@@ -7,7 +7,7 @@ import pytest
 from hypothesis import given, strategies as st
 
 from emiz import Miz
-from emiz.mission_weather import MissionWeather, _set_weather
+from emiz.mission_weather import MissionWeather, set_weather_from_icao
 
 if os.path.exists('./test_files'):
     BASE_PATH = os.path.abspath('./test_files')
@@ -44,7 +44,7 @@ def test_deviate_wind_speed(base_speed):
 
 @pytest.mark.parametrize('icao', ['UGTB', 'UGTO', 'UGKO', 'UGSA', 'UGDT', 'URSS'])
 def test_set_weather(icao):
-    result = _set_weather(icao, TEST_FILE, OUT_FILE)
+    result = set_weather_from_icao(icao, TEST_FILE, OUT_FILE)
     assert isinstance(result, str)
     result = json.loads(result)
     assert isinstance(result, dict)

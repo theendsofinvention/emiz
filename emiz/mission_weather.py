@@ -255,7 +255,7 @@ def _retrieve_metar(station_icao):
         return resp.content.decode().split('\n')[1]
 
 
-def _set_weather(station_icao, in_file, out_file):
+def set_weather_from_icao(station_icao, in_file, out_file):
     LOGGER.debug(f'getting METAR for {station_icao}')
     result = {
         'icao': station_icao,
