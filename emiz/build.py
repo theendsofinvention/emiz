@@ -12,7 +12,6 @@ import sys
 import typing
 import webbrowser
 from contextlib import contextmanager
-from json import loads
 
 import click
 from pkg_resources import DistributionNotFound, get_distribution
