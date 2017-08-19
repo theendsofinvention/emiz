@@ -212,7 +212,8 @@ class Miz:
 
         try:
 
-            with ZipFile(self.miz_path.absolute()) as zip_file:
+            path = str(self.miz_path.absolute())
+            with ZipFile(path) as zip_file:
 
                 LOGGER.debug('reading infolist')
 
@@ -257,7 +258,7 @@ class Miz:
         if destination is None:
             destination = Path(self.miz_path.parent).joinpath('{}_EMFT.miz'.format(self.miz_path.name))
 
-        destination = Path(destination).absolute()
+        destination = str(Path(destination).absolute())
 
         LOGGER.debug('zipping mission to: {}'.format(destination))
 

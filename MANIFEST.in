@@ -1,11 +1,9 @@
 include AUTHORS
 include LICENSE
 include MANIFEST.in
-include package.json
 include *.rst
-include tox.ini
 include
-graft src
+graft emiz
 graft test
 graft doc
 global-exclude __pycache__
