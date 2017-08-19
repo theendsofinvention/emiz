@@ -1,3 +1,8 @@
+certifi==2017.7.27.1      # via requests
+chardet==3.0.4            # via requests
+idna==2.6                 # via requests
 metar==1.5.0
 mpmath==0.19
 natsort==5.0.3
+requests==2.18.4
+urllib3==1.22             # via requests
