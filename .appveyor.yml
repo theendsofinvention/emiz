@@ -81,7 +81,7 @@ on_success:
   # with Unix line-endings causes the windows command interpreter to barf so
   # this is given as one-line to make this script less fragile when edited on
   # other OSes.
-  - ps: If ($env:APPVEYOR_REPO_TAG -eq "true" -And $env:APPVEYOR_REPO_BRANCH -eq "master") { Invoke-Expression "twine upload -u 132nd-etcher -p $env:PYPI_PWD --skip-existing dist/*" } Else { write-output "Not on a tag on master, won't deploy to pypi"}
+  # - ps: If ($env:APPVEYOR_REPO_TAG -eq "true" -And $env:APPVEYOR_REPO_BRANCH -eq "master") { Invoke-Expression "twine upload -u 132nd-etcher -p $env:PYPI_PWD --skip-existing dist/*" } Else { write-output "Not on a tag on master, won't deploy to pypi"}
 
 artifacts:
   - path: dist\*
