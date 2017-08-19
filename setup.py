@@ -55,11 +55,6 @@ setup_requires = [
     'pytest-runner',
 ]
 
-entry_points = '''
-[console_scripts]
-emiz-build=emiz.build:cli
-'''
-
 if __name__ == '__main__':
     setup(
         name='EMIZ',
@@ -71,12 +66,10 @@ if __name__ == '__main__':
         download_url=r'https://github.com/132nd-etcher/EMIZ/releases',
         description='Set of tools for the DCS mission builder',
         license='GPLv3',
-        py_modules=['emiz'],
         long_description=read_local_files('README.rst', 'CHANGELOG.rst'),
         packages=['emiz'],
         include_package_data=True,
         install_requires=install_requires,
-        entry_points=entry_points,
         tests_require=test_requires,
         use_scm_version=True,
         setup_requires=setup_requires,
