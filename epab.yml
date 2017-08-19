@@ -1,0 +1,8 @@
+package: 'emiz'
+doc:
+  repo: 'https://github.com/132nd-etcher/emiz-doc.git'
+  folder: './emiz-doc'
+
+test:
+  runner: 'pytest'
+  av_runner: 'pytest --long'
