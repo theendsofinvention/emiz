@@ -32,6 +32,7 @@ install_requires = [
     'mpmath',
     'natsort',
     'requests',
+    'click',
 ]
 
 # noinspection SpellCheckingInspection

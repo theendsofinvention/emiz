@@ -1,5 +1,6 @@
 certifi==2017.7.27.1      # via requests
 chardet==3.0.4            # via requests
+click==6.7
 idna==2.6                 # via requests
 metar==1.5.0
 mpmath==0.19
