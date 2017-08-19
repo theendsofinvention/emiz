@@ -258,7 +258,7 @@ class Miz:
         if destination is None:
             destination = Path(self.miz_path.parent).joinpath('{}_EMFT.miz'.format(self.miz_path.name))
 
-        destination = Path(destination).absolute()
+        destination = str(Path(destination).absolute())
 
         LOGGER.debug('zipping mission to: {}'.format(destination))
 
