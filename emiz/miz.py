@@ -212,7 +212,8 @@ class Miz:
 
         try:
 
-            with ZipFile(self.miz_path.absolute()) as zip_file:
+            path = str(self.miz_path.absolute())
+            with ZipFile(path) as zip_file:
 
                 LOGGER.debug('reading infolist')
 
