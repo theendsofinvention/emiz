@@ -4,6 +4,6 @@ click==6.7
 idna==2.6                 # via requests
 metar==1.5.0
 mpmath==0.19
-natsort==5.0.3
+natsort==5.1.0
 requests==2.18.4
 urllib3==1.22             # via requests
