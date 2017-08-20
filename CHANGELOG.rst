@@ -2,8 +2,9 @@ Changelog
 =========
 
 
-(unreleased)
-------------
+0.1.2 (2017-08-20)
+------------------
+- Update requirements. [132nd-etcher]
 - Export _set_weather. [132nd-etcher]
 
 
