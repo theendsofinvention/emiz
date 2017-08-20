@@ -75,4 +75,3 @@ def test_set_weather_from_metar(metar):
     assert in_metar.temp.value() == out_metar.temp.value()
     assert int(in_metar.wind_speed.value('MPS')) == out_metar.wind_speed.value('MPS')
     assert in_metar.wind_dir.value() == out_metar.wind_dir.value()
-
