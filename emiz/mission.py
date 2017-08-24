@@ -1,10 +1,10 @@
 # coding=utf-8
 
+import calendar
 import logging
 import typing
-from calendar import timegm
 from itertools import chain
-from time import gmtime, strftime, strptime
+from time import gmtime, strftime
 
 from emiz.validator import Validator, valid_bool, valid_float, valid_int, valid_positive_int, valid_str
 
@@ -161,6 +161,41 @@ class BaseMissionObject:
                 yield country
 
     @property
+    def _section_date(self):
+        return self.d['date']
+
+    @property
+    def day(self):
+        return self._section_date['Day']
+
+    @day.setter
+    def day(self, value):
+        Mission.validator_day.validate(value, 'day')
+        # Get the last day of the current month
+        value = max(value, calendar.monthrange(self.year, self.month)[1])
+        self._section_date['Day'] = value
+
+    @property
+    def month(self):
+        return self._section_date['Month']
+
+    @month.setter
+    def month(self, value):
+        Mission.validator_month.validate(value, 'month')
+        self._section_date['Month'] = value
+        self.day = self.day  # update day (for max value)
+
+    @property
+    def year(self):
+        return self._section_date['Year']
+
+    @year.setter
+    def year(self, value):
+        Mission.validator_year.validate(value, 'year')
+        self._section_date['Year'] = value
+        self.day = self.day  # update day (for max value)
+
+    @property
     def mission_start_time(self):
         return self.d['start_time']
 
@@ -170,13 +205,16 @@ class BaseMissionObject:
         self.d['start_time'] = value
 
     @property
-    def mission_start_time_as_date(self):
-        return strftime('%d/%m/%Y %H:%M:%S', gmtime(EPOCH_DELTA + self.mission_start_time))
+    def mission_start_time_as_string(self):
+        return strftime('%H:%M:%S', gmtime(self.mission_start_time))
 
-    @mission_start_time_as_date.setter
-    def mission_start_time_as_date(self, value):
-        Mission.validator_start_date.validate(value, 'start_time_as_date')
-        self.mission_start_time = timegm(strptime(value, '%d/%m/%Y %H:%M:%S')) - EPOCH_DELTA
+    @property
+    def mission_start_date_as_string(self):
+        return strftime(f'{self.day:02}/{self.month:02}/{self.year}')
+
+    @property
+    def mission_start_datetime_as_string(self):
+        return f'{self.mission_start_date_as_string} {self.mission_start_time_as_string}'
 
     @property
     def _sortie_name_key(self):
@@ -196,17 +234,28 @@ class Mission(BaseMissionObject):
     validator_start_time = Validator(
         _type=int,
         _min=0,
+        _max=86399,
         exc=ValueError,
         logger=LOGGER
     )
-    validator_start_date = Validator(
-        _type=str,
-        _regex=r'^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29'
-               r'(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])'
-               r'|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))'
-               r'([-./])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?'
-               r'(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])'
-               r'(:[0-5]\d){1,2})?$',
+    validator_year = Validator(
+        _type=int,
+        _min=1900,
+        _max=2100,
+        exc=ValueError,
+        logger=LOGGER
+    )
+    validator_month = Validator(
+        _type=int,
+        _min=1,
+        _max=12,
+        exc=ValueError,
+        logger=LOGGER
+    )
+    validator_day = Validator(
+        _type=int,
+        _min=1,
+        _max=31,
         exc=ValueError,
         logger=LOGGER
     )
@@ -1085,15 +1134,6 @@ class Group(Country):
     def group_start_time(self, value):
         valid_int.validate(value, 'group_start_time')
         self.group_start_delay = value - self.mission_start_time
-
-    @property
-    def group_start_time_as_date(self):
-        return strftime('%d/%m/%Y %H:%M:%S', gmtime(EPOCH_DELTA + self.group_start_time))
-
-    @group_start_time_as_date.setter
-    def group_start_time_as_date(self, value):
-        Mission.validator_start_date.validate(value, 'start_time_as_date')
-        self.group_start_time = timegm(strptime(value, '%d/%m/%Y %H:%M:%S')) - EPOCH_DELTA
 
     @property
     def units(self):

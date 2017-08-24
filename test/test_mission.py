@@ -3,14 +3,15 @@
 Tests for Mission objects
 """
 import os
+from pathlib import Path
 from time import sleep
 from zipfile import BadZipFile
 
 import pytest
+from hypothesis import given, settings, strategies as st
 
+from emiz.mission import BaseUnit, Coalition, Country, FlyingUnit, Group, Mission
 from emiz.miz import ENCODING, Miz
-from pathlib import Path
-from emiz.mission import Mission, BaseUnit, Coalition, Country, EPOCH_DELTA, FlyingUnit, Group
 
 if os.path.exists('./test_files'):
     BASE_PATH = os.path.abspath('./test_files')
@@ -18,7 +19,6 @@ elif os.path.exists('./test/test_files'):
     BASE_PATH = os.path.abspath('./test/test_files')
 else:
     raise RuntimeError('cannot find test files')
-
 
 TEST_FILE = os.path.join(BASE_PATH, 'TRG_KA50.miz')
 OUT_FILE = os.path.join(BASE_PATH, 'TRG_KA50_EMFT.miz')
@@ -107,6 +107,9 @@ RADIOS_TESTS = [
         ]
     ),
 ]
+
+with Miz(TEST_FILE) as miz:
+    DUMMY_MISSION = miz.mission
 
 
 # noinspection PyPep8Naming,PyShadowingNames
@@ -199,10 +202,11 @@ class TestMizBasics:
 
 # noinspection PyPep8Naming,PyShadowingNames
 class TestMizValues:
-    @pytest.fixture(scope='class')
-    def miz(self):
-        with Miz(TEST_FILE, keep_temp_dir=True) as miz:
-            yield miz
+    @pytest.fixture()
+    def mission(self):
+        yield Mission(dict(DUMMY_MISSION.d), dict(DUMMY_MISSION.l10n))
+        # with Miz(TEST_FILE, keep_temp_dir=True) as miz:
+        #     yield miz
 
     @pytest.fixture(autouse=True)
     def clean_up(self):
@@ -215,12 +219,12 @@ class TestMizValues:
             except FileNotFoundError:
                 pass
 
-    def test_bullseye(self, miz):
-        assert (11557, 371700) == miz.mission.red_coa.bullseye_position
-        assert (-291014, 617414) == miz.mission.blue_coa.bullseye_position
+    def test_bullseye(self, mission):
+        assert (11557, 371700) == mission.red_coa.bullseye_position
+        assert (-291014, 617414) == mission.blue_coa.bullseye_position
 
-    def test_ln10(self, miz):
-        assert miz.l10n == dict(
+    def test_ln10(self, mission):
+        assert mission.l10n == dict(
             [('DictKey_GroupName_5', 'etcher'), ('DictKey_GroupName_8', 'gal'), ('DictKey_GroupName_11', 'gilles'),
              ('DictKey_GroupName_14', 'New Vehicle Group'), ('DictKey_GroupName_17', 'New Vehicle Group #001'),
              ('DictKey_GroupName_20', 'New Vehicle Group #002'), ('DictKey_GroupName_23', 'New Vehicle Group #003'),
@@ -271,157 +275,157 @@ class TestMizValues:
              ('DictKey_descriptionRedTask_2', ''), ('DictKey_descriptionText_1', ''),
              ('DictKey_sortie_4', 'sortie_test')])
 
-    def test_qnh(self, miz):
-        assert miz.mission.weather.qnh == 760
-        miz.mission.weather.qnh = 754
-        assert miz.mission.weather.qnh == 754
+    def test_qnh(self, mission):
+        assert mission.weather.qnh == 760
+        mission.weather.qnh = 754
+        assert mission.weather.qnh == 754
         for wrong_qnh in ['caribou', 719, 791, -1, None, True]:
             with pytest.raises(ValueError):
-                miz.mission.weather.qnh = wrong_qnh
+                mission.weather.qnh = wrong_qnh
 
-    def test_seasons(self, miz):
+    def test_seasons(self, mission):
         # Season code has been deprecated by ED
-        miz.mission.weather.season_code = miz.mission.weather.seasons_enum['winter']
-        miz.mission.weather.temperature = -50
-        assert miz.mission.weather.temperature == -50
-        miz.mission.weather.season_code = miz.mission.weather.seasons_enum['summer']
-        assert miz.mission.weather.temperature == 5
+        mission.weather.season_code = mission.weather.seasons_enum['winter']
+        mission.weather.temperature = -50
+        assert mission.weather.temperature == -50
+        mission.weather.season_code = mission.weather.seasons_enum['summer']
+        assert mission.weather.temperature == 5
         # with pytest.raises(ValueError):
-        miz.mission.weather.temperature = -50
-        miz.mission.weather.temperature = 50
-        assert miz.mission.weather.temperature == 50
-        miz.mission.weather.season_code = miz.mission.weather.seasons_enum['winter']
-        assert miz.mission.weather.temperature == 15
+        mission.weather.temperature = -50
+        mission.weather.temperature = 50
+        assert mission.weather.temperature == 50
+        mission.weather.season_code = mission.weather.seasons_enum['winter']
+        assert mission.weather.temperature == 15
         # with pytest.raises(ValueError):
-        miz.mission.weather.temperature = 50
-        miz.mission.weather.temperature = -50
-        miz.mission.weather.season_code = miz.mission.weather.seasons_enum['fall']
-        assert miz.mission.weather.temperature == -10
-        miz.mission.weather.season_code = miz.mission.weather.seasons_enum['summer']
-        assert miz.mission.weather.temperature == 5
-        miz.mission.weather.temperature = 50
-        miz.mission.weather.season_code = miz.mission.weather.seasons_enum['spring']
-        assert miz.mission.weather.temperature == 30
+        mission.weather.temperature = 50
+        mission.weather.temperature = -50
+        mission.weather.season_code = mission.weather.seasons_enum['fall']
+        assert mission.weather.temperature == -10
+        mission.weather.season_code = mission.weather.seasons_enum['summer']
+        assert mission.weather.temperature == 5
+        mission.weather.temperature = 50
+        mission.weather.season_code = mission.weather.seasons_enum['spring']
+        assert mission.weather.temperature == 30
         for test in [(1, 'summer'), (2, 'winter'), (3, 'spring'), (4, 'fall')]:
-            assert test[0] == miz.mission.weather.get_season_code_from_name(test[1])
-            miz.mission.weather.season_code = test[0]
-            assert miz.mission.weather.season_name == test[1]
+            assert test[0] == mission.weather.get_season_code_from_name(test[1])
+            mission.weather.season_code = test[0]
+            assert mission.weather.season_name == test[1]
         for wrong_name in (1, -1, None, True, 'caribou'):
             with pytest.raises(ValueError, msg=wrong_name):
-                miz.mission.weather.get_season_code_from_name(wrong_name)
+                mission.weather.get_season_code_from_name(wrong_name)
 
-    def test_wind(self, miz):
-        assert miz.mission.weather.wind_at2000_dir == 0
-        assert miz.mission.weather.wind_at2000_speed == 0
-        assert miz.mission.weather.wind_at8000_dir == 0
-        assert miz.mission.weather.wind_at8000_speed == 0
-        assert miz.mission.weather.wind_at_ground_level_dir == 0
-        assert miz.mission.weather.wind_at_ground_level_speed == 0
+    def test_wind(self, mission):
+        assert mission.weather.wind_at2000_dir == 0
+        assert mission.weather.wind_at2000_speed == 0
+        assert mission.weather.wind_at8000_dir == 0
+        assert mission.weather.wind_at8000_speed == 0
+        assert mission.weather.wind_at_ground_level_dir == 0
+        assert mission.weather.wind_at_ground_level_speed == 0
         for wrong_speed in [-1, 51, True, None, 'caribou']:
             with pytest.raises(ValueError, msg=wrong_speed):
-                miz.mission.weather.wind_at_ground_level_speed = wrong_speed
+                mission.weather.wind_at_ground_level_speed = wrong_speed
             with pytest.raises(ValueError, msg=wrong_speed):
-                miz.mission.weather.wind_at8000_speed = wrong_speed
+                mission.weather.wind_at8000_speed = wrong_speed
             with pytest.raises(ValueError, msg=wrong_speed):
-                miz.mission.weather.wind_at2000_speed = wrong_speed
+                mission.weather.wind_at2000_speed = wrong_speed
         for wrong_dir in [-1, 360, True, None, 'caribou']:
             with pytest.raises(ValueError, msg=wrong_dir):
-                miz.mission.weather.wind_at_ground_level_dir = wrong_dir
+                mission.weather.wind_at_ground_level_dir = wrong_dir
             with pytest.raises(ValueError, msg=wrong_dir):
-                miz.mission.weather.wind_at2000_dir = wrong_dir
+                mission.weather.wind_at2000_dir = wrong_dir
             with pytest.raises(ValueError, msg=wrong_dir):
-                miz.mission.weather.wind_at8000_dir = wrong_dir
+                mission.weather.wind_at8000_dir = wrong_dir
         for i in range(0, 359, 1):
-            miz.mission.weather.wind_at8000_dir = i
-            miz.mission.weather.wind_at2000_dir = i
-            miz.mission.weather.wind_at_ground_level_dir = i
+            mission.weather.wind_at8000_dir = i
+            mission.weather.wind_at2000_dir = i
+            mission.weather.wind_at_ground_level_dir = i
         for i in range(0, 50, 1):
-            miz.mission.weather.wind_at8000_speed = i
-            miz.mission.weather.wind_at2000_speed = i
-            miz.mission.weather.wind_at_ground_level_speed = i
+            mission.weather.wind_at8000_speed = i
+            mission.weather.wind_at2000_speed = i
+            mission.weather.wind_at_ground_level_speed = i
 
-    def test_turbulence(self, miz):
-        assert miz.mission.weather.turbulence_at_ground_level == 0
+    def test_turbulence(self, mission):
+        assert mission.weather.turbulence_at_ground_level == 0
         for i in range(0, 60, 1):
-            miz.mission.weather.turbulence_at_ground_level = i
+            mission.weather.turbulence_at_ground_level = i
         for wrong_turbulence in [-1, 61, True, None, 'caribou']:
             with pytest.raises(ValueError, msg=wrong_turbulence):
-                miz.mission.weather.turbulence_at_ground_level = wrong_turbulence
+                mission.weather.turbulence_at_ground_level = wrong_turbulence
 
-    def test_atmosphere_type(self, miz):
-        assert miz.mission.weather.atmosphere_type == 0
-        miz.mission.weather.atmosphere_type = 1
-        assert miz.mission.weather.atmosphere_type == 1
+    def test_atmosphere_type(self, mission):
+        assert mission.weather.atmosphere_type == 0
+        mission.weather.atmosphere_type = 1
+        assert mission.weather.atmosphere_type == 1
         for wrong_atmo_type in [-1, 2, True, None, 'caribou']:
             with pytest.raises(ValueError, msg=wrong_atmo_type):
-                miz.mission.weather.atmosphere_type = wrong_atmo_type
+                mission.weather.atmosphere_type = wrong_atmo_type
 
-    def test_fog(self, miz):
-        assert not miz.mission.weather.fog_enabled
-        miz.mission.weather.fog_enabled = True
-        assert miz.mission.weather.fog_enabled
-        assert miz.mission.weather.fog_visibility == 25
-        assert miz.mission.weather.fog_thickness == 0
-        miz.mission.weather.fog_visibility = 500
-        assert miz.mission.weather.fog_visibility == 500
-        miz.mission.weather.fog_thickness = 500
-        assert miz.mission.weather.fog_thickness == 500
+    def test_fog(self, mission):
+        assert not mission.weather.fog_enabled
+        mission.weather.fog_enabled = True
+        assert mission.weather.fog_enabled
+        assert mission.weather.fog_visibility == 25
+        assert mission.weather.fog_thickness == 0
+        mission.weather.fog_visibility = 500
+        assert mission.weather.fog_visibility == 500
+        mission.weather.fog_thickness = 500
+        assert mission.weather.fog_thickness == 500
         for i in range(0, 6000, 100):
-            miz.mission.weather.fog_visibility = i
+            mission.weather.fog_visibility = i
         for i in range(0, 1000, 10):
-            miz.mission.weather.fog_thickness = i
+            mission.weather.fog_thickness = i
         for wrong_visibility in [-1, 6001, True, None, 'caribou']:
             with pytest.raises(ValueError, msg=wrong_visibility):
-                miz.mission.weather.fog_visibility = wrong_visibility
+                mission.weather.fog_visibility = wrong_visibility
         for wrong_thickness in [-1, 1001, True, None, 'caribou']:
             with pytest.raises(ValueError, msg=wrong_thickness):
-                miz.mission.weather.fog_thickness = wrong_thickness
+                mission.weather.fog_thickness = wrong_thickness
 
-    def test_clouds(self, miz):
-        assert miz.mission.weather.cloud_thickness == 200
-        assert miz.mission.weather.cloud_base == 300
+    def test_clouds(self, mission):
+        assert mission.weather.cloud_thickness == 200
+        assert mission.weather.cloud_base == 300
         for i in range(0, 10):
-            miz.mission.weather.cloud_density = i
+            mission.weather.cloud_density = i
         for wrong_density in [-1, 11, True, None, 'caribou']:
             with pytest.raises(ValueError, msg=wrong_density):
-                miz.mission.weather.cloud_density = wrong_density
+                mission.weather.cloud_density = wrong_density
         for i in range(300, 5000, 100):
-            miz.mission.weather.cloud_base = i
+            mission.weather.cloud_base = i
         for wrong_base in [-1, -500, 5001, 50000, None, False, 'caribou']:
             with pytest.raises(ValueError):
-                miz.mission.weather.cloud_base = wrong_base
+                mission.weather.cloud_base = wrong_base
         for i in range(200, 2000, 50):
-            miz.mission.weather.cloud_thickness = i
+            mission.weather.cloud_thickness = i
         for wrong_thickness in [199, 2001, -500, 2, 12000, None, False, 'caribou']:
             with pytest.raises(ValueError):
-                miz.mission.weather.cloud_thickness = wrong_thickness
+                mission.weather.cloud_thickness = wrong_thickness
 
-    def test_precipitations(self, miz):
-        miz.mission.weather.cloud_density = 4
-        miz.mission.weather.season_code = 3
-        miz.mission.weather.temperature = 1
-        miz.mission.weather.precipitations = 0
+    def test_precipitations(self, mission):
+        mission.weather.cloud_density = 4
+        mission.weather.season_code = 3
+        mission.weather.temperature = 1
+        mission.weather.precipitations = 0
         for i in range(1, 4):
             with pytest.raises(ValueError, msg=i):
-                miz.mission.weather.precipitations = i
-        miz.mission.weather.cloud_density = 5
-        miz.mission.weather.precipitations = 1
+                mission.weather.precipitations = i
+        mission.weather.cloud_density = 5
+        mission.weather.precipitations = 1
         for i in range(2, 4):
             with pytest.raises(ValueError, msg=i):
-                miz.mission.weather.precipitations = i
-        miz.mission.weather.cloud_density = 9
+                mission.weather.precipitations = i
+        mission.weather.cloud_density = 9
         for i in range(0, 2):
-            miz.mission.weather.precipitations = i
-        miz.mission.weather.temperature = 0
+            mission.weather.precipitations = i
+        mission.weather.temperature = 0
         for i in range(0, 4):
-            miz.mission.weather.precipitations = i
-        miz.mission.weather.temperature = -1
+            mission.weather.precipitations = i
+        mission.weather.temperature = -1
         for i in range(3, 4):
-            miz.mission.weather.precipitations = i
+            mission.weather.precipitations = i
         for i in range(1, 2):
             with pytest.raises(ValueError, msg=i):
-                miz.mission.weather.precipitations = i
-        miz.mission.weather.precipitations = 4
+                mission.weather.precipitations = i
+        mission.weather.precipitations = 4
         # Season code has been deprecated by ED
         # miz.mission.weather.season_code = 1
         # assert miz.mission.weather.temperature == 5
@@ -433,10 +437,10 @@ class TestMizValues:
         # miz.mission.weather.season_code = 1
         # assert miz.mission.weather.precipitations == 1
 
-    def test_ground_control(self, miz):
-        assert not miz.mission.ground_control.pilots_control_vehicles
-        miz.mission.ground_control.pilots_control_vehicles = True
-        assert miz.mission.ground_control.pilots_control_vehicles
+    def test_ground_control(self, mission):
+        assert not mission.ground_control.pilots_control_vehicles
+        mission.ground_control.pilots_control_vehicles = True
+        assert mission.ground_control.pilots_control_vehicles
         for attrib in [
             'artillery_commander_blue',
             'artillery_commander_red',
@@ -447,65 +451,65 @@ class TestMizValues:
             'observer_red',
             'observer_blue',
         ]:
-            assert getattr(miz.mission.ground_control, attrib) == 0
+            assert getattr(mission.ground_control, attrib) == 0
             for wrong_param in [-1, 101, True, None, 'caribou']:
                 with pytest.raises(ValueError, msg=wrong_param):
-                    setattr(miz.mission.ground_control, attrib, wrong_param)
+                    setattr(mission.ground_control, attrib, wrong_param)
             for i in range(0, 60, 5):
-                setattr(miz.mission.ground_control, attrib, i)
+                setattr(mission.ground_control, attrib, i)
 
-    def test_name(self, miz):
-        assert 'blue' == miz.mission.blue_coa.coalition_name
-        assert 'red' == miz.mission.red_coa.coalition_name
+    def test_name(self, mission):
+        assert 'blue' == mission.blue_coa.coalition_name
+        assert 'red' == mission.red_coa.coalition_name
 
-    def test_country_generator(self, miz):
-        for coa in (miz.mission.blue_coa, miz.mission.red_coa):
+    def test_country_generator(self, mission):
+        for coa in (mission.blue_coa, mission.red_coa):
             assert coa.countries
         l = 0
-        for country in miz.mission.blue_coa.countries:
+        for country in mission.blue_coa.countries:
             assert isinstance(country, Country)
             l += 1
         assert l == 19
         l = 0
-        for country in miz.mission.red_coa.countries:
+        for country in mission.red_coa.countries:
             assert isinstance(country, Country)
             l += 1
         assert l == 11
 
-    def test_get_country_by_name(self, miz):
-        assert isinstance(miz.mission.blue_coa.get_country_by_name('USA'), Country)
-        assert isinstance(miz.mission.blue_coa.get_country_by_id(2), Country)
-        assert isinstance(miz.mission.blue_coa.get_country_by_name('USA'), Country)
-        assert isinstance(miz.mission.blue_coa.get_country_by_id(2), Country)
+    def test_get_country_by_name(self, mission):
+        assert isinstance(mission.blue_coa.get_country_by_name('USA'), Country)
+        assert isinstance(mission.blue_coa.get_country_by_id(2), Country)
+        assert isinstance(mission.blue_coa.get_country_by_name('USA'), Country)
+        assert isinstance(mission.blue_coa.get_country_by_id(2), Country)
         for wrong_country_name in (1, -1, 0, False, None, True):
             with pytest.raises(ValueError, msg=wrong_country_name):
-                miz.mission.blue_coa.get_country_by_name(wrong_country_name)
+                mission.blue_coa.get_country_by_name(wrong_country_name)
         for wrong_country_id in (-1, False, None, True, 'caribou'):
             with pytest.raises(ValueError, msg=wrong_country_id):
-                miz.mission.blue_coa.get_country_by_id(wrong_country_id)
+                mission.blue_coa.get_country_by_id(wrong_country_id)
         for unknown_country_name in ('nope', 'nope too'):
             with pytest.raises(ValueError, msg=unknown_country_name):
-                miz.mission.blue_coa.get_country_by_name(unknown_country_name)
+                mission.blue_coa.get_country_by_name(unknown_country_name)
         for unknown_country_id in (150,):
             with pytest.raises(ValueError, msg=unknown_country_id):
-                miz.mission.blue_coa.get_country_by_id(unknown_country_id)
+                mission.blue_coa.get_country_by_id(unknown_country_id)
 
-    def test_groups(self, miz):
+    def test_groups(self, mission):
         l = 0
-        for group in miz.mission.blue_coa.groups:
+        for group in mission.blue_coa.groups:
             l += 1
             assert isinstance(group, Group)
         assert l == 3
         l = 0
-        for group in miz.mission.red_coa.groups:
+        for group in mission.red_coa.groups:
             l += 1
             assert isinstance(group, Group)
         assert l == 33
 
-    def test_get_groups_from_category(self, miz):
+    def test_get_groups_from_category(self, mission):
         for invalid_category in ('caribou', 'Plane', 'plAne', 'ships', -1, 0, 1, True, False, None):
             with pytest.raises(ValueError):
-                for _ in miz.mission.blue_coa.get_groups_from_category(invalid_category):
+                for _ in mission.blue_coa.get_groups_from_category(invalid_category):
                     pass
         with Miz(ALL_OBJECTS) as miz:
             for category in ('ship', 'plane', 'helicopter', 'vehicle'):
@@ -516,25 +520,25 @@ class TestMizValues:
                     l += 1
                 assert l == 1
 
-    def test_units(self, miz):
+    def test_units(self, mission):
         l = 0
-        for unit in miz.mission.blue_coa.units:
+        for unit in mission.blue_coa.units:
             l += 1
             assert isinstance(unit, BaseUnit)
         assert l == 3
         l = 0
-        for unit in miz.mission.red_coa.units:
+        for unit in mission.red_coa.units:
             l += 1
             assert isinstance(unit, BaseUnit)
         assert l == 33
 
-    def test_get_units_from_category(self, miz):
+    def test_get_units_from_category(self, mission):
         for invalid_category in ('caribou', 'Plane', 'plAne', 'ships', -1, 0, 1, True, False, None):
             with pytest.raises(ValueError):
-                for _ in miz.mission.blue_coa.get_units_from_category(invalid_category):
+                for _ in mission.blue_coa.get_units_from_category(invalid_category):
                     pass
         with Miz(ALL_OBJECTS) as miz:
-            # for unit in miz.mission.blue_coa.units:
+            # for unit in mission.blue_coa.units:
             #     print(unit.group_category)
             for category in ('ship', 'plane', 'helicopter', 'vehicle'):
                 l = 0
@@ -544,54 +548,54 @@ class TestMizValues:
                     l += 1
                 assert l == 1
 
-    def test_get_group_by_id(self, miz):
+    def test_get_group_by_id(self, mission):
         for group_id in range(1, 3):
-            assert isinstance(miz.mission.blue_coa.get_group_by_id(group_id), Group)
+            assert isinstance(mission.blue_coa.get_group_by_id(group_id), Group)
         for group_id in range(4, 36):
-            assert isinstance(miz.mission.red_coa.get_group_by_id(group_id), Group)
+            assert isinstance(mission.red_coa.get_group_by_id(group_id), Group)
         for wrong_group_id in (-1, False, None, True, 'caribou'):
             with pytest.raises(ValueError, msg=wrong_group_id):
-                miz.mission.red_coa.get_group_by_id(wrong_group_id)
-        for non_existing_group_id in (37, 50, 100, 150, miz.mission.next_group_id):
-            assert miz.mission.red_coa.get_group_by_id(non_existing_group_id) is None
-            assert miz.mission.blue_coa.get_group_by_id(non_existing_group_id) is None
+                mission.red_coa.get_group_by_id(wrong_group_id)
+        for non_existing_group_id in (37, 50, 100, 150, mission.next_group_id):
+            assert mission.red_coa.get_group_by_id(non_existing_group_id) is None
+            assert mission.blue_coa.get_group_by_id(non_existing_group_id) is None
 
-    def test_group_by_name(self, miz):
+    def test_group_by_name(self, mission):
         for group_name in ('etcher', 'gal', 'gilles'):
-            assert isinstance(miz.mission.blue_coa.get_group_by_name(group_name), Group)
+            assert isinstance(mission.blue_coa.get_group_by_name(group_name), Group)
         for i in range(1, 33):
-            assert isinstance(miz.mission.red_coa.get_group_by_name('New Vehicle Group #{}'.format(str(i).zfill(3))),
+            assert isinstance(mission.red_coa.get_group_by_name('New Vehicle Group #{}'.format(str(i).zfill(3))),
                               Group)
         for wrong_group_name in (-1, 0, 1, False, True, None):
             with pytest.raises(ValueError, msg=wrong_group_name):
-                miz.mission.blue_coa.get_group_by_name(wrong_group_name)
+                mission.blue_coa.get_group_by_name(wrong_group_name)
         for non_existing_group_name in ('yup', 'yop', 'New Vehicle group #019', 'Gilles', 'etcheR'):
-            assert miz.mission.red_coa.get_group_by_name(non_existing_group_name) is None
-            assert miz.mission.blue_coa.get_group_by_name(non_existing_group_name) is None
+            assert mission.red_coa.get_group_by_name(non_existing_group_name) is None
+            assert mission.blue_coa.get_group_by_name(non_existing_group_name) is None
 
-    def test_get_unit_by_id(self, miz):
+    def test_get_unit_by_id(self, mission):
         for unit_id in range(1, 3):
-            assert isinstance(miz.mission.blue_coa.get_unit_by_id(unit_id), BaseUnit)
+            assert isinstance(mission.blue_coa.get_unit_by_id(unit_id), BaseUnit)
         for unit_id in range(4, 36):
-            assert isinstance(miz.mission.red_coa.get_unit_by_id(unit_id), BaseUnit)
+            assert isinstance(mission.red_coa.get_unit_by_id(unit_id), BaseUnit)
         for wrong_unit_id in (-1, False, None, True, 'caribou'):
             with pytest.raises(ValueError, msg=wrong_unit_id):
-                miz.mission.red_coa.get_unit_by_id(wrong_unit_id)
-        for non_existing_unit_id in (37, 50, 100, 150, miz.mission.next_unit_id):
-            assert miz.mission.red_coa.get_group_by_id(non_existing_unit_id) is None
-            assert miz.mission.blue_coa.get_group_by_id(non_existing_unit_id) is None
+                mission.red_coa.get_unit_by_id(wrong_unit_id)
+        for non_existing_unit_id in (37, 50, 100, 150, mission.next_unit_id):
+            assert mission.red_coa.get_group_by_id(non_existing_unit_id) is None
+            assert mission.blue_coa.get_group_by_id(non_existing_unit_id) is None
 
-    def test_unit_by_name(self, miz):
+    def test_unit_by_name(self, mission):
         for unit_name in ('etcher', 'gal', 'gilles'):
-            assert isinstance(miz.mission.blue_coa.get_unit_by_name(unit_name), BaseUnit)
+            assert isinstance(mission.blue_coa.get_unit_by_name(unit_name), BaseUnit)
         for i in range(1, 33):
-            assert isinstance(miz.mission.red_coa.get_unit_by_name('Unit #{}'.format(str(i).zfill(3))), BaseUnit)
+            assert isinstance(mission.red_coa.get_unit_by_name('Unit #{}'.format(str(i).zfill(3))), BaseUnit)
         for wrong_unit_name in (-1, 0, 1, False, True, None):
             with pytest.raises(ValueError, msg=wrong_unit_name):
-                miz.mission.blue_coa.get_unit_by_name(wrong_unit_name)
+                mission.blue_coa.get_unit_by_name(wrong_unit_name)
         for non_existing_unit_name in ('yup', 'yop', 'unit #017', 'Gilles', 'etcheR'):
-            assert miz.mission.red_coa.get_unit_by_name(non_existing_unit_name) is None
-            assert miz.mission.blue_coa.get_unit_by_name(non_existing_unit_name) is None
+            assert mission.red_coa.get_unit_by_name(non_existing_unit_name) is None
+            assert mission.blue_coa.get_unit_by_name(non_existing_unit_name) is None
 
     def test_set_hidden(self):
         with Miz(TEST_FILE) as miz:
@@ -608,6 +612,7 @@ class TestMizValues:
                 assert getattr(group, attrib) == getattr(new_group, attrib)
             assert group.group_hidden
 
+    @pytest.mark.skip('disabled for the time being')
     def test_group_start_time(self):
         with Miz(TEST_FILE) as miz:
             group = miz.mission.get_group_by_name('etcher')
@@ -642,8 +647,8 @@ class TestMizValues:
             group = miz.mission.get_group_by_name('etcher')
             assert group.group_start_delay == 3600 * 24
 
-    def test_get_unit(self, miz):
-        group = miz.mission.get_group_by_name('etcher')
+    def test_get_unit(self, mission):
+        group = mission.get_group_by_name('etcher')
         assert isinstance(group, Group)
         unit1 = group.get_unit_by_name('etcher')
         assert isinstance(unit1, BaseUnit)
@@ -686,15 +691,15 @@ class TestMizValues:
                 assert isinstance(country.get_unit_by_name(unit_name), BaseUnit)
             assert country.get_unit_by_name('some other unit') is None
 
-    def test_get_country(self, miz):
-        assert isinstance(miz.mission.blue_coa.get_country_by_id(2), Country)
-        assert isinstance(miz.mission.blue_coa.get_country_by_name('USA'), Country)
+    def test_get_country(self, mission):
+        assert isinstance(mission.blue_coa.get_country_by_id(2), Country)
+        assert isinstance(mission.blue_coa.get_country_by_name('USA'), Country)
         with pytest.raises(ValueError):
-            miz.mission.red_coa.get_country_by_name('USA')
+            mission.red_coa.get_country_by_name('USA')
         with pytest.raises(ValueError):
-            miz.mission.red_coa.get_country_by_id(2)
+            mission.red_coa.get_country_by_id(2)
         with Miz(TEST_FILE) as miz:
-            assert isinstance(miz.mission.blue_coa.get_country_by_name('USA'), Country)
+            assert isinstance(mission.blue_coa.get_country_by_name('USA'), Country)
 
     @pytest.mark.parametrize('unit_id, unit_type, radios_to_test', RADIOS_TESTS)
     def test_radios(self, unit_id, unit_type, radios_to_test):
@@ -754,40 +759,37 @@ class TestMizValues:
                 # TODO resume
                 pass
 
-    def test_mission_start_time(self):
-        with Miz(TEST_FILE) as miz:
-            assert miz.mission.mission_start_time == 43200
-            assert miz.mission.mission_start_time_as_date == '01/06/2011 12:00:00'
-            miz.mission.mission_start_time = 0
-            assert miz.mission.mission_start_time_as_date == '01/06/2011 00:00:00'
-            miz.mission.mission_start_time = 3600 * 24 * 14
-            assert miz.mission.mission_start_time_as_date == '15/06/2011 00:00:00'
-            miz.mission.mission_start_time += 3600 * 12
-            assert miz.mission.mission_start_time_as_date == '15/06/2011 12:00:00'
-            miz.mission.mission_start_time = 1453627513 - EPOCH_DELTA
-            assert miz.mission.mission_start_time_as_date == '24/01/2016 09:25:13'
-            for wrong_start_time in [-5, True, 'caribou', None]:
-                with pytest.raises(ValueError, msg=wrong_start_time):
-                    miz.mission.mission_start_time = wrong_start_time
-            for wrong_date in [1, True, None, 'caribou', '1/1/16 9:19:22']:
-                with pytest.raises(ValueError, msg=wrong_date):
-                    miz.mission.mission_start_time_as_date = wrong_date
-            miz.mission.mission_start_time_as_date = '01/01/2012 00:00:00'
-            with pytest.raises(ValueError):
-                miz.mission.mission_start_time_as_date = '01/01/2010 00:00:00'
+    @given(time=st.integers(0, 86399))
+    @settings(max_examples=1)
+    def test_mission_start_time(self, time, mission):
+        assert mission.mission_start_time == 43200
+        assert mission.mission_start_datetime_as_string == '01/06/2011 12:00:00'
+        mission.mission_start_time = 0
+        assert mission.mission_start_datetime_as_string == '01/06/2011 00:00:00'
+        mission.mission_start_time = time
 
-    def test_repr(self):
-        with Miz(TEST_FILE) as miz:
-            assert 'Mission({})'.format(miz.mission.d) == miz.mission.__repr__()
+    @given(time=st.integers(min_value=86400))
+    @settings(max_examples=1)
+    def test_wrong_mission_start_time(self, time, mission):
+        with pytest.raises(ValueError):
+            mission.mission_start_time = time
 
-    def test_coalitions_generator(self):
-        with Miz(TEST_FILE) as miz:
-            assert miz.mission.coalitions
-            l = 0
-            for coa in miz.mission.coalitions:
-                assert isinstance(coa, Coalition)
-                l += 1
-            assert l == 2
+    @given(time=st.integers(max_value=-1))
+    @settings(max_examples=1)
+    def test_wrong_mission_start_time_neg(self, time, mission):
+        with pytest.raises(ValueError):
+            mission.mission_start_time = time
+
+    def test_repr(self, mission):
+        assert 'Mission({})'.format(mission.d) == mission.__repr__()
+
+    def test_coalitions_generator(self, mission):
+        assert miz.mission.coalitions
+        l = 0
+        for coa in miz.mission.coalitions:
+            assert isinstance(coa, Coalition)
+            l += 1
+        assert l == 2
 
     def test_sortie_name(self):
         with Miz(TEST_FILE) as miz:
@@ -802,26 +804,26 @@ class TestMizValues:
         with Miz(OUT_FILE) as miz:
             assert miz.mission.sortie_name == 'caribou'
 
-    def test_next_unit_id(self, miz):
-        assert miz.mission.next_unit_id == 37
+    def test_next_unit_id(self, mission):
+        assert mission.next_unit_id == 37
         with pytest.raises(IndexError):
             with Miz(DUPLICATE_GROUP_ID) as miz:
                 _ = miz.mission.next_unit_id
 
-    def test_next_group_id(self, miz):
-        assert miz.mission.next_group_id == 37
+    def test_next_group_id(self, mission):
+        assert mission.next_group_id == 37
         with pytest.raises(IndexError):
             with Miz(DUPLICATE_GROUP_ID) as miz:
                 _ = miz.mission.next_group_id
 
-    def test_get_group_by_name(self, miz):
-        group = miz.mission.get_group_by_name('etcher')
+    def test_get_group_by_name(self, mission):
+        group = mission.get_group_by_name('etcher')
         assert isinstance(group, Group)
         assert group.group_id == 1
-        assert miz.mission.get_group_by_name('le_caribou_puissant') is None
+        assert mission.get_group_by_name('le_caribou_puissant') is None
 
-    def test_get_unit_by_name(self, miz):
-        unit = miz.mission.get_unit_by_name('etcher')
+    def test_get_unit_by_name(self, mission):
+        unit = mission.get_unit_by_name('etcher')
         assert isinstance(unit, BaseUnit)
         assert unit.unit_id == 1
-        assert miz.mission.get_unit_by_name('le_caribou_puissant') is None
+        assert mission.get_unit_by_name('le_caribou_puissant') is None
