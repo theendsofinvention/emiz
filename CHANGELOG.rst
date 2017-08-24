@@ -2,11 +2,9 @@ Changelog
 =========
 
 
-(unreleased)
-------------
-- Update requirements. [132nd-etcher]
+0.1.4 (2017-08-24)
+------------------
 - Add mission time. [132nd-etcher]
-- Remove test file. [132nd-etcher]
 
 
 0.1.3 (2017-08-20)
