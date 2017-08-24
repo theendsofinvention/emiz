@@ -1,29 +1,59 @@
 # coding=utf-8
 
 import datetime
-import shutil
 import logging
+import re
 
 from emiz.miz import Miz
 
 LOGGER = logging.getLogger('EMIZ').getChild(__name__)
 
+RE_INPUT_STRING = re.compile(r'^'
+                             r'(?P<year>[\d]{4})'
+                             r'(?P<month>[\d]{2})'
+                             r'(?P<day>[\d]{2})'
+                             r'(?P<hour>[\d]{2})'
+                             r'(?P<minute>[\d]{2})'
+                             r'(?P<second>[\d]{2})'
+                             r'$')
+
 
 class MissionTime:
     def __init__(self, moment: datetime.datetime):
-        self.moment = moment
-        print(moment.strftime('%d/%m/%Y %H:%M:%S'))
+        self.date = datetime.date(moment.year, moment.month, moment.day)
+        self.time = moment.hour * 3600 + moment.minute * 60 + moment.second
 
-    def mission_start_time(self):
-        return self.moment.strftime('%d/%m/%Y %H:%M:%S')
+    def apply_to_miz(self, infile: str, outfile: str = None):
+        if outfile is None:
+            outfile = infile
 
+        with Miz(infile) as miz:
+            miz.mission.day = self.date.day
+            miz.mission.month = self.date.month
+            miz.mission.year = self.date.year
+            miz.mission.mission_start_time = self.time
 
-if __name__ == '__main__':
-    time = MissionTime(datetime.datetime.now())
-    with Miz('./test/test_files/time.miz') as miz:
-        miz._encode()
-        shutil.copy(miz.mission_file, './test/test_files/time/input')
-        miz.mission.mission_start_time_as_date = time.mission_start_time()
-        miz._encode()
-        shutil.copy(miz.mission_file, './test/test_files/time/output')
-        miz.zip('./test/test_files/time_output.miz')
+            miz.zip(outfile)
+
+            return True
+
+    @staticmethod
+    def from_string(input_str):
+        match = RE_INPUT_STRING.match(input_str)
+        if not match:
+            raise ValueError(f'badly formatted date/time: {input_str}')
+
+        return MissionTime(
+            datetime.datetime(
+                int(match.group('year')),
+                int(match.group('month')),
+                int(match.group('day')),
+                int(match.group('hour')),
+                int(match.group('minute')),
+                int(match.group('second')),
+            )
+        )
+
+    @staticmethod
+    def now():
+        return MissionTime(datetime.datetime.now())
