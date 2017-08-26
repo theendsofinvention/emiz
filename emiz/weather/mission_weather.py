@@ -94,7 +94,7 @@ class MissionWeather:
         val = MissionWeather._gauss(base_speed, sigma)
         if val < 0:
             return 0
-        return val
+        return min(val, 50)
 
     @staticmethod
     def _deviate_direction(base_heading, sigma) -> int:

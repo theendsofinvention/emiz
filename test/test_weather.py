@@ -4,11 +4,13 @@ import json
 import os
 
 import pytest
-from hypothesis import given, strategies as st
+from hypothesis import given, strategies as st, example
 
-from emiz import Miz
-from emiz.weather import MissionWeather, build_metar_from_mission, set_weather_from_icao,\
-    set_weather_from_metar_str, Metar
+from emiz import Miz, set_weather_from_icao
+from emiz.weather import build_metar_from_mission
+from emiz.weather.mission_weather import MissionWeather
+from metar.Metar import Metar
+from emiz.weather.utils import set_weather_from_metar_str
 
 if os.path.exists('./test_files'):
     BASE_PATH = os.path.abspath('./test_files')
@@ -37,9 +39,11 @@ def test_normalize_direction(heading):
 
 
 @given(base_speed=st.integers(min_value=0, max_value=40))
+@example(base_speed=120)
+@example(base_speed=-1)
 def test_deviate_wind_speed(base_speed):
     val = MissionWeather._deviate_wind_speed(base_speed)
-    assert 0 <= val <= 80
+    assert 0 <= val <= 50
     assert type(val) is int
 
 
