@@ -6,8 +6,8 @@ import os
 import pytest
 from hypothesis import given, strategies as st, example
 
-from emiz import Miz, set_weather_from_icao
-from emiz.weather import build_metar_from_mission
+from emiz import Miz
+from emiz.weather import build_metar_from_mission, set_weather_from_icao
 from emiz.weather.mission_weather import MissionWeather
 from metar.Metar import Metar
 from emiz.weather.utils import set_weather_from_metar_str
