@@ -1,12 +1,14 @@
 # coding=utf-8
-
+"""
+Etcher's MIZ library
+"""
 from pkg_resources import DistributionNotFound, get_distribution
 
+from emiz.edit_miz import edit_miz
+from emiz.weather import build_metar_from_mission
+from emiz.weather.utils import parse_metar_string, retrieve_metar
 from .miz import Mission, Miz
 from .parking_spots import parkings
-from emiz.weather.utils import retrieve_metar, parse_metar_string
-from emiz.weather import build_metar_from_mission
-from emiz.edit_miz import edit_miz
 
 try:
     __version__ = get_distribution('emiz').version

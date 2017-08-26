@@ -1,4 +1,7 @@
 # coding=utf-8
+"""
+Stupid class I wrote a while back to validate values (dummy me)
+"""
 from os.path import exists
 from re import fullmatch as re_full_match
 
@@ -42,7 +45,7 @@ class Validator:
         if logger is not None:
             self.logger = logger
 
-        if self.type is not None and not type(value) == self.type:
+        if self.type is not None and not type(value) == self.type:  # pylint: disable=unidiomatic-typecheck
             self.error(
                 'invalid type for parameter "{}": {} (value: {}) -- expected {}'.format(param_name, type(value), value,
                                                                                         self.type)
@@ -75,6 +78,13 @@ class Validator:
         return True
 
     def error(self, error_msg):
+        """
+        Outputs error message on own logger. Also raises exceptions if need be.
+
+        Args:
+            error_msg: message to output
+
+        """
         if self.logger is not None:
             self.logger.error(error_msg)
 
@@ -82,16 +92,16 @@ class Validator:
             raise self.exc(error_msg)
 
 
-valid_bool = Validator(_type=bool)
-valid_str = Validator(_type=str)
-valid_int = Validator(_type=int)
-valid_positive_int = Validator(_type=int, _min=0)
-valid_negative_int = Validator(_type=int, _max=0)
-valid_float = Validator(_type=float)
-valid_existing_path = Validator(_path_exists=True)
-valid_list = Validator(_type=list)
-valid_dict = Validator(_type=dict)
-not_a_str = [-1, True, False, None, 1234, dict(), list(), set(), tuple()]
-not_an_int = [True, False, None, '', 'meh', 12.34, dict(), list(), set(), tuple()]
-not_a_positive_int = [True, False, None, '', 'meh', 12.34, -1, -100000, dict(), list(), set(), tuple()]
-not_a_bool = [None, 1, 12.34, 'meh', dict(), list(), set(), tuple()]
+VALID_BOOL = Validator(_type=bool)
+VALID_STR = Validator(_type=str)
+VALID_INT = Validator(_type=int)
+VALID_POSITIVE_INT = Validator(_type=int, _min=0)
+VALID_NEGATIVE_INT = Validator(_type=int, _max=0)
+VALID_FLOAT = Validator(_type=float)
+VALID_EXISTING_PATH = Validator(_path_exists=True)
+VALID_LIST = Validator(_type=list)
+VALID_DICT = Validator(_type=dict)
+NOT_A_STR = [-1, True, False, None, 1234, dict(), list(), set(), tuple()]
+NOT_AN_INT = [True, False, None, '', 'meh', 12.34, dict(), list(), set(), tuple()]
+NOT_A_POSITIVE_INT = [True, False, None, '', 'meh', 12.34, -1, -100000, dict(), list(), set(), tuple()]
+NOT_A_BOOL = [None, 1, 12.34, 'meh', dict(), list(), set(), tuple()]

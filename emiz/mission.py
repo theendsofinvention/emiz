@@ -1,12 +1,12 @@
 # coding=utf-8
-
+# pylint: skip-file
 import calendar
 import logging
 import typing
 from itertools import chain
 from time import gmtime, strftime
 
-from emiz.validator import Validator, valid_bool, valid_float, valid_int, valid_positive_int, valid_str
+from emiz.validator import VALID_BOOL, VALID_FLOAT, VALID_INT, VALID_POSITIVE_INT, VALID_STR, Validator
 
 EPOCH_DELTA = 1306886400
 
@@ -38,7 +38,7 @@ class BaseMissionObject:
         self._countries_by_id = {}
 
     def get_country_by_name(self, country_name):
-        valid_str.validate(country_name, 'get_country_by_name', exc=ValueError)
+        VALID_STR.validate(country_name, 'get_country_by_name', exc=ValueError)
         if country_name not in self._countries_by_name.keys():
             for country in self.countries:
                 assert isinstance(country, Country)
@@ -50,7 +50,7 @@ class BaseMissionObject:
             return self._countries_by_name[country_name]
 
     def get_country_by_id(self, country_id):
-        valid_positive_int.validate(country_id, 'get_country_by_id')
+        VALID_POSITIVE_INT.validate(country_id, 'get_country_by_id')
         if country_id not in self._countries_by_id.keys():
             for country in self.countries:
                 assert isinstance(country, Country)
@@ -74,7 +74,7 @@ class BaseMissionObject:
                 yield unit
 
     def get_group_by_id(self, group_id):
-        valid_positive_int.validate(group_id, 'get_group_by_id', exc=ValueError)
+        VALID_POSITIVE_INT.validate(group_id, 'get_group_by_id', exc=ValueError)
         for group in self.groups:
             assert isinstance(group, Group)
             if group.group_id == group_id:
@@ -88,7 +88,7 @@ class BaseMissionObject:
                 yield group
 
     def get_group_by_name(self, group_name):
-        valid_str.validate(group_name, 'get_group_by_name')
+        VALID_STR.validate(group_name, 'get_group_by_name')
         for group in self.groups:
             assert isinstance(group, Group)
             if group.group_name == group_name:
@@ -96,7 +96,7 @@ class BaseMissionObject:
         return None
 
     def get_unit_by_name(self, unit_name):
-        valid_str.validate(unit_name, 'get_unit_by_name')
+        VALID_STR.validate(unit_name, 'get_unit_by_name')
         for unit in self.units:
             assert isinstance(unit, BaseUnit)
             if unit.unit_name == unit_name:
@@ -104,7 +104,7 @@ class BaseMissionObject:
         return None
 
     def get_unit_by_id(self, unit_id):
-        valid_positive_int.validate(unit_id, 'get_unit_by_id')
+        VALID_POSITIVE_INT.validate(unit_id, 'get_unit_by_id')
         for unit in self.units:
             assert isinstance(unit, BaseUnit)
             if unit.unit_id == unit_id:
@@ -226,7 +226,7 @@ class BaseMissionObject:
 
     @sortie_name.setter
     def sortie_name(self, value):
-        valid_str.validate(value, 'sortie name')
+        VALID_STR.validate(value, 'sortie name')
         self.l10n[self._sortie_name_key] = value
 
 
@@ -347,7 +347,7 @@ class Coalition(BaseMissionObject):
             yield self._countries[k]
 
     def get_country_by_name(self, country_name) -> 'Country':
-        valid_str.validate(country_name, 'get_country_by_name', exc=ValueError)
+        VALID_STR.validate(country_name, 'get_country_by_name', exc=ValueError)
         if country_name not in self._countries_by_name.keys():
             for country in self.countries:
                 assert isinstance(country, Country)
@@ -358,7 +358,7 @@ class Coalition(BaseMissionObject):
             return self._countries_by_name[country_name]
 
     def get_country_by_id(self, country_id) -> 'Country':
-        valid_positive_int.validate(country_id, 'get_country_by_id', exc=ValueError)
+        VALID_POSITIVE_INT.validate(country_id, 'get_country_by_id', exc=ValueError)
         if country_id not in self._countries_by_id.keys():
             for country in self.countries:
                 assert isinstance(country, Country)
@@ -415,28 +415,28 @@ class Coalition(BaseMissionObject):
                 yield unit
 
     def get_group_by_id(self, group_id) -> 'Group':
-        valid_positive_int.validate(group_id, 'get_group_by_id')
+        VALID_POSITIVE_INT.validate(group_id, 'get_group_by_id')
         for group in self.groups:
             assert isinstance(group, Group)
             if group.group_id == group_id:
                 return group
 
     def get_group_by_name(self, group_name) -> 'Group':
-        valid_str.validate(group_name, 'get_group_by_name')
+        VALID_STR.validate(group_name, 'get_group_by_name')
         for group in self.groups:
             assert isinstance(group, Group)
             if group.group_name == group_name:
                 return group
 
     def get_unit_by_name(self, unit_name) -> 'BaseUnit':
-        valid_str.validate(unit_name, 'get_unit_by_name')
+        VALID_STR.validate(unit_name, 'get_unit_by_name')
         for unit in self.units:
             assert isinstance(unit, BaseUnit)
             if unit.unit_name == unit_name:
                 return unit
 
     def get_unit_by_id(self, unit_id) -> 'BaseUnit':
-        valid_positive_int.validate(unit_id, 'get_unit_by_id')
+        VALID_POSITIVE_INT.validate(unit_id, 'get_unit_by_id')
         for unit in self.units:
             assert isinstance(unit, BaseUnit)
             if unit.unit_id == unit_id:
@@ -484,7 +484,7 @@ class GroundControl(BaseMissionObject):
 
     @pilots_control_vehicles.setter
     def pilots_control_vehicles(self, value):
-        valid_bool.validate(value, 'pilots_control_vehicles')
+        VALID_BOOL.validate(value, 'pilots_control_vehicles')
         self._section_ground_control['isPilotControlVehicles'] = value
 
     @property
@@ -689,7 +689,7 @@ class Weather(BaseMissionObject):
 
     @fog_enabled.setter
     def fog_enabled(self, value):
-        valid_bool.validate(value, 'enable_fog')
+        VALID_BOOL.validate(value, 'enable_fog')
         self._section_weather['enable_fog'] = value
 
     @property
@@ -978,7 +978,7 @@ class Static(Country):
 
     @static_id.setter
     def static_id(self, value):
-        valid_int.validate(value, 'groupId')
+        VALID_INT.validate(value, 'groupId')
         self._section_static['groupId'] = value
 
     @property
@@ -1103,7 +1103,7 @@ class Group(Country):
 
     @group_hidden.setter
     def group_hidden(self, value):
-        valid_bool.validate(value, 'property "hidden" for group')
+        VALID_BOOL.validate(value, 'property "hidden" for group')
         self._section_group['hidden'] = value
 
     @property
@@ -1112,7 +1112,7 @@ class Group(Country):
 
     @group_id.setter
     def group_id(self, value):
-        valid_int.validate(value, 'groupId')
+        VALID_INT.validate(value, 'groupId')
         self._section_group['groupId'] = value
 
     @property
@@ -1121,7 +1121,7 @@ class Group(Country):
 
     @group_start_delay.setter
     def group_start_delay(self, value):
-        valid_int.validate(value, 'group_start_delay')
+        VALID_INT.validate(value, 'group_start_delay')
         if value < 0:
             raise ValueError(self.group_name)
         self._section_group['start_time'] = value
@@ -1132,7 +1132,7 @@ class Group(Country):
 
     @group_start_time.setter
     def group_start_time(self, value):
-        valid_int.validate(value, 'group_start_time')
+        VALID_INT.validate(value, 'group_start_time')
         self.group_start_delay = value - self.mission_start_time
 
     @property
@@ -1236,7 +1236,7 @@ class BaseUnit(Group):
 
     @speed.setter
     def speed(self, value):
-        valid_float.validate(value, 'unit speed')
+        VALID_FLOAT.validate(value, 'unit speed')
         self._section_unit['speed'] = value
 
     @property
@@ -1254,7 +1254,7 @@ class BaseUnit(Group):
 
     @unit_id.setter
     def unit_id(self, value):
-        valid_int.validate(value, 'unitId')
+        VALID_INT.validate(value, 'unitId')
         self._section_unit['unitId'] = value
 
     @property
@@ -1263,7 +1263,7 @@ class BaseUnit(Group):
 
     @unit_pos_x.setter
     def unit_pos_x(self, value):
-        valid_float.validate(value, 'unit position X coordinate')
+        VALID_FLOAT.validate(value, 'unit position X coordinate')
         self._section_unit['x'] = value
 
     @property
@@ -1272,7 +1272,7 @@ class BaseUnit(Group):
 
     @unit_pos_y.setter
     def unit_pos_y(self, value):
-        valid_float.validate(value, 'unit position Y coordinate')
+        VALID_FLOAT.validate(value, 'unit position Y coordinate')
         self._section_unit['y'] = value
 
     @property
@@ -1492,7 +1492,7 @@ class FlyingUnit(BaseUnit):
                 yield (k, float(self._section_channels[k]))
 
         def get_frequency(self, channel):
-            valid_positive_int.validate(channel, 'get_frequency')
+            VALID_POSITIVE_INT.validate(channel, 'get_frequency')
             if 1 <= channel <= self.channels_qty:
                 return float(self._section_channels[channel])
             else:
@@ -1501,8 +1501,8 @@ class FlyingUnit(BaseUnit):
                                                                     self.parent_unit.unit_name))
 
         def set_frequency(self, channel, frequency):
-            valid_positive_int.validate(channel, 'set_frequency')
-            valid_float.validate(frequency, 'set_frequency')
+            VALID_POSITIVE_INT.validate(channel, 'set_frequency')
+            VALID_FLOAT.validate(frequency, 'set_frequency')
             if 1 <= channel <= self.channels_qty:
                 # noinspection PyTypeChecker
                 if self.min <= frequency <= self.max:
@@ -1561,7 +1561,7 @@ class FlyingUnit(BaseUnit):
     @livery.setter
     def livery(self, value):
         # TODO validate livery_id
-        valid_str.validate(value, 'unit livery')
+        VALID_STR.validate(value, 'unit livery')
         self._section_unit['livery_id'] = value
 
     @property

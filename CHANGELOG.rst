@@ -2,6 +2,18 @@ Changelog
 =========
 
 
+0.1.6 (2017-08-26)
+------------------
+
+Changes
+~~~~~~~
+- Using edit_miz for batch operations. [132nd-etcher]
+
+Fix
+~~~
+- Remove CLRXXXX from metar string while parsing. [132nd-etcher]
+
+
 0.1.5 (2017-08-26)
 ------------------
 

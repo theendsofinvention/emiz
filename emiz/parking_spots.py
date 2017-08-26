@@ -4,6 +4,7 @@ import math
 import pickle
 from collections import namedtuple
 
+# pylint: skip-file
 # noinspection PyProtectedMember
 from emiz._parking_spots import parkings
 from emiz.mission import Static

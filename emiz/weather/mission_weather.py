@@ -1,8 +1,12 @@
 # coding=utf-8
+"""
+Manage mission weather
+"""
 
 import logging
 import random
 import re
+import typing
 from datetime import date, datetime
 
 from metar.Metar import Metar
@@ -11,17 +15,18 @@ from emiz.miz import Mission, Miz
 
 LOGGER = logging.getLogger('EMIZ').getChild(__name__)
 
-SKY_COVER = {"SKC": (0, 0),
-             "CLR": (0, 0),
-             "NSC": (0, 0),
-             "NCD": (0, 0),
-             "FEW": (1, 3),
-             "SCT": (4, 6),
-             "BKN": (7, 8),
-             "OVC": (9, 10),
-             "///": (0, 0),
-             "VV": (0, 0)
-             }
+SKY_COVER = {
+    "SKC": (0, 0),
+    "CLR": (0, 0),
+    "NSC": (0, 0),
+    "NCD": (0, 0),
+    "FEW": (1, 3),
+    "SCT": (4, 6),
+    "BKN": (7, 8),
+    "OVC": (9, 10),
+    "///": (0, 0),
+    "VV": (0, 0)
+}
 
 Y = 2000
 
@@ -34,21 +39,40 @@ SEASONS = [
 ]
 
 
-def _get_season():
+def _get_season() -> typing.Tuple[str, int]:
+    """
+    Finds the current season based on now() and gives a dummy temperature
+
+    Returns: tuple of season name, temperature
+
+    """
     now = datetime.now().date().replace(year=Y)
     return next((season, temp) for season, temp, (start, end) in SEASONS if start <= now <= end)
 
 
 def _hpa_to_mmhg(pressure) -> int:
+    """
+    Converts pressure in hpa to mmhg
+    Args:
+        pressure: pressure to convert
+
+    Returns: pressure in mmhg
+
+    """
     return int(pressure * 0.75006156130264)
 
 
-class MissionWeather:
-    def __init__(self,
-                 metar: Metar,
-                 min_wind: int = 0,
-                 max_wind: int = 40,
-                 ):
+class MissionWeather:  # pylint: disable=too-many-instance-attributes
+    """
+    Struct for Mission weather
+    """
+
+    def __init__(
+            self,
+            metar: Metar,
+            min_wind: int = 0,
+            max_wind: int = 40,
+    ):
         self.metar = metar
         self.wind_dir = None
         self.wind_speed = None
@@ -69,14 +93,32 @@ class MissionWeather:
         return random.randint(0, 359)
 
     @staticmethod
-    def _reverse_direction(heading) -> int:
+    def reverse_direction(heading: int) -> int:
+        """
+        Inverts a direction in degrees
+
+        Args:
+            heading: original direction
+
+        Returns: direction plus or minus 180°
+
+        """
         if heading >= 180:
             return int(heading - 180)
-        else:
-            return int(heading + 180)
+
+        return int(heading + 180)
 
     @staticmethod
-    def _normalize_direction(heading) -> int:
+    def _normalize_direction(heading: int) -> int:
+        """
+        Make sure that 0 < heading < 360
+
+        Args:
+            heading: base heading
+
+        Returns: corrected heading
+
+        """
         while heading > 359:
             heading = int(heading - 359)
         while heading < 0:
@@ -84,11 +126,31 @@ class MissionWeather:
         return heading
 
     @staticmethod
-    def _gauss(mean, sigma) -> int:
+    def _gauss(mean: int, sigma: int) -> int:
+        """
+        Creates a variation from a base value
+
+        Args:
+            mean: base value
+            sigma: gaussian sigma
+
+        Returns: random value
+
+        """
         return int(random.gauss(mean, sigma))
 
     @staticmethod
-    def _deviate_wind_speed(base_speed, sigma=None) -> int:
+    def _deviate_wind_speed(base_speed: int, sigma: int = None) -> int:
+        """
+        Creates a variation in wind speed
+
+        Args:
+            base_speed: base wind speed
+            sigma: sigma value for gaussian variation
+
+        Returns: random wind speed
+
+        """
         if sigma is None:
             sigma = base_speed / 4
         val = MissionWeather._gauss(base_speed, sigma)
@@ -98,22 +160,42 @@ class MissionWeather:
 
     @staticmethod
     def _deviate_direction(base_heading, sigma) -> int:
+        """
+        Creates a variation in direction
+
+        Args:
+            base_heading: base direction
+            sigma: sigma value for gaussian variation
+
+        Returns: random direction
+
+        """
         val = MissionWeather._gauss(base_heading, sigma)
         val = MissionWeather._normalize_direction(val)
         return val
 
     @property
     def wind_at_ground_level_dir(self) -> int:
+        """
+
+        Returns: direction of wind at ground level
+
+        """
         if self.metar.wind_dir is None:
             LOGGER.info('wind is variable, making a random value')
             val = self._random_direction()
         else:
-            val = self._reverse_direction(self.metar.wind_dir.value())
+            val = self.reverse_direction(self.metar.wind_dir.value())
         self.wind_dir = val
         return val
 
     @property
     def wind_at_ground_level_speed(self) -> int:
+        """
+
+        Returns: speed of wind at ground level
+
+        """
         if self.metar.wind_speed is None:
             LOGGER.info('wind speed is missing, making a random value')
             val = random.randint(self._min_wind, self._max_wind)
@@ -124,6 +206,11 @@ class MissionWeather:
 
     @property
     def qnh(self) -> int:
+        """
+
+        Returns: atmospheric pressure
+
+        """
         if self.metar.press is None:
             LOGGER.info('QNH is missing, returning standard QNH')
             return 760
@@ -131,6 +218,11 @@ class MissionWeather:
 
     @property
     def visibility(self) -> int:
+        """
+
+        Returns: visibility in kilometers
+
+        """
         if self.metar.vis is None:
             LOGGER.debug('visibility is missing, returning maximum')
             return 800000
@@ -140,6 +232,11 @@ class MissionWeather:
         return val
 
     def _parse_precip(self):
+        """
+
+        Sets precipitation and optional minimal cloud density
+
+        """
         if 'rain' in self.metar.present_weather():
             self.precip = 1
             self.force_cloud_density = 5
@@ -155,6 +252,11 @@ class MissionWeather:
             self.force_cloud_density = 9
 
     def _parse_clouds(self):
+        """
+
+        Sets cloud density
+
+        """
         base = 0
         ceiling = 999999
         layers = {}
@@ -173,6 +275,11 @@ class MissionWeather:
 
     @property
     def temperature(self):
+        """
+
+        Sets temperature
+
+        """
         if self.metar.temp is None:
             season, temp = _get_season()
             LOGGER.debug(f'no temperature given, since it is {season}, defaulting to {temp}')
@@ -181,6 +288,11 @@ class MissionWeather:
 
     @property
     def turbulence(self) -> int:
+        """
+
+        Sets turbulence from base wind value
+
+        """
         if self.metar.wind_gust is None:
             return 0
         val = int(self.metar.wind_gust.value('MPS'))
@@ -189,6 +301,15 @@ class MissionWeather:
         return int(min((val - self.wind_speed) * 10, 60))
 
     def apply_to_miz(self, miz):
+        """
+        Applies weather to an opened Miz file (the mission will be mutated)
+
+        Args:
+            miz: source miz
+
+        Returns: True
+
+        """
 
         miz.mission.weather.wind_at_ground_level_dir = self.wind_at_ground_level_dir
         miz.mission.weather.wind_at_ground_level_speed = self.wind_at_ground_level_speed
@@ -217,12 +338,25 @@ class MissionWeather:
         return True
 
 
-def build_metar_from_mission(mission_file: str,
-                             icao: str,
-                             time: str = None,
-                             ):
+def build_metar_from_mission(
+        mission_file: str,
+        icao: str = 'XXXX',
+        time: str = None,
+) -> str:
+    """
+    Builds a dummy METAR string from a mission file
+
+    Args:
+        mission_file: input mission file
+        icao: dummy ICAO (defaults to XXXX)
+        time: dummy time (defaults to now())
+
+    Returns: METAR str
+
+    """
+
     def _get_wind(mission):
-        wind_dir = MissionWeather._reverse_direction(mission.weather.wind_at_ground_level_dir)
+        wind_dir = MissionWeather.reverse_direction(mission.weather.wind_at_ground_level_dir)
         wind_speed = int(mission.weather.wind_at_ground_level_speed)
         return f'{wind_dir:03}{wind_speed:02}MPS'
 

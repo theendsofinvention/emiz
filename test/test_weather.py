@@ -4,12 +4,13 @@ import json
 import os
 
 import pytest
-from hypothesis import given, strategies as st, example
+from hypothesis import strategies as st
+from hypothesis import example, given
+from metar.Metar import Metar
 
 from emiz import Miz
 from emiz.weather import build_metar_from_mission, set_weather_from_icao
 from emiz.weather.mission_weather import MissionWeather
-from metar.Metar import Metar
 from emiz.weather.utils import set_weather_from_metar_str
 
 if os.path.exists('./test_files'):
@@ -25,7 +26,7 @@ OUT_FILE = os.path.join(BASE_PATH, 'weather_output.miz')
 
 @given(heading=st.integers(min_value=0, max_value=359))
 def test_reverse_direction(heading):
-    val = MissionWeather._reverse_direction(heading)
+    val = MissionWeather.reverse_direction(heading)
     assert 0 <= val <= 359
     assert val == heading - 180 or val == heading + 180
     assert type(val) is int
@@ -50,13 +51,8 @@ def test_deviate_wind_speed(base_speed):
 @pytest.mark.parametrize('icao', ['UGTB', 'UGTO', 'UGKO', 'UGSA', 'UGDT', 'URSS'])
 def test_set_weather_from_icao(icao):
     result = set_weather_from_icao(icao, TEST_FILE, OUT_FILE)
-    assert isinstance(result, str)
-    result = json.loads(result)
-    assert isinstance(result, dict)
-    assert result['status'] == 'success'
-    assert result['icao'] == icao
-    assert result['from'] == TEST_FILE
-    assert result['to'] == OUT_FILE
+    assert isinstance(result, tuple)
+    assert result[0] is None
     with Miz(TEST_FILE) as miz:
         miz._encode()
         m1 = miz.mission

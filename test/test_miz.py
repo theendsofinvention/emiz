@@ -53,6 +53,6 @@ class TestMizPath:
     def test_context(self):
         with Miz(TEST_FILE) as miz:
             assert isinstance(miz.mission, Mission)
-            tmpdir = miz.tmpdir.absolute()
+            tmpdir = os.path.abspath(miz.temp_dir)
 
         assert not os.path.exists(tmpdir)

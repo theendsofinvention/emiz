@@ -1,18 +1,41 @@
 # coding=utf-8
+"""
+Allow for batch edit of time and weather of single miz
+"""
 
 import logging
+import typing
 
 from metar.Metar import Metar
+
+from emiz.mission_time import MissionTime
 from emiz.miz import Miz
 from emiz.weather import MissionWeather, parse_metar_string, retrieve_metar
-from emiz.mission_time import MissionTime
 
 LOGGER = logging.getLogger('EMIZ').getChild(__name__)
 
 
-def edit_miz(infile: str, outfile: str = None, metar=None, time=None,
-             min_wind=0, max_wind=40):
+def edit_miz(  # noqa: C901 pylint: disable=too-many-arguments,too-many-branches
+        infile: str,
+        outfile: str = None,
+        metar: typing.Union[str, Metar] = None,  # pylint: disable=bad-whitespace
+        time: str = None,
+        min_wind: int = 0,
+        max_wind: int = 40
+):
+    # noinspection SpellCheckingInspection
+    """
+    Edit an opened MIZ file and sets the time and date and the weather
 
+    Args:
+        infile: source file
+        outfile: output file (will default to source file)
+        metar: metar string, ICAO or object to apply
+        time: time string to apply (YYYYMMDDHHMMSS)
+        min_wind: minimum wind
+        max_wind: maximum wind
+
+    """
     if outfile is None:
         LOGGER.debug(f'editing in place: {infile}')
         outfile = infile
@@ -48,4 +71,3 @@ def edit_miz(infile: str, outfile: str = None, metar=None, time=None,
             if not time.apply_to_miz(miz):
                 return 'error while setting time on mission'
         miz.zip(outfile)
-

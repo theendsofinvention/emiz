@@ -8,7 +8,8 @@ from time import sleep
 from zipfile import BadZipFile
 
 import pytest
-from hypothesis import given, settings, strategies as st
+from hypothesis import strategies as st
+from hypothesis import given, settings
 
 from emiz.mission import BaseUnit, Coalition, Country, FlyingUnit, Group, Mission
 from emiz.miz import ENCODING, Miz
@@ -194,10 +195,10 @@ class TestMizBasics:
     def test_temp_dir_cleaning(self):
         mis = Miz(TEST_FILE)
         mis.unzip()
-        assert mis.tmpdir.exists()
-        assert not mis.tmpdir.glob('*') == []
+        assert os.path.exists(mis.temp_dir)
+        assert os.listdir(mis.temp_dir)
         mis._remove_temp_dir()
-        assert not mis.tmpdir.exists()
+        assert not os.path.exists(mis.temp_dir)
 
 
 # noinspection PyPep8Naming,PyShadowingNames

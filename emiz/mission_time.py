@@ -1,10 +1,10 @@
 # coding=utf-8
-
+"""
+Manages date and time in a mission
+"""
 import datetime
 import logging
 import re
-
-from emiz.miz import Miz
 
 LOGGER = logging.getLogger('EMIZ').getChild(__name__)
 
@@ -19,11 +19,24 @@ RE_INPUT_STRING = re.compile(r'^'
 
 
 class MissionTime:
+    """
+    Represents date and time in a mission
+    """
+
     def __init__(self, moment: datetime.datetime):
         self.date = datetime.date(moment.year, moment.month, moment.day)
         self.time = moment.hour * 3600 + moment.minute * 60 + moment.second
 
     def apply_to_miz(self, miz):
+        """
+        Applies this datetime to a Miz object (it will be mutated in place)
+
+        Args:
+            miz: MIZ object to mutate
+
+        Returns: True
+
+        """
         miz.mission.day = self.date.day
         miz.mission.month = self.date.month
         miz.mission.year = self.date.year
@@ -32,7 +45,19 @@ class MissionTime:
         return True
 
     @staticmethod
-    def from_string(input_str):
+    def from_string(input_str) -> 'MissionTime':
+        # noinspection SpellCheckingInspection
+        """
+        Creates a MissionTime instance from a string
+
+        Format: YYYYMMDDHHMMSS
+
+        Args:
+            input_str: string to parse
+
+        Returns: MissionTime instance
+
+        """
         match = RE_INPUT_STRING.match(input_str)
         if not match:
             raise ValueError(f'badly formatted date/time: {input_str}')
@@ -49,5 +74,10 @@ class MissionTime:
         )
 
     @staticmethod
-    def now():
+    def now() -> 'MissionTime':
+        """
+
+        Returns: MissionTime object with the current time
+
+        """
         return MissionTime(datetime.datetime.now())
