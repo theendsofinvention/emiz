@@ -1,5 +1,5 @@
 # coding=utf-8
-import json
+import re
 import logging
 
 import requests
@@ -61,6 +61,8 @@ def set_weather_from_icao(station_icao, in_file, out_file):
 
 
 def parse_metar_string(metar_string):
+    metar_string = re.sub(r' CLR[\d]+ ', ' ', metar_string)
+    print(metar_string)
     try:
         return None, Metar.Metar(metar_string)
     except Metar.ParserError:
