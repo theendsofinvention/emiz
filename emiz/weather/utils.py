@@ -29,21 +29,26 @@ def retrieve_metar(station_icao):
         return None, resp.content.decode().split('\n')[1]
 
 
+def set_weather_from_metar_obj(metar: Metar.Metar, in_file, out_file):
+    LOGGER.debug(f'METAR: {metar.code}')
+    LOGGER.debug(f'applying metar: {in_file} -> {out_file}')
+    try:
+        if MissionWeather(metar).apply_to_miz(in_file, out_file):
+            return None, f'successfully applied METAR to {in_file}'
+    except ValueError:
+        error = f'Unable to apply METAR string to the mission.\n'
+        f'This is most likely due to a freak value, this feature is still experimental.\n'
+        f'I will fix it ASAP !'
+        return error, None
+
+
+
 def set_weather_from_metar_str(metar_str, in_file, out_file):
     error, metar = parse_metar_string(metar_str)
     if error:
         return error, None
     else:
-        LOGGER.debug(f'METAR: {metar.code}')
-        LOGGER.debug(f'applying metar: {in_file} -> {out_file}')
-        try:
-            if MissionWeather(metar).apply_to_miz(in_file, out_file):
-                return None, f'successfully applied METAR to {in_file}'
-        except ValueError:
-            error = f'Unable to apply METAR string to the mission.\n'
-            f'This is most likely due to a freak value, this feature is still experimental.\n'
-            f'I will fix it ASAP !'
-            return error, None
+        return set_weather_from_metar_obj(metar, in_file, out_file)
 
 
 def set_weather_from_icao(station_icao, in_file, out_file):
