@@ -188,39 +188,33 @@ class MissionWeather:
             return 0
         return int(min((val - self.wind_speed) * 10, 60))
 
-    def apply_to_miz(self, infile: str, outfile: str = None):
+    def apply_to_miz(self, miz):
 
-        if outfile is None:
-            outfile = infile
+        miz.mission.weather.wind_at_ground_level_dir = self.wind_at_ground_level_dir
+        miz.mission.weather.wind_at_ground_level_speed = self.wind_at_ground_level_speed
+        miz.mission.weather.wind_at2000_dir = self._deviate_direction(self.wind_dir, 40)
+        miz.mission.weather.wind_at2000_speed = self._deviate_wind_speed(5 + self.wind_speed * 2)
+        miz.mission.weather.wind_at8000_dir = self._deviate_direction(self.wind_dir, 80)
+        miz.mission.weather.wind_at8000_speed = self._deviate_wind_speed(10 + self.wind_speed * 3)
+        miz.mission.weather.turbulence_at_ground_level = self.turbulence
 
-        with Miz(infile) as miz:
-            miz.mission.weather.wind_at_ground_level_dir = self.wind_at_ground_level_dir
-            miz.mission.weather.wind_at_ground_level_speed = self.wind_at_ground_level_speed
-            miz.mission.weather.wind_at2000_dir = self._deviate_direction(self.wind_dir, 40)
-            miz.mission.weather.wind_at2000_speed = self._deviate_wind_speed(5 + self.wind_speed * 2)
-            miz.mission.weather.wind_at8000_dir = self._deviate_direction(self.wind_dir, 80)
-            miz.mission.weather.wind_at8000_speed = self._deviate_wind_speed(10 + self.wind_speed * 3)
-            miz.mission.weather.turbulence_at_ground_level = self.turbulence
+        miz.mission.weather.atmosphere_type = 0
+        miz.mission.weather.qnh = self.qnh
 
-            miz.mission.weather.atmosphere_type = 0
-            miz.mission.weather.qnh = self.qnh
+        miz.mission.weather.visibility = self.visibility
+        miz.mission.weather.fog_thickness = 1000
+        if self.fog_vis:
+            miz.mission.weather.fog_visibility = self.fog_vis
+            miz.mission.weather.fog_enabled = True
 
-            miz.mission.weather.visibility = self.visibility
-            miz.mission.weather.fog_thickness = 1000
-            if self.fog_vis:
-                miz.mission.weather.fog_visibility = self.fog_vis
-                miz.mission.weather.fog_enabled = True
+        miz.mission.weather.cloud_density = max(self.force_cloud_density, self.cloud_density)
+        miz.mission.weather.cloud_thickness = self.cloud_thickness
+        miz.mission.weather.cloud_base = self.cloud_base
+        miz.mission.weather.precipitations = self.precip
 
-            miz.mission.weather.cloud_density = max(self.force_cloud_density, self.cloud_density)
-            miz.mission.weather.cloud_thickness = self.cloud_thickness
-            miz.mission.weather.cloud_base = self.cloud_base
-            miz.mission.weather.precipitations = self.precip
+        miz.mission.weather.temperature = self.temperature
 
-            miz.mission.weather.temperature = self.temperature
-
-            miz.zip(outfile)
-
-            return True
+        return True
 
 
 def build_metar_from_mission(mission_file: str,

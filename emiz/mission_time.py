@@ -23,19 +23,13 @@ class MissionTime:
         self.date = datetime.date(moment.year, moment.month, moment.day)
         self.time = moment.hour * 3600 + moment.minute * 60 + moment.second
 
-    def apply_to_miz(self, infile: str, outfile: str = None):
-        if outfile is None:
-            outfile = infile
+    def apply_to_miz(self, miz):
+        miz.mission.day = self.date.day
+        miz.mission.month = self.date.month
+        miz.mission.year = self.date.year
+        miz.mission.mission_start_time = self.time
 
-        with Miz(infile) as miz:
-            miz.mission.day = self.date.day
-            miz.mission.month = self.date.month
-            miz.mission.year = self.date.year
-            miz.mission.mission_start_time = self.time
-
-            miz.zip(outfile)
-
-            return True
+        return True
 
     @staticmethod
     def from_string(input_str):

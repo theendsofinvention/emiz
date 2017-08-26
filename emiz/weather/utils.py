@@ -1,11 +1,12 @@
 # coding=utf-8
-import re
 import logging
+import re
 
 import requests
 from metar import Metar
 
 from emiz.weather.mission_weather import MissionWeather
+from emiz.miz import Miz
 
 LOGGER = logging.getLogger('EMIZ').getChild(__name__)
 BASE_TAF_URL = r'http://tgftp.nws.noaa.gov/data/forecasts/taf/stations/{station}.TXT'
@@ -29,18 +30,21 @@ def retrieve_metar(station_icao):
         return None, resp.content.decode().split('\n')[1]
 
 
-def set_weather_from_metar_obj(metar: Metar.Metar, in_file, out_file):
+def set_weather_from_metar_obj(metar: Metar.Metar, in_file, out_file=None):
+    if out_file is None:
+        out_file = in_file
     LOGGER.debug(f'METAR: {metar.code}')
     LOGGER.debug(f'applying metar: {in_file} -> {out_file}')
     try:
-        if MissionWeather(metar).apply_to_miz(in_file, out_file):
+        with Miz(in_file) as miz:
+            MissionWeather(metar).apply_to_miz(miz)
+            miz.zip(out_file)
             return None, f'successfully applied METAR to {in_file}'
     except ValueError:
         error = f'Unable to apply METAR string to the mission.\n'
         f'This is most likely due to a freak value, this feature is still experimental.\n'
         f'I will fix it ASAP !'
         return error, None
-
 
 
 def set_weather_from_metar_str(metar_str, in_file, out_file):
