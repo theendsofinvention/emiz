@@ -47,4 +47,8 @@ Fix
 ------------------
 - Add MissionWeather to exports. [132nd-etcher]
 - Dev: initial commit. [132nd-etcher]
+
+
+0.1.0 (2017-08-19)
+------------------
 - Initial commit. [132nd-etcher]
