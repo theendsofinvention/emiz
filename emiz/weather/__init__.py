@@ -2,6 +2,6 @@
 
 
 from .mission_weather import build_metar_from_mission
-from .utils import set_weather_from_metar_str, set_weather_from_icao, retrieve_metar
+from .utils import set_weather_from_metar_str, set_weather_from_icao, retrieve_metar, parse_metar_string
 
 
