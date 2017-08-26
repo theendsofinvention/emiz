@@ -2,6 +2,14 @@ Changelog
 =========
 
 
+0.1.5 (2017-08-26)
+------------------
+
+Fix
+~~~
+- Catch ParserError while parsing for metar string. [132nd-etcher]
+
+
 0.1.4 (2017-08-24)
 ------------------
 - Add mission time. [132nd-etcher]
