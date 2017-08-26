@@ -5,7 +5,7 @@ import json
 import logging
 
 import requests
-from metar.Metar import Metar
+from metar import Metar
 from .mission_weather import MissionWeather, build_metar_from_mission
 
 LOGGER = logging.getLogger('EMIZ').getChild(__name__)
@@ -37,10 +37,10 @@ def set_weather_from_metar_str(metar_str, in_file, out_file):
         'to': out_file,
     }
     try:
-        metar = Metar(metar_str)
+        metar = Metar.Metar(metar_str)
         result['icao'] = metar.station_id
-    except:
-        LOGGER.error('Failed to parse METAR string. This is a bug in the METAR library, I will take a look ASAP')
+    except Metar.ParserError:
+        LOGGER.error(f'failed to parse METAR from string: {metar_str}')
         result['status'] = 'failed'
     else:
         LOGGER.debug(f'METAR: {metar.code}')
