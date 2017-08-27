@@ -2,6 +2,14 @@ Changelog
 =========
 
 
+0.1.8 (2017-08-27)
+------------------
+
+Fix
+~~~
+- Catch OSError while editing MIZ file. [132nd-etcher]
+
+
 0.1.6 (2017-08-26)
 ------------------
 
