@@ -70,4 +70,8 @@ def edit_miz(  # noqa: C901 pylint: disable=too-many-arguments,too-many-branches
         if time:
             if not time.apply_to_miz(miz):
                 return 'error while setting time on mission'
-        miz.zip(outfile)
+
+        try:
+            miz.zip(outfile)
+        except OSError:
+            return f'permission error: cannot edit "{outfile}"; maybe it is in use ?'
