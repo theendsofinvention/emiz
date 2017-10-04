@@ -125,7 +125,6 @@ def parse_metar_string(metar_string) -> typing.Tuple[typing.Union[None, str], ty
 
     """
     metar_string = re.sub(r' CLR[\d]+ ', ' ', metar_string)
-    print(metar_string)
     try:
         return None, Metar.Metar(metar_string)
     except Metar.ParserError:
