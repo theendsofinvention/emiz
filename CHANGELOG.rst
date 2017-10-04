@@ -2,6 +2,15 @@ Changelog
 =========
 
 
+0.1.11 (2017-10-04)
+-------------------
+
+New
+~~~
+- Added custom METAR class to handle printing pressure with all units.
+  [132nd-etcher]
+
+
 0.1.8 (2017-08-27)
 ------------------
 
