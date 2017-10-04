@@ -1,4 +1,5 @@
 # coding=utf-8
+# pylint: skip-file
 
 from metar.Datatypes import UnitsError, pressure
 from metar.Metar import Metar
@@ -9,7 +10,7 @@ class CustomPressure(pressure):
 
     def value(self, units=None):
         """Return the pressure in the specified units."""
-        if units == None:
+        if units is None:
             return self._value
         else:
             if not units.upper() in CustomPressure.legal_units:
@@ -32,7 +33,6 @@ class CustomPressure(pressure):
         else:
             raise UnitsError("unrecognized pressure unit: '" + units + "'")
 
-
     def string(self, units=None):
         """Return a string representation of the pressure, using the given units."""
         if not units:
@@ -53,12 +53,11 @@ class CustomPressure(pressure):
 
 
 class CustomMetar(Metar):
-
     def __init__(self, metarcode, month=None, year=None, utcdelta=None):
         Metar.__init__(self, metarcode, month, year, utcdelta)
         self.press = CustomPressure(self.press.value('mb'))
 
-    def string(self):
+    def string(self):  # noqa: C901
         """
         Return a human-readable version of the decoded report.
         """
