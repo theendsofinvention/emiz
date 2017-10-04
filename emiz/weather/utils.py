@@ -11,6 +11,7 @@ from metar import Metar
 
 from emiz.miz import Miz
 from emiz.weather.mission_weather import MissionWeather
+from emiz.weather.custom_metar import CustomMetar
 
 LOGGER = logging.getLogger('EMIZ').getChild(__name__)
 BASE_TAF_URL = r'http://tgftp.nws.noaa.gov/data/forecasts/taf/stations/{station}.TXT'
@@ -126,6 +127,6 @@ def parse_metar_string(metar_string) -> typing.Tuple[typing.Union[None, str], ty
     """
     metar_string = re.sub(r' CLR[\d]+ ', ' ', metar_string)
     try:
-        return None, Metar.Metar(metar_string)
+        return None, CustomMetar(metar_string)
     except Metar.ParserError:
         return f'invalid METAR string: {metar_string}', None
