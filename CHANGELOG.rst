@@ -2,6 +2,23 @@ Changelog
 =========
 
 
+0.1.13 (2017-12-17)
+-------------------
+
+Fix
+~~~
+- Fix issue when no clouds were present. [132nd-etcher]
+
+
+0.1.12 (2017-10-04)
+-------------------
+
+New
+~~~
+- Added custom METAR class to handle printing pressure with all units.
+  [132nd-etcher]
+
+
 0.1.11 (2017-10-04)
 -------------------
 
