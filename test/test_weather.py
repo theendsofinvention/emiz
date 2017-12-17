@@ -48,7 +48,7 @@ def test_deviate_wind_speed(base_speed):
     assert type(val) is int
 
 
-@pytest.mark.parametrize('icao', ['UGTB', 'UGTO', 'UGKO', 'UGSA', 'UGDT', 'URSS'])
+@pytest.mark.parametrize('icao', ['UGTB', 'UGTO', 'UGKO', 'UGSA', 'UGDT', 'URSS', 'EBBR'])
 def test_set_weather_from_icao(icao):
     result = set_weather_from_icao(icao, TEST_FILE, OUT_FILE)
     assert isinstance(result, tuple)
