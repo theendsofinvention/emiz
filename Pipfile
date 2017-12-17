@@ -1,0 +1,24 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+certifi = "*"
+chardet = "*"
+click = "*"
+idna = "*"
+metar = "*"
+mpmath = "*"
+natsort = "*"
+requests = "*"
+"urllib3" = "*"
+
+
+[dev-packages]
+
+epab = "*"
+
