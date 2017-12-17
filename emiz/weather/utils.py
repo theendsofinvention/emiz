@@ -10,8 +10,8 @@ import requests
 from metar import Metar
 
 from emiz.miz import Miz
-from emiz.weather.mission_weather import MissionWeather
 from emiz.weather.custom_metar import CustomMetar
+from emiz.weather.mission_weather import MissionWeather
 
 LOGGER = logging.getLogger('EMIZ').getChild(__name__)
 BASE_TAF_URL = r'http://tgftp.nws.noaa.gov/data/forecasts/taf/stations/{station}.TXT'

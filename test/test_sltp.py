@@ -2,9 +2,9 @@
 
 import os
 
-import datadiff
 import pytest
 
+import datadiff
 from emiz.sltp import SLTP, SLTPParsingError
 
 if os.path.exists('./test_files'):

@@ -73,5 +73,6 @@ def edit_miz(  # noqa: C901 pylint: disable=too-many-arguments,too-many-branches
 
         try:
             miz.zip(outfile)
+            return ''
         except OSError:
             return f'permission error: cannot edit "{outfile}"; maybe it is in use ?'

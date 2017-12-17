@@ -17,6 +17,7 @@ LOGGER = logging.getLogger('EMIZ').getChild(__name__)
 ENCODING = 'iso8859_15'
 
 
+# pylint: disable=too-many-instance-attributes
 class Miz:
     """
     Manage MIZ files
@@ -65,11 +66,12 @@ class Miz:
                 os.path.abspath(self.temp_dir)))
             LOGGER.error('{}\n{}'.format(exc_type, exc_val))
             return False
-        else:
-            LOGGER.debug('closing Mission object context')
-            if not self.keep_temp_dir:
-                LOGGER.debug('removing temp dir: {}'.format(os.path.abspath(self.temp_dir)))
-                self._remove_temp_dir()
+
+        LOGGER.debug('closing Mission object context')
+        if not self.keep_temp_dir:
+            LOGGER.debug('removing temp dir: {}'.format(os.path.abspath(self.temp_dir)))
+            self._remove_temp_dir()
+        return True
 
     @property
     def mission_file(self):
@@ -246,7 +248,7 @@ class Miz:
 
             try:
                 zip_file.extract(item, os.path.abspath(self.temp_dir))
-            except:
+            except:  # noqa: E722
                 LOGGER.error('failed to extract archive member: {}'.format(item.filename))
                 raise
 
@@ -280,7 +282,7 @@ class Miz:
         except BadZipFile:
             raise BadZipFile(self.miz_path)
 
-        except:
+        except:  # noqa: E722
             LOGGER.exception('error while unzipping miz file: {}'.format(self.miz_path))
             raise
 

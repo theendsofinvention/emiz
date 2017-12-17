@@ -6,6 +6,7 @@ from os.path import exists
 from re import fullmatch as re_full_match
 
 
+# pylint: disable=too-many-instance-attributes
 class Validator:
     """Validates many kind of values against pre-defined conditions, raises Exception and logs errors"""
 

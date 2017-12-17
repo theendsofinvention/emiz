@@ -339,6 +339,7 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
         return True
 
 
+# pylint: disable=too-many-locals
 def build_metar_from_mission(
         mission_file: str,
         icao: str = 'XXXX',
