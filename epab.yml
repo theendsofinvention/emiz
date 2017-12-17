@@ -4,5 +4,6 @@ doc:
   folder: './emiz-doc'
 
 test:
-  runner: 'pytest'
-  av_runner: 'pytest --long'
+  runner_options:
+  av_runner_options:
+    - '--long'
