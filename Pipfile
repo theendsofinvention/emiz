@@ -21,3 +21,4 @@ requests = "*"
 [dev-packages]
 
 epab = "*"
+datadiff = "*"
