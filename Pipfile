@@ -21,4 +21,3 @@ requests = "*"
 [dev-packages]
 
 epab = "*"
-
