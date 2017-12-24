@@ -6,7 +6,7 @@ Etcher's MIZ library
 from emiz.edit_miz import edit_miz
 from emiz.weather import build_metar_from_mission
 from emiz.weather.utils import parse_metar_string, retrieve_metar
-from ._version import get_versions
+from ._e_version import get_versions
 from .miz import Mission, Miz
 from .parking_spots import parkings
 
