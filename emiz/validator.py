@@ -48,33 +48,29 @@ class Validator:
 
         if self.type is not None and not type(value) == self.type:  # pylint: disable=unidiomatic-typecheck
             self.error(
-                'invalid type for parameter "{}": {} (value: {}) -- expected {}'.format(param_name, type(value), value,
-                                                                                        self.type)
+                f'invalid type for parameter "{param_name}": {type(value)} (value: {value}) -- expected {self.type}'
             )
 
         if self.instance is not None and not isinstance(value, self.instance):
             self.error(
-                'invalid instance for parameter "{}": {} (value: {}) -- expected {}'.format(param_name, type(value),
-                                                                                            value, self.instance)
+                f'invalid instance for parameter "{param_name}": {type(value)} (value: {value})'
+                f' -- expected {self.instance}'
             )
 
         if self.min is not None and value < self.min:
-            self.error('invalid value for parameter "{}" (under minima): {}'.format(param_name, value))
+            self.error(f'invalid value for parameter "{param_name}" (under minima of {self.min}): {value}')
 
         if self.max is not None and value > self.max:
-            self.error('invalid value for parameter "{}" (over maxima): {}'.format(param_name, value))
+            self.error(f'invalid value for parameter "{param_name}" (over maxima if {self.max}): {value}')
 
         if self.regex is not None and not re_full_match(self.regex, value):
-            self.error('invalid value for parameter "{}" (should match: "{}"): {}'
-                       .format(param_name, self.regex, value))
+            self.error(f'invalid value for parameter "{param_name}" (should match: "{self.regex}"): {value}')
 
         if self.in_list is not None and value not in self.in_list:
-            self.error(
-                'invalid value for parameter "{}"; "{}" is not in list: {}'.format(param_name, value, self.in_list)
-            )
+            self.error(f'invalid value for parameter "{param_name}"; "{value}" is not in list: {self.in_list}')
 
         if self.path_exists and not exists(value):
-            self.error('"{}" does not exist: {}'.format(param_name, value))
+            self.error(f'"{param_name}" file does not exist: {value}')
 
         return True
 
