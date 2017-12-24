@@ -5,22 +5,138 @@ Access to AVWX API
 https://avwx.rest/documentation
 """
 
+import string
 import json
-from collections import namedtuple
+from collections import defaultdict
 
 import requests
 import requests.adapters
 
 from emiz import MAIN_LOGGER
+from elib.custom_random import random_string
 
 LOGGER = MAIN_LOGGER.getChild(__name__)
 
 
-AVWXResult = namedtuple('AVWXResult', 'Meta, Altimeter, CloudList, Dewpoint, FlightRules, Info, OtherList, RawReport,'
-                                      'Remarks, RemarksInfo, RunwayVisList, Speech, Station, Summary, Temperature,'
-                                      'Time, Units, Visibility, WindDirection, WindGust, WindSpeed,'
-                                      'WindVariableDir,City, Country, Elevation, IATA, ICAO, Latitude,'
-                                      'Longitude, Name, Priority, State')
+PHONETIC = {'A': 'Alpha', 'B': 'Bravo', 'C': 'Charlie', 'D': 'Delta', 'E': 'Echo', 'F': 'Foxtrot', 'G': 'Golf',
+            "H": "Hotel", 'I': 'India', 'J': 'Juliet', 'K': 'Kilo', 'L': 'Lima', 'M': 'Mike', 'N': 'November',
+            'O': 'Oscar', 'P': 'Papa', 'Q': 'Quebec', 'R': 'Romeo', 'S': 'Sierra', 'T': 'Tango', 'U': 'Uniform',
+            'V': 'Victor', 'W': 'Whiskey', 'X': 'Xray', 'Y': 'Yankee', 'Z': 'Zulu'}
+
+
+class AVWXProp:
+    def __init__(self, func):
+        self.func = func
+
+    def __get__(self, obj, _):
+        if obj is None:
+            return self
+        return obj._data[self.func.__name__]
+
+
+# noinspection PyMissingOrEmptyDocstring
+class AVWXResult:
+    default_value = 'NOTSET'
+
+    @staticmethod
+    def default_factory():
+        return AVWXResult.default_value
+
+    def __init__(self, **kwargs):
+        self._data = defaultdict(default_factory=self.default_factory)
+        self._data.update(kwargs)
+
+    @AVWXProp
+    def altimeter(self) -> str:
+        pass
+
+    @AVWXProp
+    def cloudlist(self) -> list:
+        pass
+
+    @AVWXProp
+    def dewpoint(self) -> str:
+        pass
+
+    @AVWXProp
+    def flightrules(self) -> str:
+        pass
+
+    @AVWXProp
+    def info(self) -> dict:
+        pass
+
+    @AVWXProp
+    def meta(self) -> dict:
+        pass
+
+    @AVWXProp
+    def otherlist(self) -> list:
+        pass
+
+    @AVWXProp
+    def rawreport(self) -> str:
+        pass
+
+    @AVWXProp
+    def remarks(self) -> str:
+        pass
+
+    @AVWXProp
+    def remarksinfo(self) -> dict:
+        pass
+
+    @AVWXProp
+    def runwayvislist(self) -> list:
+        pass
+
+    @AVWXProp
+    def speech(self) -> str:
+        pass
+
+    @AVWXProp
+    def station(self) -> str:
+        pass
+
+    @AVWXProp
+    def summary(self) -> str:
+        pass
+
+    @AVWXProp
+    def temperature(self) -> str:
+        pass
+
+    @AVWXProp
+    def time(self) -> str:
+        pass
+
+    @AVWXProp
+    def translations(self) -> dict:
+        pass
+
+    @AVWXProp
+    def units(self) -> dict:
+        pass
+
+    @AVWXProp
+    def visibility(self) -> str:
+        pass
+
+    @AVWXProp
+    def winddirection(self) -> str:
+        pass
+
+    @AVWXProp
+    def windgust(self) -> str:
+        pass
+
+    @AVWXProp
+    def windspeed(self) -> str:
+        pass
+
+    @AVWXProp
+    def windvariabledir(self) -> list:
+        pass
 
 
 # pylint: disable=too-few-public-methods
@@ -34,12 +150,28 @@ class AVWX:
     s.mount('https://avwx.rest', requests.adapters.HTTPAdapter(max_retries=10))
 
     @staticmethod
-    def _query(url) -> dict:
+    def _query(url, params: dict = None) -> AVWXResult:
         LOGGER.debug(f'querying: {url}')
-        req = AVWX.s.get(url, timeout=2)
+        req = AVWX.s.get(url, timeout=2, params=params)
         if not req.ok:
-            raise ConnectionError(f'failed to retrieve: {url}')
-        return json.loads(req.content)
+            msg = f'failed to retrieve: {url}'
+            LOGGER.error(msg)
+            raise ConnectionError(msg)
+        LOGGER.debug('parsing data')
+        orig_data = json.loads(req.content)
+        new_data = {}
+        LOGGER.debug('sanitizing data keys')
+        for key in orig_data:
+            new_key = str(key).replace('-', '')
+            new_key = new_key.lower()
+            new_data[new_key] = orig_data[key]
+        try:
+            LOGGER.debug('returning AVWXResult instance')
+            return AVWXResult(**new_data)
+        except TypeError:
+            import pprint
+            LOGGER.error(f'invalid data was:\n{pprint.pformat(orig_data)}')
+            raise
 
     @staticmethod
     def query_icao(icao: str) -> AVWXResult:
@@ -52,21 +184,31 @@ class AVWX:
         Returns: AVWXResult instance
 
         """
-        data = AVWX._query(f'https://avwx.rest/api/metar/{icao}?options=info,speech,summary')
-        for key in data:
-            if '-' in key:
-                new_key = str(key).replace('-', '')
-                data[new_key] = data[key]
-                del data[key]
-        try:
-            data.update(data['Info'])
-        except KeyError:
-            import pprint
-            LOGGER.error(f'data is missing "Info":\n{pprint.pformat(data)}')
-            raise
-        try:
-            return AVWXResult(**data)
-        except TypeError:
-            import pprint
-            LOGGER.error(f'invalid data was:\n{pprint.pformat(data)}')
-            raise
+        params = {
+            'options': 'info,speech,summary,translate'
+        }
+        LOGGER.info(f'getting METAR info for ICAO: {icao}')
+        return AVWX._query(f'https://avwx.rest/api/metar/{icao}', params=params)
+
+    @staticmethod
+    def metar_to_speech(metar: str) -> str:
+        """
+        Creates a speakable text from a METAR
+
+        Args:
+            metar: METAR string to use
+
+        Returns: speakable METAR for TTS
+
+        """
+        LOGGER.info(f'getting speech text from METAR: {metar}')
+        params = {
+            'report': metar,
+            'options': 'info,speech,summary'
+        }
+        result = AVWX._query(f'https://avwx.rest/api/parse/metar', params=params)
+        intro = f'Automated weather bulletin for {result.info["City"]} {result.info["Name"]}.'
+        identifier = f'Advise you have information {PHONETIC[random_string(1, string.ascii_uppercase)]}.'
+        speech = f'{intro} {result.speech}. {identifier}'
+        LOGGER.debug(f'resulting speech: {speech}')
+        return speech
