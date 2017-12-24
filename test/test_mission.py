@@ -163,18 +163,21 @@ class TestMizBasics:
         with Miz(LARGE_FILE, keep_temp_dir=True) as miz:
             out_file = miz.zip()
         assert Path(out_file).exists()
-        with Miz(out_file) as miz2:
-            assert miz.mission.d == miz2.mission.d
-            miz.mission.weather.cloud_density = 4
-            assert not miz.mission.d == miz2.mission.d
-            sleep(1)
-            m1 = miz.mission_file
-            m2 = miz2.mission_file
-            with open(m1, encoding=ENCODING) as _f:
-                t1 = _f.read()
-            with open(m2, encoding=ENCODING) as _f:
-                t2 = _f.read()
-            assert t1 == t2
+        try:
+            with Miz(out_file) as miz2:
+                assert miz.mission.d == miz2.mission.d
+                miz.mission.weather.cloud_density = 4
+                assert not miz.mission.d == miz2.mission.d
+                sleep(1)
+                m1 = miz.mission_file
+                m2 = miz2.mission_file
+                with open(m1, encoding=ENCODING) as _f:
+                    t1 = _f.read()
+                with open(m2, encoding=ENCODING) as _f:
+                    t2 = _f.read()
+                assert t1 == t2
+        finally:
+            Path(out_file).unlink()
 
     def test_is_unzipped(self):
         mis = Miz(TEST_FILE)
