@@ -207,7 +207,7 @@ class AVWX:
             'options': 'info,speech,summary'
         }
         result = AVWX._query(f'https://avwx.rest/api/parse/metar', params=params)
-        intro = f'Automated traffic information service for {result.info["City"]} {result.info["Name"]}.'
+        intro = f'ATIS information for {result.info["City"]} {result.info["Name"]}.'
         identifier = f'Advise you have information {PHONETIC[random_string(1, string.ascii_uppercase)]}.'
         speech = f'{intro} {result.speech}. {identifier}'
         LOGGER.debug(f'resulting speech: {speech}')
