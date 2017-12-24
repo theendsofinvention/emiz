@@ -2,11 +2,11 @@
 # pylint: skip-file
 # FIXME: pylint the shit out of this
 import calendar
-from emiz import MAIN_LOGGER
 import typing
 from itertools import chain
 from time import gmtime, strftime
 
+from emiz import MAIN_LOGGER
 from emiz.validator import VALID_BOOL, VALID_FLOAT, VALID_INT, VALID_POSITIVE_INT, VALID_STR, Validator
 
 EPOCH_DELTA = 1306886400

@@ -3,7 +3,6 @@
 Manage mission weather
 """
 
-from emiz import MAIN_LOGGER
 import random
 import re
 import typing
@@ -11,6 +10,7 @@ from datetime import date, datetime
 
 from metar.Metar import Metar
 
+from emiz import MAIN_LOGGER
 from emiz.miz import Mission, Miz
 
 LOGGER = MAIN_LOGGER.getChild(__name__)

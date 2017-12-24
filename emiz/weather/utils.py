@@ -2,13 +2,13 @@
 """
 Utility function for weather
 """
-from emiz import MAIN_LOGGER
 import re
 import typing
 
 import requests
 from metar import Metar
 
+from emiz import MAIN_LOGGER
 from emiz.miz import Miz
 from emiz.weather.custom_metar import CustomMetar
 from emiz.weather.mission_weather import MissionWeather

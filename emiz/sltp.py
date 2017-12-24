@@ -2,14 +2,14 @@
 # pylint: skip-file
 # FIXME: Pylint
 """Simple Lua Python Parser"""
-from emiz import MAIN_LOGGER
 import re
 
 import mpmath
 from natsort import natsorted
 
-LOGGER = MAIN_LOGGER.getChild(__name__)
+from emiz import MAIN_LOGGER
 
+LOGGER = MAIN_LOGGER.getChild(__name__)
 
 
 # noinspection SpellCheckingInspection

@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import pytest
+
 from emiz.weather import AVWX, AVWXResult
 
 

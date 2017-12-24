@@ -3,11 +3,11 @@
 Allow for batch edit of time and weather of single miz
 """
 
-from emiz import MAIN_LOGGER
 import typing
 
 from metar.Metar import Metar
 
+from emiz import MAIN_LOGGER
 from emiz.mission_time import MissionTime
 from emiz.miz import Miz
 from emiz.weather import MissionWeather, parse_metar_string, retrieve_metar

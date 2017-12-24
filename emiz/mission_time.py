@@ -3,8 +3,9 @@
 Manages date and time in a mission
 """
 import datetime
-from emiz import MAIN_LOGGER
 import re
+
+from emiz import MAIN_LOGGER
 
 LOGGER = MAIN_LOGGER.getChild(__name__)
 

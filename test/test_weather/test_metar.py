@@ -9,7 +9,6 @@ from emiz import Miz
 from emiz.weather import build_metar_from_mission, set_weather_from_icao
 from emiz.weather.utils import set_weather_from_metar_str
 
-
 TEST_FILE_PATH = './test/test_files'
 if not os.path.exists(TEST_FILE_PATH):
     raise RuntimeError(f'cannot find test files in: {TEST_FILE_PATH}')

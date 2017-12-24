@@ -2,13 +2,13 @@
 """
 Manages MIZ files
 """
-from emiz import MAIN_LOGGER
 import os
 import shutil
 import tempfile
 from filecmp import dircmp
 from zipfile import BadZipFile, ZipFile, ZipInfo
 
+from emiz import MAIN_LOGGER
 from emiz.dummy_miz import dummy_miz
 from emiz.mission import Mission
 from emiz.sltp import SLTP
