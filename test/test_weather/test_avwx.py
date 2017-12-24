@@ -57,5 +57,5 @@ def test_speech():
     speech = AVWX.metar_to_speech('KJFK 241051Z 35007KT 10SM SCT200 BKN250 03/M02 A3016 RMK AO2 SLP211 T00281017')
     assert 'ATIS information for New York City John F Kennedy International Airport.' \
            ' Winds three five zero at 7kt. Visibility one zero ' \
-           'miles. Temperature three degrees Celsius. Dew point minus two degrees Celsius. Altimeter three zero ' \
+           'miles. Temperature three degrees Celsius. Dew point minus two degrees Celsius. Q N H three zero ' \
            'point one six. Scattered clouds at 20000ft. Broken layer at 25000ft' in speech
