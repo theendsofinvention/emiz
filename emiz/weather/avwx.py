@@ -1,19 +1,20 @@
 # coding=utf-8
+# pylint: disable=unsubscriptable-object
 """
 Access to AVWX API
 
 https://avwx.rest/documentation
 """
 
-import string
 import json
+import string
 from collections import defaultdict
 
 import requests
 import requests.adapters
+from elib.custom_random import random_string
 
 from emiz import MAIN_LOGGER
-from elib.custom_random import random_string
 
 LOGGER = MAIN_LOGGER.getChild(__name__)
 
@@ -24,18 +25,27 @@ PHONETIC = {'A': 'Alpha', 'B': 'Bravo', 'C': 'Charlie', 'D': 'Delta', 'E': 'Echo
             'V': 'Victor', 'W': 'Whiskey', 'X': 'Xray', 'Y': 'Yankee', 'Z': 'Zulu'}
 
 
+# pylint: disable=too-few-public-methods
 class AVWXProp:
+    """
+    Represents a property of AVWX result (simple descriptor)
+    """
+
     def __init__(self, func):
         self.func = func
 
     def __get__(self, obj, _):
         if obj is None:
             return self
-        return obj._data[self.func.__name__]
+        return obj.data[self.func.__name__]
 
 
+# pylint: disable=missing-docstring,too-many-public-methods
 # noinspection PyMissingOrEmptyDocstring
 class AVWXResult:
+    """
+    Represents the result of a query to AVWX API
+    """
     default_value = 'NOTSET'
 
     @staticmethod
@@ -43,8 +53,8 @@ class AVWXResult:
         return AVWXResult.default_value
 
     def __init__(self, **kwargs):
-        self._data = defaultdict(default_factory=self.default_factory)
-        self._data.update(kwargs)
+        self.data = defaultdict(default_factory=self.default_factory)
+        self.data.update(kwargs)
 
     @AVWXProp
     def altimeter(self) -> str:
