@@ -161,7 +161,7 @@ class AVWX:
 
     @staticmethod
     def _query(url, params: dict = None) -> AVWXResult:
-        LOGGER.debug(f'querying: {url}')
+        LOGGER.debug(f'querying: {url}{params}')
         req = AVWX.s.get(url, timeout=2, params=params)
         if not req.ok:
             msg = f'failed to retrieve: {url}'
@@ -222,3 +222,7 @@ class AVWX:
         speech = f'{intro} {result.speech}. {identifier}'.replace('Altimeter', 'Q N H')
         LOGGER.debug(f'resulting speech: {speech}')
         return speech
+
+
+if __name__ == '__main__':
+    print(AVWX.metar_to_speech('UGTB 240501Z 30003MPS CAVOK 14/14 Q1009 NOSIG'))
