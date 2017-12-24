@@ -2,6 +2,26 @@ Changelog
 =========
 
 
+0.1.14 (2017-12-24)
+-------------------
+
+New
+~~~
+- AVWX metar to speech. [132nd-etcher]
+- Add AVWX API. [132nd-etcher]
+
+Changes
+~~~~~~~
+- Fix intro line for ATIS. [132nd-etcher]
+- Change ATIS intro speech. [132nd-etcher]
+
+Fix
+~~~
+- Replace "altimeter" with "Q N H" [132nd-etcher]
+- Fix init. [132nd-etcher]
+- Fix clouds when applying metar to miz file. [132nd-etcher]
+
+
 0.1.13 (2017-12-17)
 -------------------
 
