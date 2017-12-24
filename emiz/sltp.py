@@ -1,14 +1,16 @@
 # coding=utf-8
+# pylint: skip-file
+# FIXME: Pylint
 """Simple Lua Python Parser"""
-import logging
+from emiz import MAIN_LOGGER
 import re
 
 import mpmath
 from natsort import natsorted
 
-LOGGER = logging.getLogger('EMIZ').getChild(__name__)
+LOGGER = MAIN_LOGGER.getChild(__name__)
 
-# pylint: skip-file
+
 
 # noinspection SpellCheckingInspection
 ERRORS = {

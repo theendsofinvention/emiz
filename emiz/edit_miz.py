@@ -3,7 +3,7 @@
 Allow for batch edit of time and weather of single miz
 """
 
-import logging
+from emiz import MAIN_LOGGER
 import typing
 
 from metar.Metar import Metar
@@ -12,7 +12,7 @@ from emiz.mission_time import MissionTime
 from emiz.miz import Miz
 from emiz.weather import MissionWeather, parse_metar_string, retrieve_metar
 
-LOGGER = logging.getLogger('EMIZ').getChild(__name__)
+LOGGER = MAIN_LOGGER.getChild(__name__)
 
 
 def edit_miz(  # noqa: C901 pylint: disable=too-many-arguments,too-many-branches

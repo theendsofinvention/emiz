@@ -3,7 +3,7 @@
 Manage mission weather
 """
 
-import logging
+from emiz import MAIN_LOGGER
 import random
 import re
 import typing
@@ -13,7 +13,7 @@ from metar.Metar import Metar
 
 from emiz.miz import Mission, Miz
 
-LOGGER = logging.getLogger('EMIZ').getChild(__name__)
+LOGGER = MAIN_LOGGER.getChild(__name__)
 
 SKY_COVER = {
     "SKC": (0, 0),

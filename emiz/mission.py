@@ -1,7 +1,8 @@
 # coding=utf-8
 # pylint: skip-file
+# FIXME: pylint the shit out of this
 import calendar
-import logging
+from emiz import MAIN_LOGGER
 import typing
 from itertools import chain
 from time import gmtime, strftime
@@ -10,7 +11,7 @@ from emiz.validator import VALID_BOOL, VALID_FLOAT, VALID_INT, VALID_POSITIVE_IN
 
 EPOCH_DELTA = 1306886400
 
-LOGGER = logging.getLogger('EMIZ').getChild(__name__)
+LOGGER = MAIN_LOGGER.getChild(__name__)
 
 validator_group_or_unit_name = Validator(_type=str, _regex=r'[a-zA-Z0-9\_\-\#]+',
                                          exc=ValueError, logger=LOGGER)

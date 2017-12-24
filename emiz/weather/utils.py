@@ -2,7 +2,7 @@
 """
 Utility function for weather
 """
-import logging
+from emiz import MAIN_LOGGER
 import re
 import typing
 
@@ -13,7 +13,7 @@ from emiz.miz import Miz
 from emiz.weather.custom_metar import CustomMetar
 from emiz.weather.mission_weather import MissionWeather
 
-LOGGER = logging.getLogger('EMIZ').getChild(__name__)
+LOGGER = MAIN_LOGGER.getChild(__name__)
 BASE_TAF_URL = r'http://tgftp.nws.noaa.gov/data/forecasts/taf/stations/{station}.TXT'
 BASE_METAR_URL = r'http://tgftp.nws.noaa.gov/data/observations/metar/stations/{station}.TXT'
 

@@ -4,11 +4,11 @@
 import requests
 import requests.adapters
 import json
-import logging
 from collections import namedtuple
+from emiz import MAIN_LOGGER
 
 
-LOGGER = logging.getLogger('EMIZ').getChild(__name__)
+LOGGER = MAIN_LOGGER.getChild(__name__)
 
 
 AVWXResult = namedtuple('AVWXResult', 'Meta, Altimeter, CloudList, Dewpoint, FlightRules, Info, OtherList, RawReport,'

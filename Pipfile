@@ -16,6 +16,7 @@ mpmath = "*"
 natsort = "*"
 requests = "*"
 "urllib3" = "*"
+elib = "*"
 
 
 [dev-packages]

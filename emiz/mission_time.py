@@ -3,10 +3,10 @@
 Manages date and time in a mission
 """
 import datetime
-import logging
+from emiz import MAIN_LOGGER
 import re
 
-LOGGER = logging.getLogger('EMIZ').getChild(__name__)
+LOGGER = MAIN_LOGGER.getChild(__name__)
 
 RE_INPUT_STRING = re.compile(r'^'
                              r'(?P<year>[\d]{4})'

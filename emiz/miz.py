@@ -2,7 +2,7 @@
 """
 Manages MIZ files
 """
-import logging
+from emiz import MAIN_LOGGER
 import os
 import shutil
 import tempfile
@@ -13,7 +13,7 @@ from emiz.dummy_miz import dummy_miz
 from emiz.mission import Mission
 from emiz.sltp import SLTP
 
-LOGGER = logging.getLogger('EMIZ').getChild(__name__)
+LOGGER = MAIN_LOGGER.getChild(__name__)
 ENCODING = 'iso8859_15'
 
 
