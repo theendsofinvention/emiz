@@ -219,6 +219,6 @@ class AVWX:
         result = AVWX._query(f'https://avwx.rest/api/parse/metar', params=params)
         intro = f'ATIS information for {result.info["City"]} {result.info["Name"]}.'
         identifier = f'Advise you have information {PHONETIC[random_string(1, string.ascii_uppercase)]}.'
-        speech = f'{intro} {result.speech}. {identifier}'
+        speech = f'{intro} {result.speech}. {identifier}'.replace('Altimeter', 'Q N H')
         LOGGER.debug(f'resulting speech: {speech}')
         return speech
