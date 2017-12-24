@@ -2,6 +2,7 @@ include AUTHORS
 include LICENSE
 include MANIFEST.in
 include *.rst
+include *.py
 include
 graft emiz
 graft test
