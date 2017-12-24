@@ -1,51 +1,22 @@
 # coding=utf-8
 
-import json
 import os
 
 import pytest
-from hypothesis import strategies as st
-from hypothesis import example, given
 from metar.Metar import Metar
 
 from emiz import Miz
 from emiz.weather import build_metar_from_mission, set_weather_from_icao
-from emiz.weather.mission_weather import MissionWeather
 from emiz.weather.utils import set_weather_from_metar_str
 
-if os.path.exists('./test_files'):
-    BASE_PATH = os.path.abspath('./test_files')
-elif os.path.exists('./test/test_files'):
-    BASE_PATH = os.path.abspath('./test/test_files')
-else:
-    raise RuntimeError('cannot find test files')
+
+TEST_FILE_PATH = './test/test_files'
+if not os.path.exists(TEST_FILE_PATH):
+    raise RuntimeError(f'cannot find test files in: {TEST_FILE_PATH}')
+BASE_PATH = os.path.abspath(TEST_FILE_PATH)
 
 TEST_FILE = os.path.join(BASE_PATH, 'weather.miz')
 OUT_FILE = os.path.join(BASE_PATH, 'weather_output.miz')
-
-
-@given(heading=st.integers(min_value=0, max_value=359))
-def test_reverse_direction(heading):
-    val = MissionWeather.reverse_direction(heading)
-    assert 0 <= val <= 359
-    assert val == heading - 180 or val == heading + 180
-    assert type(val) is int
-
-
-@given(heading=st.integers(min_value=-2000, max_value=2000))
-def test_normalize_direction(heading):
-    val = MissionWeather._normalize_direction(heading)
-    assert 0 <= val <= 359
-    assert type(val) is int
-
-
-@given(base_speed=st.integers(min_value=0, max_value=40))
-@example(base_speed=120)
-@example(base_speed=-1)
-def test_deviate_wind_speed(base_speed):
-    val = MissionWeather._deviate_wind_speed(base_speed)
-    assert 0 <= val <= 50
-    assert type(val) is int
 
 
 @pytest.mark.parametrize('icao', ['UGTB', 'UGTO', 'UGKO', 'UGSA', 'UGDT', 'URSS', 'EBBR'])
