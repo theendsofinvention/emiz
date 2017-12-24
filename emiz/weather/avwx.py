@@ -19,12 +19,6 @@ from emiz import MAIN_LOGGER
 LOGGER = MAIN_LOGGER.getChild(__name__)
 
 
-PHONETIC = {'A': 'Alpha', 'B': 'Bravo', 'C': 'Charlie', 'D': 'Delta', 'E': 'Echo', 'F': 'Foxtrot', 'G': 'Golf',
-            "H": "Hotel", 'I': 'India', 'J': 'Juliet', 'K': 'Kilo', 'L': 'Lima', 'M': 'Mike', 'N': 'November',
-            'O': 'Oscar', 'P': 'Papa', 'Q': 'Quebec', 'R': 'Romeo', 'S': 'Sierra', 'T': 'Tango', 'U': 'Uniform',
-            'V': 'Victor', 'W': 'Whiskey', 'X': 'Xray', 'Y': 'Yankee', 'Z': 'Zulu'}
-
-
 # pylint: disable=too-few-public-methods
 class AVWXProp:
     """
@@ -217,12 +211,6 @@ class AVWX:
             'options': 'info,speech,summary'
         }
         result = AVWX._query(f'https://avwx.rest/api/parse/metar', params=params)
-        intro = f'ATIS information for {result.info["City"]} {result.info["Name"]}.'
-        identifier = f'Advise you have information {PHONETIC[random_string(1, string.ascii_uppercase)]}.'
-        speech = f'{intro} {result.speech}. {identifier}'.replace('Altimeter', 'Q N H')
+        speech = str(result.speech).replace('Altimeter', 'Q N H')
         LOGGER.debug(f'resulting speech: {speech}')
         return speech
-
-
-if __name__ == '__main__':
-    print(AVWX.metar_to_speech('UGTB 240501Z 30003MPS CAVOK 14/14 Q1009 NOSIG'))
