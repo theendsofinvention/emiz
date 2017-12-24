@@ -8,6 +8,7 @@ Etcher's Mission File Tools
 |license|
 
 |av_master| |av_develop|
+|codacy| |coverage|
 
 
 .. |OSI| image:: https://badges.frapsoft.com/os/v3/open-source-200x33.png?v=103
@@ -18,3 +19,7 @@ Etcher's Mission File Tools
     :target: https://ci.appveyor.com/project/132nd-etcher/emiz
 .. |av_develop| image:: https://img.shields.io/appveyor/ci/132nd-etcher/emiz/develop.svg?label=develop
     :target: https://ci.appveyor.com/project/132nd-etcher/emiz
+.. |codacy| image:: https://img.shields.io/codacy/grade/d4699411cc594094bb926601ece926a0.svg
+    :target: https://www.codacy.com/app/132nd-etcher/epab
+.. |coverage| image:: https://img.shields.io/codacy/coverage/d4699411cc594094bb926601ece926a0.svg
+    :target: https://www.codacy.com/app/132nd-etcher/epab
