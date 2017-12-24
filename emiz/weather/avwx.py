@@ -7,12 +7,10 @@ https://avwx.rest/documentation
 """
 
 import json
-import string
 from collections import defaultdict
 
 import requests
 import requests.adapters
-from elib.custom_random import random_string
 
 from emiz import MAIN_LOGGER
 
