@@ -257,22 +257,20 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
         Sets cloud density
 
         """
-        base = 0
-        ceiling = 999999
         layers = {}
         for skyi in self.metar.sky:
             cover, height, _ = skyi
             if height:
                 height = int(height.value('M'))
-                base = min(base, height)
-                ceiling = max(ceiling, height)
+                height = max(height, 300)
+                height = min(height, 5000)
                 cover = random.randint(*SKY_COVER[cover])
                 layers[cover] = height
         if layers:
             max_cover = max([key for key in layers])
             self.cloud_density = max_cover
             self.cloud_base = layers[max_cover]
-            self.cloud_thickness = max(min(200, ceiling - base), 2000)
+            self.cloud_thickness = int(max_cover / 10 * 2000)
 
     @property
     def temperature(self):
