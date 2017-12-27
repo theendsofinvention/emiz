@@ -616,40 +616,25 @@ class TestMizValues:
                 assert getattr(group, attrib) == getattr(new_group, attrib)
             assert group.group_hidden
 
-    @pytest.mark.skip('disabled for the time being')
     def test_group_start_time(self):
         with Miz(TEST_FILE) as miz:
             group = miz.mission.get_group_by_name('etcher')
             assert miz.mission.mission_start_time == group.group_start_time
-            assert miz.mission.mission_start_time_as_date == group.group_start_time_as_date
-            assert group.group_start_time_as_date == '01/06/2011 12:00:00'
+            assert miz.mission.mission_start_datetime_as_string == group.group_start_date_time_as_string
+            assert group.group_start_date_time_as_string == '01/06/2011 12:00:00'
             assert group.group_start_delay == 0
             group.group_start_delay += 60
-            assert group.group_start_time_as_date == '01/06/2011 12:01:00'
+            assert group.group_start_date_time_as_string == '01/06/2011 12:01:00'
             group.group_start_delay += 3600
-            assert group.group_start_time_as_date == '01/06/2011 13:01:00'
-            group.group_start_time_as_date = '01/06/2011 12:00:00'
-            assert miz.mission.mission_start_time == group.group_start_time
-            assert group.group_start_delay == 0
-            for invalid_start_date in (
-                    'caribou', True, False, None, -1, '35/06/2010 12:00:00', '01/15/2010 12:00:00',
-                    '01/06/2010 25:00:00',
-                    '01/06/2010 12:61:00', '01/06/2010 12:00:120'):
-                with pytest.raises(ValueError, msg=invalid_start_date):
-                    group.group_start_time_as_date = invalid_start_date
-            for wrong_start_date in (
-                    '01/06/2011 11:59:59', '01/05/2011 12:00:00', '31/05/2011 12:00:00', '01/06/2010 12:00:00'):
-                with pytest.raises(ValueError, msg=wrong_start_date):
-                    group.group_start_time_as_date = wrong_start_date
-            group.group_start_time_as_date = '01/06/2011 13:00:00'
-            assert group.group_start_delay == 3600
-            group.group_start_time_as_date = '02/06/2011 12:00:00'
-            assert group.group_start_delay == 3600 * 24
+            assert group.group_start_date_time_as_string == '01/06/2011 13:01:00'
+            group.group_start_delay = 0
+            group.group_start_delay = 3600
+            assert group.group_start_date_time_as_string == '01/06/2011 13:00:00'
             miz.zip(OUT_FILE)
 
         with Miz(OUT_FILE) as miz:
             group = miz.mission.get_group_by_name('etcher')
-            assert group.group_start_delay == 3600 * 24
+            assert group.group_start_delay == 3600
 
     def test_get_unit(self, mission):
         group = mission.get_group_by_name('etcher')

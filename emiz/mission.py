@@ -205,13 +205,25 @@ class BaseMissionObject:
         Mission.validator_start_time.validate(value, 'start_time')
         self.d['start_time'] = value
 
+    @staticmethod
+    def _start_time_as_string(start_time):
+        return strftime('%H:%M:%S', gmtime(start_time))
+
+    @staticmethod
+    def _start_date_as_string(day, month, year):
+        return strftime(f'{day:02}/{month:02}/{year}')
+
+    def _start_datetime_as_string(self, startime):
+        return f'{self.mission_start_date_as_string} {self._start_time_as_string(startime)}'
+
+
     @property
     def mission_start_time_as_string(self):
-        return strftime('%H:%M:%S', gmtime(self.mission_start_time))
+        return self._start_time_as_string(self.mission_start_time)
 
     @property
     def mission_start_date_as_string(self):
-        return strftime(f'{self.day:02}/{self.month:02}/{self.year}')
+        return self._start_date_as_string(self.day, self.month, self.year)
 
     @property
     def mission_start_datetime_as_string(self):
@@ -1135,6 +1147,10 @@ class Group(Country):
     def group_start_time(self, value):
         VALID_INT.validate(value, 'group_start_time')
         self.group_start_delay = value - self.mission_start_time
+
+    @property
+    def group_start_date_time_as_string(self):
+        return self._start_datetime_as_string(self.group_start_time)
 
     @property
     def units(self):
