@@ -2,6 +2,23 @@ Changelog
 =========
 
 
+0.1.18 (2017-12-27)
+-------------------
+
+Fix
+~~~
+- Fix bug in mission.day. [132nd-etcher]
+- Fix issue with cloud height in METARs inferred from MIZ files. [132nd-
+  etcher]
+
+  fix #3
+- Fix bug where fog would not be disabled from a mission. [132nd-etcher]
+
+Other
+~~~~~
+- Fix re-introduced basic datetime func. [132nd-etcher]
+
+
 0.1.14 (2017-12-24)
 -------------------
 
