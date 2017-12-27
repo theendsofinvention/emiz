@@ -295,7 +295,6 @@ class Mission(BaseMissionObject):
     def __repr__(self):
         return 'Mission({})'.format(self.d)
 
-
     @property
     def blue_coa(self) -> 'Coalition':
         return self._blue_coa

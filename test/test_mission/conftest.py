@@ -3,10 +3,10 @@
 Configuration test specific to Mission & Miz
 """
 
+import copy
 from pathlib import Path
 
 import pytest
-import copy
 
 from emiz import Mission, Miz
 
@@ -88,6 +88,3 @@ def mission_dict():
 @pytest.fixture()
 def mission_l10n():
     yield copy.deepcopy(DUMMY_MISSION.l10n)
-
-
-

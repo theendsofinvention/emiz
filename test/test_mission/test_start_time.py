@@ -4,7 +4,8 @@ Tests start time
 """
 
 import pytest
-from hypothesis import given, settings, strategies as st
+from hypothesis import strategies as st
+from hypothesis import given, settings
 
 from emiz.miz import Miz
 
