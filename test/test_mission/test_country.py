@@ -51,4 +51,4 @@ def test_get_country(mission, test_file):
     with pytest.raises(ValueError):
         mission.red_coa.get_country_by_id(2)
     with Miz(test_file) as miz:
-        assert isinstance(miz.mission.blue_coa.get_country_by_name('USA'), Country)
+        assert isinstance(miz.mission._blue_coa.get_country_by_name('USA'), Country)

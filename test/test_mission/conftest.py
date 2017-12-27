@@ -6,6 +6,7 @@ Configuration test specific to Mission & Miz
 from pathlib import Path
 
 import pytest
+import copy
 
 from emiz import Mission, Miz
 
@@ -74,6 +75,19 @@ with Miz(Path(TEST_FILES_FOLDER.joinpath('TRG_KA50.miz'))) as miz:
     DUMMY_MISSION = miz.mission
 
 
-@pytest.fixture()
+@pytest.fixture(scope='function')
 def mission():
-    yield Mission(dict(DUMMY_MISSION.d), dict(DUMMY_MISSION.l10n))
+    yield Mission(copy.deepcopy(DUMMY_MISSION.d), copy.deepcopy(DUMMY_MISSION.l10n))
+
+
+@pytest.fixture()
+def mission_dict():
+    yield copy.deepcopy(DUMMY_MISSION.d)
+
+
+@pytest.fixture()
+def mission_l10n():
+    yield copy.deepcopy(DUMMY_MISSION.l10n)
+
+
+

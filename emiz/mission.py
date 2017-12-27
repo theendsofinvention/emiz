@@ -31,8 +31,8 @@ class BaseMissionObject:
         self.l10n = l10n
 
         self.weather = None
-        self.blue_coa = None
-        self.red_coa = None
+        self._blue_coa = None
+        self._red_coa = None
         self.ground_control = None
 
         self._countries_by_name = {}
@@ -129,7 +129,7 @@ class BaseMissionObject:
     @property
     def next_group_id(self):
         ids = set()
-        for group in chain(self.blue_coa.groups, self.red_coa.groups):
+        for group in chain(self._blue_coa.groups, self._red_coa.groups):
             assert isinstance(group, Group)
             id_ = group.group_id
             if id_ in ids:
@@ -140,7 +140,7 @@ class BaseMissionObject:
     @property
     def next_unit_id(self):
         ids = set()
-        for unit in chain(self.blue_coa.units, self.red_coa.units):
+        for unit in chain(self._blue_coa.units, self._red_coa.units):
             assert isinstance(unit, BaseUnit)
             id_ = unit.unit_id
             if id_ in ids:
@@ -150,7 +150,7 @@ class BaseMissionObject:
 
     @property
     def coalitions(self):
-        for coalition in [self.blue_coa, self.red_coa]:
+        for coalition in [self._blue_coa, self._red_coa]:
             assert isinstance(coalition, Coalition)
             yield coalition
 
@@ -288,15 +288,24 @@ class Mission(BaseMissionObject):
     def __init__(self, mission_dict, l10n):
         super().__init__(mission_dict, l10n)
         self.weather = Weather(self.d, l10n)
-        self.blue_coa = Coalition(self.d, l10n, 'blue')
-        self.red_coa = Coalition(self.d, l10n, 'red')
+        self._blue_coa = Coalition(self.d, l10n, 'blue')
+        self._red_coa = Coalition(self.d, l10n, 'red')
         self.ground_control = GroundControl(self.d, l10n)
 
     def __repr__(self):
         return 'Mission({})'.format(self.d)
 
+
+    @property
+    def blue_coa(self) -> 'Coalition':
+        return self._blue_coa
+
+    @property
+    def red_coa(self) -> 'Coalition':
+        return self._red_coa
+
     def farps(self) -> typing.Generator['Static', None, None]:
-        for coa in [self.blue_coa, self.red_coa]:
+        for coa in [self._blue_coa, self._red_coa]:
             for farp in coa.farps:
                 yield farp
 
@@ -398,12 +407,10 @@ class Coalition(BaseMissionObject):
 
     @property
     def farps(self) -> typing.Generator['Static', None, None]:
-        for country in self.countries:
-            assert isinstance(country, Country)
-            for static in country.statics:
-                assert isinstance(static, Static)
-                if static.static_is_farp:
-                    yield static
+        for static in self.statics:
+            assert isinstance(static, Static)
+            if static.static_is_farp:
+                yield static
 
     def get_groups_from_category(self, category) -> typing.Generator['Group', None, None]:
         Mission.validator_group_category.validate(category, 'get_groups_from_category')
@@ -447,12 +454,14 @@ class Coalition(BaseMissionObject):
             if unit.unit_name == unit_name:
                 return unit
 
-    def get_unit_by_id(self, unit_id) -> 'BaseUnit':
+    def get_unit_by_id(self, unit_id) -> typing.Union['BaseUnit', None]:
         VALID_POSITIVE_INT.validate(unit_id, 'get_unit_by_id')
         for unit in self.units:
             assert isinstance(unit, BaseUnit)
             if unit.unit_id == unit_id:
                 return unit
+        else:
+            return None
 
 
 class Trig(BaseMissionObject):

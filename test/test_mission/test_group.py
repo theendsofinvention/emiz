@@ -30,7 +30,7 @@ def test_get_groups_from_category(mission, all_objects):
     with Miz(all_objects) as miz:
         for category in ('ship', 'plane', 'helicopter', 'vehicle'):
             l = 0
-            for group in miz.mission.blue_coa.get_groups_from_category(category):
+            for group in miz.mission._blue_coa.get_groups_from_category(category):
                 assert isinstance(group, Group)
                 assert group.group_category == category
                 l += 1

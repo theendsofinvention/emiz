@@ -32,7 +32,7 @@ def test_get_units_from_category(mission, all_objects):
         #     print(unit.group_category)
         for category in ('ship', 'plane', 'helicopter', 'vehicle'):
             l = 0
-            for unit in miz.mission.blue_coa.get_units_from_category(category):
+            for unit in miz.mission._blue_coa.get_units_from_category(category):
                 assert isinstance(unit, BaseUnit)
                 assert unit.group_category == category
                 l += 1
