@@ -1,61 +1,60 @@
 # coding=utf-8
-# pylint: skip-file
+"""
+Subclass metar.Metar.Metar (sic) to add functionality
+"""
+import typing
 
-from metar.Datatypes import UnitsError, pressure
-from metar.Metar import Metar
+from metar.Metar import Metar, ParserError
+
+from ... import MAIN_LOGGER
+from .custom_metar_pressure import CustomPressure
+from .. import noaa
 
 
-class CustomPressure(pressure):
-    legal_units = ["MB", "HPA", "IN", "MM"]
-
-    def value(self, units=None):
-        """Return the pressure in the specified units."""
-        if units is None:
-            return self._value
-        else:
-            if not units.upper() in CustomPressure.legal_units:
-                raise UnitsError("unrecognized pressure unit: '" + units + "'")
-            units = units.upper()
-        if units == self._units:
-            return self._value
-        if self._units == "IN":
-            mb_value = self._value * 33.86398
-        elif self._units == "MM":
-            mb_value = self._value * 1.3332239
-        else:
-            mb_value = self._value
-        if units == "MB" or units == "HPA":
-            return mb_value
-        elif units == "IN":
-            return mb_value / 33.86398
-        elif units == "MM":
-            return mb_value / 1.3332239
-        else:
-            raise UnitsError("unrecognized pressure unit: '" + units + "'")
-
-    def string(self, units=None):
-        """Return a string representation of the pressure, using the given units."""
-        if not units:
-            units = self._units
-        else:
-            if not units.upper() in CustomPressure.legal_units:
-                raise UnitsError("unrecognized pressure unit: '" + units + "'")
-            units = units.upper()
-        val = self.value(units)
-        if units == "MB":
-            return "%.0f mb" % val
-        elif units == "HPA":
-            return "%.0f hPa" % val
-        elif units == "IN":
-            return "%.2f inches" % val
-        elif units == "MM":
-            return "%.0f mmHg" % val
+LOGGER = MAIN_LOGGER.getChild(__name__)
 
 
 class CustomMetar(Metar):
-    def __init__(self, metarcode, month=None, year=None, utcdelta=None):
-        Metar.__init__(self, metarcode, month, year, utcdelta)
+    """
+    Subclass metar.Metar.Metar (sic) to add functionality
+    """
+
+    def __init__(self, metar_code, month=None, year=None, utc_delta=None):
+        LOGGER.debug(f'creating METAR from: {metar_code}')
+        Metar.__init__(self, metar_code, month, year, utc_delta)
         self.press = CustomPressure(self.press.value('mb'))
+
+    @staticmethod
+    def get_metar(
+            metar: typing.Union[str, 'CustomMetar']
+    ) -> typing.Tuple[typing.Union[str, None], typing.Union['CustomMetar', None]]:
+        """
+        Builds a CustomMetar object from a CustomMetar object (returns it), an ICAO code or a METAR string
+
+        Args:
+            metar: CustomMetar object, ICAO string or METAR string
+
+        Returns: CustomMetar object
+
+        """
+        error = None
+        if isinstance(metar, CustomMetar):
+            return None, metar
+        elif isinstance(metar, str):
+            LOGGER.debug(f'building CustomMetar from: {metar}')
+            if len(metar) == 4:
+                LOGGER.debug('retrieving METAR from ICAO')
+                error, metar = noaa.retrieve_metar(metar)
+        else:
+            error = f'expected a string or or a CustomMetar object, got: {type(metar)}'
+
+        if error:
+            return error, None
+
+        try:
+            return None, CustomMetar(metar_code=metar)
+        except ParserError:
+            return f'Unable to parse METAR: {metar}', None
 
     def string(self):  # noqa: C901
         """
@@ -143,6 +142,7 @@ class CustomMetar(Metar):
             else:
                 self.press = CustomPressure(press, 'MB')
 
+    # noinspection SpellCheckingInspection
     def _handleSealvlPressRemark(self, d):
         """
         Parse the sea-level pressure remark group.
@@ -155,8 +155,3 @@ class CustomMetar(Metar):
         if not self.press:
             self.press = CustomPressure(value, "MB")
         self.press_sea_level = CustomPressure(value, "MB")
-
-
-if __name__ == '__main__':
-    metar = CustomMetar('UGTB 041500Z 14007KT 9999 FEW020 BKN038CB OVC052 11/08 Q1030 R13R/CLRD70 NOSIG')
-    print(metar.string())

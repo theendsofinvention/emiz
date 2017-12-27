@@ -4,16 +4,25 @@ Manage mission weather
 """
 
 import random
-import re
 import typing
 from datetime import date, datetime
 
 from metar.Metar import Metar
 
 from emiz import MAIN_LOGGER
-from emiz.miz import Mission, Miz
+from ..utils import hpa_to_mmhg
 
 LOGGER = MAIN_LOGGER.getChild(__name__)
+
+Y = 2000
+
+SEASONS = [
+    ('winter', 5, (date(Y, 1, 1), date(Y, 3, 20))),
+    ('spring', 10, (date(Y, 3, 21), date(Y, 6, 20))),
+    ('summer', 20, (date(Y, 6, 21), date(Y, 9, 22))),
+    ('autumn', 10, (date(Y, 9, 23), date(Y, 12, 20))),
+    ('winter', 5, (date(Y, 12, 21), date(Y, 12, 31))),
+]
 
 SKY_COVER = {
     "SKC": (0, 0),
@@ -28,16 +37,6 @@ SKY_COVER = {
     "VV": (0, 0)
 }
 
-Y = 2000
-
-SEASONS = [
-    ('winter', 5, (date(Y, 1, 1), date(Y, 3, 20))),
-    ('spring', 10, (date(Y, 3, 21), date(Y, 6, 20))),
-    ('summer', 20, (date(Y, 6, 21), date(Y, 9, 22))),
-    ('autumn', 10, (date(Y, 9, 23), date(Y, 12, 20))),
-    ('winter', 5, (date(Y, 12, 21), date(Y, 12, 31))),
-]
-
 
 def _get_season() -> typing.Tuple[str, int]:
     """
@@ -48,18 +47,6 @@ def _get_season() -> typing.Tuple[str, int]:
     """
     now = datetime.now().date().replace(year=Y)
     return next((season, temp) for season, temp, (start, end) in SEASONS if start <= now <= end)
-
-
-def _hpa_to_mmhg(pressure) -> int:
-    """
-    Converts pressure in hpa to mmhg
-    Args:
-        pressure: pressure to convert
-
-    Returns: pressure in mmhg
-
-    """
-    return int(pressure * 0.75006156130264)
 
 
 class MissionWeather:  # pylint: disable=too-many-instance-attributes
@@ -79,13 +66,13 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
         self._min_wind = min_wind
         self._max_wind = max_wind
         self.fog_vis = None
-        self.precip = 0
+        self.precipitations = 0
         self.cloud_density = 0
         self.cloud_base = 300
         self.cloud_thickness = 200
         self.force_cloud_density = 0
         self.force_temperature = 999
-        self._parse_precip()
+        self._parse_precipitations()
         self._parse_clouds()
 
     @staticmethod
@@ -214,7 +201,7 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
         if self.metar.press is None:
             LOGGER.info('QNH is missing, returning standard QNH: 760')
             return 760
-        return _hpa_to_mmhg(self.metar.press.value())
+        return hpa_to_mmhg(self.metar.press.value())
 
     @property
     def visibility(self) -> int:
@@ -231,24 +218,24 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
             self.fog_vis = min(6000, val)
         return val
 
-    def _parse_precip(self):
+    def _parse_precipitations(self):
         """
 
         Sets precipitation and optional minimal cloud density
 
         """
         if 'rain' in self.metar.present_weather():
-            self.precip = 1
+            self.precipitations = 1
             self.force_cloud_density = 5
         if 'snow' in self.metar.present_weather():
-            self.precip = 3
+            self.precipitations = 3
             self.force_cloud_density = 5
             self.force_temperature = 0
         if 'storm' in self.metar.present_weather():
-            if self.precip == 2:
-                self.precip = 4
+            if self.precipitations == 2:
+                self.precipitations = 4
             else:
-                self.precip = 3
+                self.precipitations = 3
             self.force_cloud_density = 9
 
     def _parse_clouds(self):
@@ -258,8 +245,8 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
 
         """
         layers = {}
-        for skyi in self.metar.sky:
-            cover, height, _ = skyi
+        for sky_info in self.metar.sky:
+            cover, height, _ = sky_info
             if height:
                 height = int(height.value('M'))
                 height = max(height, 300)
@@ -310,6 +297,8 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
 
         """
 
+        report = ['Building mission with weather:']
+
         miz.mission.weather.wind_at_ground_level_dir = self.wind_at_ground_level_dir
         miz.mission.weather.wind_at_ground_level_speed = self.wind_at_ground_level_speed
         miz.mission.weather.wind_at2000_dir = self._deviate_direction(self.wind_dir, 40)
@@ -318,8 +307,24 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
         miz.mission.weather.wind_at8000_speed = self._deviate_wind_speed(10 + self.wind_speed * 3)
         miz.mission.weather.turbulence_at_ground_level = self.turbulence
 
+        _ground = f'{miz.mission.weather.wind_at_ground_level_dir}/{miz.mission.weather.wind_at_ground_level_speed}'
+        _at2000 = f'{miz.mission.weather.wind_at2000_dir}/{miz.mission.weather.wind_at2000_speed}'
+        _at8000 = f'{miz.mission.weather.wind_at8000_dir}/{miz.mission.weather.wind_at8000_speed}'
+        _turbulence = f'{miz.mission.weather.turbulence_at_ground_level}'
+
+        wind = f'Wind:' \
+               f'\n\tGround: {_ground}' \
+               f'\n\t2000m: {_at2000}' \
+               f'\n\t8000m: {_at8000}' \
+               f'\n\tTurbulence: {_turbulence}'
+
+        report.append(wind)
+
         miz.mission.weather.atmosphere_type = 0
         miz.mission.weather.qnh = self.qnh
+
+        report.append(f'Atmosphere type: {miz.mission.weather.atmosphere_type}')
+        report.append(f'QNH: {miz.mission.weather.qnh}')
 
         miz.mission.weather.visibility = self.visibility
         miz.mission.weather.fog_thickness = 1000
@@ -329,96 +334,28 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
         else:
             miz.mission.weather.fog_enabled = False
 
+        visibility = f'Visibility: {miz.mission.weather.visibility}' \
+                     f'\n\tFog: {"yes" if miz.mission.weather.fog_enabled else "no"}' \
+                     f'\n\tFog thickness: {miz.mission.weather.fog_thickness}' \
+                     f'\n\tFog visibility: {miz.mission.weather.fog_visibility}'
+
+        report.append(visibility)
+
         miz.mission.weather.cloud_density = max(self.force_cloud_density, self.cloud_density)
         miz.mission.weather.cloud_thickness = self.cloud_thickness
         miz.mission.weather.cloud_base = self.cloud_base
-        miz.mission.weather.precipitations = self.precip
+        miz.mission.weather.precipitations = self.precipitations
+
+        clouds = f'Clouds:' \
+                 f'\n\tClouds density: {miz.mission.weather.cloud_density}' \
+                 f'\n\tClouds thickness: {miz.mission.weather.cloud_thickness}' \
+                 f'\n\tClouds base: {miz.mission.weather.cloud_base}' \
+                 f'\n\tPrecipitations: {miz.mission.weather.precipitations}'
+
+        report.append(clouds)
 
         miz.mission.weather.temperature = self.temperature
 
+        report.append(f'Temperature: {self.temperature}°C')
+
         return True
-
-
-# pylint: disable=too-many-locals
-def build_metar_from_mission(
-        mission_file: str,
-        icao: str = 'XXXX',
-        time: str = None,
-) -> str:
-    """
-    Builds a dummy METAR string from a mission file
-
-    Args:
-        mission_file: input mission file
-        icao: dummy ICAO (defaults to XXXX)
-        time: dummy time (defaults to now())
-
-    Returns: METAR str
-
-    """
-
-    def _get_wind(mission):
-        wind_dir = MissionWeather.reverse_direction(mission.weather.wind_at_ground_level_dir)
-        wind_speed = int(mission.weather.wind_at_ground_level_speed)
-        return f'{wind_dir:03}{wind_speed:02}MPS'
-
-    def _get_precip(mission: Mission):
-        precip = {
-            0: '',
-            1: 'RA',
-            2: 'SN',
-            3: '+RA',
-            4: '+SN',
-        }
-        return precip[mission.weather.precipitations]
-
-    def _get_clouds(mission: Mission):
-        density = {
-            0: 'CLR',
-            1: 'FEW',
-            2: 'FEW',
-            3: 'FEW',
-            4: 'SCT',
-            5: 'SCT',
-            6: 'SCT',
-            7: 'BKN',
-            8: 'BKN',
-            9: 'OVC',
-            10: 'OVC',
-        }
-        density = density[mission.weather.cloud_density]
-        base = int(round(mission.weather.cloud_base * 3.28084, -2) / 100)
-        return f'{density}{base:03}'
-
-    def _get_temp(mission: Mission):
-        temp = mission.weather.temperature
-        minus = 'M' if temp < 0 else ''
-        temp = abs(temp)
-        return f'{minus}{temp:02}/{minus}{temp:02}'
-
-    def _get_pressure(mission: Mission):
-        pres = mission.weather.qnh
-        hpa = round(pres / 0.75006156130264)
-        return f'Q{hpa}'
-
-    if time is None:
-        now = datetime.utcnow()
-        day = now.day
-        hour = now.hour
-        minute = now.minute
-        time = f'{day:02}{hour:02}{minute:02}Z'
-    with Miz(mission_file) as miz:
-        mission = miz.mission
-    wind = _get_wind(mission)
-    visibility = min(mission.weather.visibility, 9999)
-    precip = _get_precip(mission)
-    clouds = _get_clouds(mission)
-    temp = _get_temp(mission)
-    pres = _get_pressure(mission)
-    qual = 'NOSIG'
-
-    if visibility == 9999 and int(round(mission.weather.cloud_base * 3.28084, -2)) >= 5000:
-        visibility = 'CAVOK'
-
-    metar = f'{icao} {time} {wind} {visibility} {precip} {clouds} {temp} {pres} {qual}'
-    return re.sub(' +', ' ', metar)

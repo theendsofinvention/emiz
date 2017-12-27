@@ -1,5 +1,4 @@
 # coding=utf-8
-# pylint: disable=unsubscriptable-object
 """
 Access to AVWX API
 
@@ -7,138 +6,17 @@ https://avwx.rest/documentation
 """
 
 import json
-from collections import defaultdict
 
 import requests
 import requests.adapters
 
 from emiz import MAIN_LOGGER
 
+from .avwx_result import AVWXResult
+
 LOGGER = MAIN_LOGGER.getChild(__name__)
 
 
-# pylint: disable=too-few-public-methods
-class AVWXProp:
-    """
-    Represents a property of AVWX result (simple descriptor)
-    """
-
-    def __init__(self, func):
-        self.func = func
-
-    def __get__(self, obj, _):
-        if obj is None:
-            return self
-        return obj.data[self.func.__name__]
-
-
-# pylint: disable=missing-docstring,too-many-public-methods
-# noinspection PyMissingOrEmptyDocstring
-class AVWXResult:
-    """
-    Represents the result of a query to AVWX API
-    """
-    default_value = 'NOTSET'
-
-    @staticmethod
-    def default_factory():
-        return AVWXResult.default_value
-
-    def __init__(self, **kwargs):
-        self.data = defaultdict(default_factory=self.default_factory)
-        self.data.update(kwargs)
-
-    @AVWXProp
-    def altimeter(self) -> str:
-        pass
-
-    @AVWXProp
-    def cloudlist(self) -> list:
-        pass
-
-    @AVWXProp
-    def dewpoint(self) -> str:
-        pass
-
-    @AVWXProp
-    def flightrules(self) -> str:
-        pass
-
-    @AVWXProp
-    def info(self) -> dict:
-        pass
-
-    @AVWXProp
-    def meta(self) -> dict:
-        pass
-
-    @AVWXProp
-    def otherlist(self) -> list:
-        pass
-
-    @AVWXProp
-    def rawreport(self) -> str:
-        pass
-
-    @AVWXProp
-    def remarks(self) -> str:
-        pass
-
-    @AVWXProp
-    def remarksinfo(self) -> dict:
-        pass
-
-    @AVWXProp
-    def runwayvislist(self) -> list:
-        pass
-
-    @AVWXProp
-    def speech(self) -> str:
-        pass
-
-    @AVWXProp
-    def station(self) -> str:
-        pass
-
-    @AVWXProp
-    def summary(self) -> str:
-        pass
-
-    @AVWXProp
-    def temperature(self) -> str:
-        pass
-
-    @AVWXProp
-    def time(self) -> str:
-        pass
-
-    @AVWXProp
-    def translations(self) -> dict:
-        pass
-
-    @AVWXProp
-    def units(self) -> dict:
-        pass
-
-    @AVWXProp
-    def visibility(self) -> str:
-        pass
-
-    @AVWXProp
-    def winddirection(self) -> str:
-        pass
-
-    @AVWXProp
-    def windgust(self) -> str:
-        pass
-
-    @AVWXProp
-    def windspeed(self) -> str:
-        pass
-
-    @AVWXProp
-    def windvariabledir(self) -> list:
-        pass
 
 
 # pylint: disable=too-few-public-methods
