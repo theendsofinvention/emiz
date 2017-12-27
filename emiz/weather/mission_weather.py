@@ -326,6 +326,8 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
         if self.fog_vis:
             miz.mission.weather.fog_visibility = self.fog_vis
             miz.mission.weather.fog_enabled = True
+        else:
+            miz.mission.weather.fog_enabled = False
 
         miz.mission.weather.cloud_density = max(self.force_cloud_density, self.cloud_density)
         miz.mission.weather.cloud_thickness = self.cloud_thickness
