@@ -212,7 +212,7 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
 
         """
         if self.metar.press is None:
-            LOGGER.info('QNH is missing, returning standard QNH')
+            LOGGER.info('QNH is missing, returning standard QNH: 760')
             return 760
         return _hpa_to_mmhg(self.metar.press.value())
 
