@@ -82,7 +82,7 @@ class BaseMissionObject:
                 return group
         return None
 
-    def get_clients_groups(self) -> typing.Generator['FlyingUnit', None, None]:
+    def get_clients_groups(self) -> typing.Generator['Group', None, None]:
         for group in self.groups:
             assert isinstance(group, Group)
             if group.group_is_client_group:
