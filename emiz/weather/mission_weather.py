@@ -387,8 +387,8 @@ def build_metar_from_mission(
             10: 'OVC',
         }
         density = density[mission.weather.cloud_density]
-        base = int(round(mission.weather.cloud_base * 3.28084, -2))
-        return f'{density}{base:04}'
+        base = int(round(mission.weather.cloud_base * 3.28084, -2) / 100)
+        return f'{density}{base:03}'
 
     def _get_temp(mission: Mission):
         temp = mission.weather.temperature
