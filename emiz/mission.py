@@ -173,7 +173,7 @@ class BaseMissionObject:
     def day(self, value):
         Mission.validator_day.validate(value, 'day')
         # Get the last day of the current month
-        value = max(value, calendar.monthrange(self.year, self.month)[1])
+        value = min(value, calendar.monthrange(self.year, self.month)[1])
         self._section_date['Day'] = value
 
     @property
