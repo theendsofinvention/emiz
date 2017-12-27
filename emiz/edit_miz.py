@@ -14,8 +14,10 @@ from emiz.miz import Miz
 
 LOGGER = MAIN_LOGGER.getChild(__name__)
 
+# pylint: disable=too-many-arguments,too-many-branches,too-many-return-statements
 
-def edit_miz(  # noqa: C901 pylint: disable=too-many-arguments,too-many-branches
+
+def edit_miz(  # noqa: C901
         infile: str,
         outfile: str = None,
         metar: typing.Union[str, Metar] = None,
@@ -44,10 +46,10 @@ def edit_miz(  # noqa: C901 pylint: disable=too-many-arguments,too-many-branches
     else:
         LOGGER.debug(f'editing miz file: {infile} -> {outfile}')
 
-    mission_weather = None
+    mission_weather = mission_time = None
 
     if metar:
-        error, metar = emiz.weather.custom_metar.CustomMetar(metar)
+        error, metar = emiz.weather.custom_metar.CustomMetar.get_metar(metar)
         if error:
             return error
 
@@ -55,11 +57,11 @@ def edit_miz(  # noqa: C901 pylint: disable=too-many-arguments,too-many-branches
 
     if time:
         try:
-            time = MissionTime.from_string(time)
+            mission_time = MissionTime.from_string(time)
         except ValueError:
             return f'badly formatted time string: {time}'
 
-    if not metar and not time:
+    if not mission_weather and not mission_time:
         return 'nothing to do!'
 
     with Miz(infile) as miz:
@@ -67,9 +69,9 @@ def edit_miz(  # noqa: C901 pylint: disable=too-many-arguments,too-many-branches
             LOGGER.debug('applying MissionWeather')
             if not mission_weather.apply_to_miz(miz):
                 return 'error while applying METAR to mission'
-        if time:
+        if mission_time:
             LOGGER.debug('applying MissionTime')
-            if not time.apply_to_miz(miz):
+            if not mission_time.apply_to_miz(miz):
                 return 'error while setting time on mission'
 
         try:

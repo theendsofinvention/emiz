@@ -5,13 +5,13 @@ Applies a METAR to a MIZ file
 import typing
 from pathlib import Path
 
-from metar import Metar
-
 import elib.path
+from metar import Metar
 
 from emiz import MAIN_LOGGER
 from emiz.miz import Miz
-from .. import mission_weather, custom_metar
+
+from .. import custom_metar, mission_weather
 
 LOGGER = MAIN_LOGGER.getChild(__name__)
 

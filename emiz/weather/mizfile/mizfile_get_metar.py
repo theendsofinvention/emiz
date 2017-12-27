@@ -6,10 +6,9 @@ Builds a dummy METAR string from a mission file
 import re
 from datetime import datetime
 
+import emiz.weather.utils
 from emiz import MAIN_LOGGER
 from emiz.miz import Mission, Miz
-
-import emiz.weather.utils
 
 LOGGER = MAIN_LOGGER.getChild(__name__)
 

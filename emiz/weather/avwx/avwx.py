@@ -17,8 +17,6 @@ from .avwx_result import AVWXResult
 LOGGER = MAIN_LOGGER.getChild(__name__)
 
 
-
-
 # pylint: disable=too-few-public-methods
 class AVWX:
     """

@@ -1,4 +1,7 @@
 # coding=utf-8
+"""
+Represents the result of a query to AVWX API
+"""
 from collections import defaultdict
 
 from emiz import MAIN_LOGGER
@@ -22,6 +25,7 @@ class _AVWXProp:
 
 
 # noinspection SpellCheckingInspection
+# pylint: disable=too-many-public-methods
 class AVWXResult:
     """
     Represents the result of a query to AVWX API

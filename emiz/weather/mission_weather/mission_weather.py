@@ -10,6 +10,7 @@ from datetime import date, datetime
 from metar.Metar import Metar
 
 from emiz import MAIN_LOGGER
+
 from ..utils import hpa_to_mmhg
 
 LOGGER = MAIN_LOGGER.getChild(__name__)

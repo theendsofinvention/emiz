@@ -6,10 +6,9 @@ import typing
 
 from metar.Metar import Metar, ParserError
 
+from .. import noaa
 from ... import MAIN_LOGGER
 from .custom_metar_pressure import CustomPressure
-from .. import noaa
-
 
 LOGGER = MAIN_LOGGER.getChild(__name__)
 
@@ -56,6 +55,7 @@ class CustomMetar(Metar):
         except ParserError:
             return f'Unable to parse METAR: {metar}', None
 
+    # pylint: disable=too-many-branches
     def string(self):  # noqa: C901
         """
         Return a human-readable version of the decoded report.
@@ -80,11 +80,7 @@ class CustomMetar(Metar):
         if self.runway:
             lines.append("visual range: %s" % self.runway_visual_range())
         if self.press:
-            lines.append(f"pressure: "
-                         f"{self.press.string('MB')} - "
-                         f"{self.press.string('IN')} - "
-                         f"{self.press.string('MM')}"
-                         )
+            lines.append(f"pressure: {self.press.string('MB')} {self.press.string('IN')} {self.press.string('MM')}")
         if self.weather:
             lines.append("weather: %s" % self.present_weather())
         if self.sky:

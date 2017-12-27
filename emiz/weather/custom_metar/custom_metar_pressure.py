@@ -37,7 +37,7 @@ class CustomPressure(pressure):
         else:
             raise UnitsError("unrecognized pressure unit: '" + units + "'")
 
-    def string(self, units=None):
+    def string(self, units=None) -> str:
         """Return a string representation of the pressure, using the given units."""
         if not units:
             units = self._units
@@ -54,3 +54,5 @@ class CustomPressure(pressure):
             return "%.2f inches" % val
         elif units == "MM":
             return "%.0f mmHg" % val
+
+        raise ValueError(units)

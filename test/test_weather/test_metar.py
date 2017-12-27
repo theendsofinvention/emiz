@@ -10,7 +10,6 @@ import emiz.weather
 from emiz import Miz
 from emiz.mission import Mission
 
-
 TEST_FILES_FOLDER = elib.path.ensure_path('./test/test_files').absolute()
 if not TEST_FILES_FOLDER.exists():
     raise RuntimeError(f'cannot find test files in: {str(TEST_FILES_FOLDER.absolute())}')
@@ -69,7 +68,8 @@ def test_set_weather_from_metar(metar):
     assert out_metar.wind_dir.value() == 130
     assert out_metar.wind_speed.value() == 7.0
     with Miz(OUT_FILE) as miz:
-        assert miz.mission.weather.wind_at_ground_level_dir == emiz.weather.utils.reverse_direction(in_metar.wind_dir.value())
+        assert miz.mission.weather.wind_at_ground_level_dir == emiz.weather.utils.reverse_direction(
+            in_metar.wind_dir.value())
         assert miz.mission.weather.visibility == 10000
         assert miz.mission.weather.cloud_thickness == 200
         assert miz.mission.weather.atmosphere_type == 0

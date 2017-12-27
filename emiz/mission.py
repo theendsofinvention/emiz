@@ -216,7 +216,6 @@ class BaseMissionObject:
     def _start_datetime_as_string(self, startime):
         return f'{self.mission_start_date_as_string} {self._start_time_as_string(startime)}'
 
-
     @property
     def mission_start_time_as_string(self):
         return self._start_time_as_string(self.mission_start_time)
