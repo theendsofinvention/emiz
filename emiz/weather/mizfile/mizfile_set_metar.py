@@ -44,7 +44,7 @@ def set_weather_from_metar(
     if out_file is None:
         out_file = in_file
     else:
-        out_file = elib.path.ensure_file(out_file, must_exit=False)
+        out_file = elib.path.ensure_file(out_file, must_exist=False)
     LOGGER.debug(f'applying metar: {in_file} -> {out_file}')
 
     try:

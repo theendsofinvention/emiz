@@ -152,7 +152,7 @@ class Miz:
         """
 
         miz_file_path = elib.path.ensure_file(miz_file_path)
-        target_dir = elib.path.ensure_dir(target_dir, must_exit=False)
+        target_dir = elib.path.ensure_dir(target_dir, must_exist=False)
 
         LOGGER.debug(f're-ordering miz file: {miz_file_path}')
         LOGGER.debug(f'destination folder: {target_dir}')
@@ -330,7 +330,7 @@ class Miz:
         if destination is None:
             destination = self.miz_path.parent.joinpath(f'{self.miz_path.stem}_EMIZ.miz')
         else:
-            destination = elib.path.ensure_file(destination, must_exit=False)
+            destination = elib.path.ensure_file(destination, must_exist=False)
 
         LOGGER.debug('zipping mission to: {}'.format(destination))
 

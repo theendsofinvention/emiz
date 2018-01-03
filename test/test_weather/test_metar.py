@@ -55,7 +55,7 @@ def test_set_weather_from_icao(icao):
 ])
 def test_set_weather_from_metar(metar):
     in_metar = Metar(metar)
-    random_file = elib.path.ensure_path('./test.miz', must_exit=False)
+    random_file = elib.path.ensure_path('./test.miz', must_exist=False)
     with Miz(TEST_FILE) as miz:
         _randomize_weather(miz.mission)
         miz.zip(random_file)
