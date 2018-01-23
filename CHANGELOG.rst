@@ -2,6 +2,14 @@ Changelog
 =========
 
 
+0.1.22 (2018-01-23)
+-------------------
+
+Fix
+~~~
+- Fix visibility in METAR from mission in case of fog. [132nd-etcher]
+
+
 0.1.21 (2018-01-23)
 -------------------
 
