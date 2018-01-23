@@ -101,7 +101,3 @@ def get_metar_from_mission(
 
     metar = f'{icao} {time} {wind} {visibility} {precipitations} {clouds} {temp} {pres} {qual}'
     return re.sub(' +', ' ', metar)
-
-
-if __name__ == '__main__':
-    print(get_metar_from_mission(r'C:\Users\bob\Saved Games\DCS\Missions\ESST\TRMT_6.2.0.miz'))
