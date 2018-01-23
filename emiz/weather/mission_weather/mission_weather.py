@@ -328,12 +328,14 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
         report.append(f'QNH: {miz.mission.weather.qnh}')
 
         miz.mission.weather.visibility = self.visibility
-        miz.mission.weather.fog_thickness = 1000
         if self.fog_vis:
+            miz.mission.weather.fog_thickness = 1000
             miz.mission.weather.fog_visibility = self.fog_vis
             miz.mission.weather.fog_enabled = True
         else:
             miz.mission.weather.fog_enabled = False
+            miz.mission.weather.fog_visibility = 0
+            miz.mission.weather.fog_thickness = 0
 
         visibility = f'Visibility: {miz.mission.weather.visibility}' \
                      f'\n\tFog: {"yes" if miz.mission.weather.fog_enabled else "no"}' \
