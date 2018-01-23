@@ -84,6 +84,10 @@ def get_metar_from_mission(
         mission = miz.mission
     wind = _get_wind(mission)
     visibility = min(mission.weather.visibility, 9999)
+    if mission.weather.fog_visibility > 0:
+        visibility = min(mission.weather.fog_visibility, visibility)
+    if visibility:
+        visibility = ('{:04d}M'.format(visibility))
     precipitations = _get_precipitations(mission)
     clouds = _get_clouds(mission)
     temp = _get_temp(mission)
@@ -97,3 +101,7 @@ def get_metar_from_mission(
 
     metar = f'{icao} {time} {wind} {visibility} {precipitations} {clouds} {temp} {pres} {qual}'
     return re.sub(' +', ' ', metar)
+
+
+if __name__ == '__main__':
+    print(get_metar_from_mission(r'C:\Users\bob\Saved Games\DCS\Missions\ESST\TRMT_6.2.0.miz'))
