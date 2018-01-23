@@ -90,6 +90,6 @@ def test_bogus_cloud_alt():
     assert base == 4600
     assert f'{base:04}' == '4600'
     metar = emiz.weather.mizfile.get_metar_from_mission(BOGUS_CLOUD_ALT_TEST_FILE)
-    assert '02104MPS 9999 OVC046 07/07 Q1028 NOSIG' in metar
+    assert '02104MPS 9999M OVC046 07/07 Q1028 NOSIG' in metar
     metar = emiz.weather.custom_metar.CustomMetar(metar)
     assert 'sky: overcast at 4600 feet' in metar.string()
