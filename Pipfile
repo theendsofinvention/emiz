@@ -24,3 +24,5 @@ elib = "*"
 epab = "*"
 datadiff = "*"
 "e1839a8" = {path = ".", editable = true}
+# TODO: remove when EPAB is stable again
+mockito = "*"
