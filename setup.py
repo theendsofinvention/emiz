@@ -5,8 +5,6 @@ import os
 from pip.req import parse_requirements
 from setuptools import find_packages, setup
 
-import versioneer
-
 requirements = [str(r.req) for r in
                 parse_requirements('requirements.txt', session=False)]
 test_requirements = [str(r.req) for r in
@@ -48,8 +46,8 @@ setup(
     install_requires=requirements,
     tests_require=test_requirements,
     python_requires='>=3.6',
-    version=versioneer.get_version(),
-    cmdclass=versioneer.get_cmdclass(),
+    use_scm_version=True,
+    setup_requires=['setuptools_scm'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Topic :: Utilities',
