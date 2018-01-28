@@ -39,13 +39,13 @@ def _setup():
 
 # http://localhost:63342/EMIZ/htmlcov/emiz_weather_mizfile_mizfile_get_metar_py.html
 def test_basic_metar(setup):
-    _, mission, time, icao = setup
+    _, _, time, icao = setup
     metar = get_metar_from_mission('test', time=time, icao=icao)
     assert metar == f'{icao} {time} 00000MPS CAVOK 10/10 Q1008 NOSIG'
 
 
 def test_cavok(setup):
-    miz, mission, time, icao = setup
+    _, mission, time, icao = setup
     mission.weather.visibility = 9998
     metar = get_metar_from_mission('test', time=time, icao=icao)
     assert 'CAVOK' not in metar
@@ -69,7 +69,7 @@ def test_cloud_density(setup, density):
 
 
 def test_no_time(setup):
-    _, mission, _, icao = setup
+    _, _, _, icao = setup
     now = datetime.utcnow()
     day = now.day
     hour = now.hour
