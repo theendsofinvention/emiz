@@ -229,7 +229,7 @@ def test_next_unit_id(mission, duplicate_group_id):
     assert mission.next_unit_id == 37
     with pytest.raises(IndexError):
         with Miz(duplicate_group_id) as miz:
-            _ = miz.mission.next_unit_id
+            assert miz.mission.next_unit_id
 
 
 def test_sortie_name(test_file, out_file):
