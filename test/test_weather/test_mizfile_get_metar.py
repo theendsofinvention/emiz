@@ -89,4 +89,3 @@ def test_fog(setup, fog_visibility):
         assert metar == f'{icao} {time} 00000MPS {fog_visibility:04d}M 10/10 Q1008 NOSIG'
     else:
         assert metar == f'{icao} {time} 00000MPS {fog_visibility:04d}M 10/10 Q1008 NOSIG'
-
