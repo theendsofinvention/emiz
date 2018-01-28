@@ -7,3 +7,6 @@ test:
   runner_options:
   av_runner_options:
     - '--long'
+
+flake8:
+  exclude: '.\emiz\_parking_spots.py'
