@@ -12,5 +12,3 @@ global-exclude *.py[co]
 global-exclude html-cov
 exclude .landscape.yml
 exclude .appveyor.yml
-include versioneer.py
-include emiz/_e_version.py
