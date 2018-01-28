@@ -16,12 +16,12 @@ def test_country_generator(mission):
     for country in mission.blue_coa.countries:
         assert isinstance(country, Country)
         value += 1
-    assert value == 19
+    assert value in [19, 21]
     value = 0
     for country in mission.red_coa.countries:
         assert isinstance(country, Country)
         value += 1
-    assert value == 11
+    assert value in [10, 11]
 
 
 def test_get_country_by_name(mission):
