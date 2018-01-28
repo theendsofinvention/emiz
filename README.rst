@@ -6,18 +6,13 @@ Etcher's Mission File Tools
 |OSI|
 
 |license|
-
 |av|
-|codacy| |coverage|
-
-|ccissues| |ccmain|
-
+|codacy|
+|coverage|
+|ccissues|
+|ccmain|
 |requires|
-
-|cdcq|
-
 |bch|
-
 |bp|
 
 |graph|
@@ -35,7 +30,7 @@ Etcher's Mission File Tools
     :target: https://www.codacy.com/app/132nd-etcher/emiz
 .. |coverage| image:: https://img.shields.io/codacy/coverage/d4699411cc594094bb926601ece926a0.svg
     :target: https://www.codacy.com/app/132nd-etcher/emiz
-.. |cdcq| image:: https://img.shields.io/codacy/grade/d4699411cc594094bb926601ece926a0/master.svg?style=flat-square
+.. |cdcq| image:: https://img.shields.io/codacy/grade/d4699411cc594094bb926601ece926a0/master.svg
     :target: https://www.codacy.com/app/132nd-etcher/emiz
     :alt: 'Codacy grade'
 .. |av| image:: https://img.shields.io/appveyor/ci/132nd-etcher/emiz/master.svg?label=master
@@ -44,13 +39,13 @@ Etcher's Mission File Tools
 .. |graph| image:: https://graphs.waffle.io/132nd-etcher/emiz/throughput.svg
     :target: https://waffle.io/132nd-etcher/emiz/metrics/throughput
     :alt: 'Throughput Graph'
-.. |requires| image:: https://img.shields.io/requires/github/132nd-etcher/emiz.svg?style=flat-square
+.. |requires| image:: https://requires.io/github/132nd-etcher/emiz/requirements.svg?branch=master
     :target: https://requires.io/github/132nd-etcher/emiz/requirements/?branch=master
     :alt: 'Requires.io'
-.. |ccissues| image:: https://img.shields.io/codeclimate/issues/github/132nd-etcher/emiz.svg?style=flat-square
+.. |ccissues| image:: https://img.shields.io/codeclimate/issues/github/132nd-etcher/emiz.svg
     :target: https://codeclimate.com/github/132nd-etcher/emiz
     :alt: 'CodeClimate issues'
-.. |ccmain| image:: https://img.shields.io/codeclimate/maintainability/132nd-etcher/emiz.svg?style=flat-square
+.. |ccmain| image:: https://img.shields.io/codeclimate/maintainability/132nd-etcher/emiz.svg
     :target: https://codeclimate.com/github/132nd-etcher/emiz
     :alt: 'CodeClimate maintainability'
 .. |bch| image:: https://bettercodehub.com/edge/badge/132nd-etcher/emiz?branch=master
