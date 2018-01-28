@@ -15,9 +15,15 @@ if not TEST_FILES_FOLDER.exists():
     raise RuntimeError('cannot find test files')
 
 
-@pytest.fixture()
-def test_file():
-    yield Path(TEST_FILES_FOLDER.joinpath('TRG_KA50.miz'))
+@pytest.fixture(
+    params=[
+        Path(TEST_FILES_FOLDER.joinpath('TRG_KA50.miz')),
+        Path(TEST_FILES_FOLDER.joinpath('test_158.miz')),
+    ],
+    ids=['older version', '1.5.8']
+)
+def test_file(request):
+    yield request.param
 
 
 @pytest.fixture()
@@ -71,7 +77,7 @@ def remove_out_file():
         path.unlink()
 
 
-with Miz(Path(TEST_FILES_FOLDER.joinpath('TRG_KA50.miz'))) as miz:
+with Miz(Path(TEST_FILES_FOLDER.joinpath('test_158.miz'))) as miz:
     DUMMY_MISSION = miz.mission
 
 
