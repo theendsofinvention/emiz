@@ -1,9 +1,9 @@
 # coding=utf-8
 import os
 import sys
-from pathlib import Path
 
 import pytest
+from mockito import unstub
 
 
 # noinspection PyUnusedLocal
@@ -18,7 +18,7 @@ def pytest_unconfigure(config):
 
 
 @pytest.fixture(autouse=True)
-def cleandir(request, tmpdir):
+def all(request, tmpdir):
     if 'nocleandir' in request.keywords:
         yield
     else:
@@ -26,6 +26,7 @@ def cleandir(request, tmpdir):
         os.chdir(str(tmpdir))
         yield os.getcwd()
         os.chdir(current_dir)
+    unstub()
 
 
 def pytest_addoption(parser):
