@@ -40,12 +40,12 @@ def test_get_groups_from_category(mission, all_objects):
 def test_get_group_by_id(mission):
     for group_id in range(1, 3):
         assert isinstance(mission.blue_coa.get_group_by_id(group_id), Group)
-    for group_id in range(4, 36):
+    for group_id in range(9, 41):
         assert isinstance(mission.red_coa.get_group_by_id(group_id), Group)
     for wrong_group_id in (-1, False, None, True, 'caribou'):
         with pytest.raises(ValueError, msg=wrong_group_id):
             mission.red_coa.get_group_by_id(wrong_group_id)
-    for non_existing_group_id in (37, 50, 100, 150, mission.next_group_id):
+    for non_existing_group_id in (42, 50, 100, 150, mission.next_group_id):
         assert mission.red_coa.get_group_by_id(non_existing_group_id) is None
         assert mission.blue_coa.get_group_by_id(non_existing_group_id) is None
 
