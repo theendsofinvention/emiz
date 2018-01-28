@@ -53,7 +53,7 @@ def test_cavok(setup):
 
 @pytest.mark.parametrize('density', range(0, 10))
 def test_cloud_density(setup, density):
-    miz, mission, time, icao = setup
+    _, mission, time, icao = setup
     mission.weather.cloud_density = density
     metar = get_metar_from_mission('test', time=time, icao=icao)
     if density == 0:
@@ -81,7 +81,7 @@ def test_no_time(setup):
 
 @pytest.mark.parametrize('fog_visibility', range(0, 6001, 500))
 def test_fog(setup, fog_visibility):
-    miz, mission, time, icao = setup
+    _, mission, time, icao = setup
     mission.weather.fog_visibility = fog_visibility
     mission.weather.fog_enabled = True
     metar = get_metar_from_mission('test', time=time, icao=icao)
