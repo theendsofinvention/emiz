@@ -1,5 +1,32 @@
 Changelog
 =========
+(unreleased)
+------------
+Fix
+~~~
+- Fix visibility in weather report. [132nd-etcher]
+Other
+~~~~~
+- Remove unused values. [132nd-etcher]
+  pep8 [auto]
+  sorting imports [auto]
+  update requirements [auto]
+0.1.24 (2018-01-28)
+-------------------
+New
+~~~
+- Add test mission for DCS 1.5.8 (#6) [132nd-etcher]
+0.1.24a1 (2018-01-28)
+---------------------
+Fix
+~~~
+- Fix forced temperature not applied in case of snow/snow storm. [132nd-
+  etcher]
+0.1.24a3 (2018-01-28)
+---------------------
+New
+~~~
+- Add test mission for DCS 1.5.8. [132nd-etcher]
 0.1.22 (2018-01-23)
 -------------------
 Fix

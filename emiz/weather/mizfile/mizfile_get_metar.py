@@ -48,7 +48,7 @@ def get_metar_from_mission(
 
     def _get_clouds(mission_: Mission):
         density = {
-            0: 'CLR',
+            0: '',
             1: 'FEW',
             2: 'FEW',
             3: 'FEW',
@@ -60,6 +60,9 @@ def get_metar_from_mission(
             9: 'OVC',
             10: 'OVC',
         }
+        if mission_.weather.cloud_density == 0:
+            return ''
+
         density = density[mission_.weather.cloud_density]
         base = int(round(mission_.weather.cloud_base * 3.28084, -2) / 100)
         return f'{density}{base:03}'
@@ -84,10 +87,8 @@ def get_metar_from_mission(
         mission = miz.mission
     wind = _get_wind(mission)
     visibility = min(mission.weather.visibility, 9999)
-    if mission.weather.fog_visibility > 0:
+    if mission.weather.fog_enabled:
         visibility = min(mission.weather.fog_visibility, visibility)
-    if visibility:
-        visibility = ('{:04d}M'.format(visibility))
     precipitations = _get_precipitations(mission)
     clouds = _get_clouds(mission)
     temp = _get_temp(mission)
@@ -98,6 +99,8 @@ def get_metar_from_mission(
     if visibility == 9999 and int(round(mission.weather.cloud_base * 3.28084, -2)) >= 5000:
         # noinspection SpellCheckingInspection
         visibility = 'CAVOK'
+    else:
+        visibility = ('{:04d}M'.format(visibility))
 
     metar = f'{icao} {time} {wind} {visibility} {precipitations} {clouds} {temp} {pres} {qual}'
     return re.sub(' +', ' ', metar)
