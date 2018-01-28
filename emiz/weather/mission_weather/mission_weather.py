@@ -271,7 +271,8 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
             season, temp = _get_season()
             LOGGER.debug(f'no temperature given, since it is {season}, defaulting to {temp}')
             return temp
-        return int(self.metar.temp.value('C'))
+        value = min(self.force_temperature, int(self.metar.temp.value('C')))
+        return value
 
     @property
     def turbulence(self) -> int:
@@ -344,6 +345,10 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
 
         report.append(visibility)
 
+        miz.mission.weather.temperature = self.temperature
+
+        report.append(f'Temperature: {self.temperature}°C')
+
         miz.mission.weather.cloud_density = max(self.force_cloud_density, self.cloud_density)
         miz.mission.weather.cloud_thickness = self.cloud_thickness
         miz.mission.weather.cloud_base = self.cloud_base
@@ -357,8 +362,6 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
 
         report.append(clouds)
 
-        miz.mission.weather.temperature = self.temperature
-
-        report.append(f'Temperature: {self.temperature}°C')
+        LOGGER.debug(f'applying weather: {report}')
 
         return True
