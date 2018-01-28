@@ -10,16 +10,16 @@ from emiz.miz import Miz
 
 
 def test_units(mission):
-    l = 0
+    value = 0
     for unit in mission.blue_coa.units:
-        l += 1
+        value += 1
         assert isinstance(unit, BaseUnit)
-    assert l == 3
-    l = 0
+    assert value == 3
+    value = 0
     for unit in mission.red_coa.units:
-        l += 1
+        value += 1
         assert isinstance(unit, BaseUnit)
-    assert l == 33
+    assert value == 33
 
 
 def test_get_units_from_category(mission, all_objects):
@@ -31,12 +31,12 @@ def test_get_units_from_category(mission, all_objects):
         # for unit in mission.blue_coa.units:
         #     print(unit.group_category)
         for category in ('ship', 'plane', 'helicopter', 'vehicle'):
-            l = 0
+            value = 0
             for unit in miz.mission._blue_coa.get_units_from_category(category):
                 assert isinstance(unit, BaseUnit)
                 assert unit.group_category == category
-                l += 1
-            assert l == 1
+                value += 1
+            assert value == 1
 
 
 def test_get_unit_by_id(mission):

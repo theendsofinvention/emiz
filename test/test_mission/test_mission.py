@@ -207,11 +207,11 @@ def test_objects(all_objects):
 
 def test_coalitions_generator(mission):
     assert mission.coalitions
-    l = 0
+    value = 0
     for coa in mission.coalitions:
         assert isinstance(coa, Coalition)
-        l += 1
-    assert l == 2
+        value += 1
+    assert value == 2
 
 
 def test_repr(mission):
@@ -222,7 +222,7 @@ def test_next_group_id(mission, duplicate_group_id):
     assert mission.next_group_id == 37
     with pytest.raises(IndexError):
         with Miz(duplicate_group_id) as miz:
-            _ = miz.mission.next_group_id
+            assert miz.mission.next_group_id
 
 
 def test_next_unit_id(mission, duplicate_group_id):

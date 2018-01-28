@@ -12,16 +12,16 @@ from emiz.miz import Miz
 def test_country_generator(mission):
     for coa in (mission.blue_coa, mission.red_coa):
         assert coa.countries
-    l = 0
+    value = 0
     for country in mission.blue_coa.countries:
         assert isinstance(country, Country)
-        l += 1
-    assert l == 19
-    l = 0
+        value += 1
+    assert value == 19
+    value = 0
     for country in mission.red_coa.countries:
         assert isinstance(country, Country)
-        l += 1
-    assert l == 11
+        value += 1
+    assert value == 11
 
 
 def test_get_country_by_name(mission):

@@ -10,16 +10,16 @@ from emiz.miz import Miz
 
 
 def test_groups(mission):
-    l = 0
+    value = 0
     for group in mission.blue_coa.groups:
-        l += 1
+        value += 1
         assert isinstance(group, Group)
-    assert l == 3
-    l = 0
+    assert value == 3
+    value = 0
     for group in mission.red_coa.groups:
-        l += 1
+        value += 1
         assert isinstance(group, Group)
-    assert l == 33
+    assert value == 33
 
 
 def test_get_groups_from_category(mission, all_objects):
@@ -29,12 +29,12 @@ def test_get_groups_from_category(mission, all_objects):
                 pass
     with Miz(all_objects) as miz:
         for category in ('ship', 'plane', 'helicopter', 'vehicle'):
-            l = 0
+            value = 0
             for group in miz.mission._blue_coa.get_groups_from_category(category):
                 assert isinstance(group, Group)
                 assert group.group_category == category
-                l += 1
-            assert l == 1
+                value += 1
+            assert value == 1
 
 
 def test_get_group_by_id(mission):
