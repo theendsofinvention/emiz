@@ -4,7 +4,6 @@
 """Simple Lua Python Parser"""
 import re
 
-import mpmath
 from natsort import natsorted
 
 from emiz import MAIN_LOGGER
@@ -129,7 +128,7 @@ class SLTP:
             s += '"%s"' % obj.replace('"', '\\"')
         elif isinstance(obj, bool):
             s += str(obj).lower()
-        elif isinstance(obj, (int, float, complex, mpmath.mpf)):
+        elif isinstance(obj, (int, float, complex)):
             s += str(obj)
         elif isinstance(obj, (list, tuple, dict)):
             # Ladies and gentlemen, please take a minute to behold the following code.
@@ -139,7 +138,7 @@ class SLTP:
             self.depth += 1
             # noinspection PyTypeChecker
             if not isinstance(obj, dict) and len(filter(
-                lambda x: isinstance(x, (int, float, mpmath.mpf)) or (isinstance(x, str) and len(x) < 10), obj
+                lambda x: isinstance(x, (int, float)) or (isinstance(x, str) and len(x) < 10), obj
             )) == len(obj):
                 newline = tab = ''
             dp = tab * self.depth
@@ -250,7 +249,7 @@ class SLTP:
                         o[idx] = k
                     if not numeric_keys and len(
                         [
-                            key for key in o if type(key) in (str, float, bool, tuple, mpmath.mpf)
+                            key for key in o if type(key) in (str, float, bool, tuple)
                         ]
                     ) == 0:
                         ar = []
@@ -331,7 +330,7 @@ class SLTP:
         try:
             return int(n, 0)
         except ValueError:
-            return mpmath.mpf(n)
+            return float(n)
 
     # noinspection PyMissingOrEmptyDocstring
     def digit(self):
@@ -344,10 +343,8 @@ class SLTP:
     # noinspection PyMissingOrEmptyDocstring
     def hex(self):
         n = ''
+        # noinspection SpellCheckingInspection
         while self.ch and (self.ch in 'ABCDEFabcdef' or self.ch.isdigit()):
             n += self.ch
             self.next_chr()
         return n
-
-
-sltp = SLTP()
