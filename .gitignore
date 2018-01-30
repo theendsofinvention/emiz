@@ -29,3 +29,5 @@ __version_frozen__.py
 Pipfile.lock
 .gitchangelog.rc
 /test_decompose/
+/test/test_files/TRG_KA50/
+/test/test_files/TRMT_6.4.3/
