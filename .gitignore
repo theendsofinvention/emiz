@@ -31,3 +31,5 @@ Pipfile.lock
 /test_decompose/
 /test/test_files/TRG_KA50/
 /test/test_files/TRMT_6.4.3/
+/test_recompose.json
+/test_decompose.json

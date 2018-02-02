@@ -234,6 +234,7 @@ class SLTP:
         if self.ch and self.ch == '}':
             self.depth -= 1
             self.next_chr()
+            o = {k: o[k] for k in natsorted(o.keys())}
             return o  # Exit here
         else:
             while self.ch:
