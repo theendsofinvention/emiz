@@ -11,7 +11,7 @@ test_requirements = [str(r.req) for r in
                      parse_requirements('requirements-dev.txt', session=False)]
 
 CLASSIFIERS = filter(None, map(str.strip,
-"""
+                               """
 Development Status :: 3 - Alpha
 Topic :: Utilities
 License :: OSI Approved :: GNU General Public License v3 (GPLv3)
@@ -31,6 +31,7 @@ Programming Language :: Python :: Implementation :: CPython
 Topic :: Games/Entertainment
 Topic :: Utilities
 """.splitlines()))
+
 
 def read_local_files(*file_paths: str) -> str:
     """
