@@ -72,15 +72,11 @@ class Recompose:
             if dict_version != self._version:
                 wrong_version(file.absolute(), dict_version, self._version)
 
-            dict_single = dict_.pop('__single__', False)
             file_stem = file.name.replace('.json', '')
             if file_stem == 'base_info':
                 return self._sorted(dict_)
             else:
-                if dict_single:
-                    output[file_stem] = self._sorted(dict_)
-                else:
-                    output[file_stem] = self._sorted(dict_)
+                output[file_stem] = self._sorted(dict_)
 
             for key in dict_:
                 if isinstance(key, str) and key.startswith('__'):

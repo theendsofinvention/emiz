@@ -7,27 +7,7 @@ from natsort import natsorted
 
 from emiz.miz import Miz
 
-# TODO: decode with "precise_float=True"
-
 VERSION = None
-
-
-# def _write(src: dict, path: Path, l10n, keys: typing.List[str] = None, debug=False):
-#     output = {}
-#     if keys is None:
-#         keys = src.keys()
-#     if debug:
-#         print(keys)
-#     for key in keys:
-#         if debug:
-#             print(key)
-#         value = src[key]
-#         output[key] = value
-#         try:
-#             REMAINING_KEYS.remove(key)
-#         except ValueError:
-#             pass
-#     path.write_text(ujson.dumps(output, indent=2, ensure_ascii=False), encoding='utf8')
 
 
 class Decomposer2:
@@ -39,16 +19,23 @@ class Decomposer2:
         self._l10n = miz.l10n
         self._map = miz.map_res
         self._version = self._dict['version']
+        self._missing_name_counter = 0
 
-    def _translate(self, key):
-        if isinstance(key, str) \
-                and key.startswith('DictKey_'):
+    def _missing_name(self):
+        self._missing_name_counter += 1
+        return f'__MISSING_NAME #{self._missing_name_counter:03d}'
+
+    def _translate(self, dict_key):
+        if isinstance(dict_key, str) \
+                and dict_key.startswith('DictKey_'):
             try:
-                return self._l10n[key]
+                return self._l10n[dict_key]
             except KeyError:
+                self._l10n[dict_key] = self._missing_name()
+                return self._l10n[dict_key]
                 # TODO: l10n is missing a name !!!
                 pass
-        return key
+        return dict_key
 
     def _write_output_to_file(self, file: Path, output: dict):
         file.write_text(ujson.dumps(output, indent=2, ensure_ascii=False), encoding='utf8')
@@ -112,7 +99,6 @@ class Decomposer2:
             else:
                 output_folder.rmdir()
                 file = Path(f'{output_folder}.json')
-                output['__single__'] = True
             self._write_output_to_file(file, output)
 
     def decompose(self, output_folder: Path):
@@ -136,7 +122,7 @@ if __name__ == '__main__':
     with Miz(test_file) as miz_:
         # print(miz_.mission.d['weather'])
         # decomposer = Decomposer(miz_, output_folder)
-        # Path('test_decompose.json').write_text(ujson.dumps(miz_.mission.d, indent=4), encoding='utf8')
+        Path('test_decompose.json').write_text(ujson.dumps(miz_.mission.d, indent=4), encoding='utf8')
         Decomposer2(miz_).decompose(test_folder)
 
 # TODO: isolate triggers & trigrules (name value is "comment" on trigrules
