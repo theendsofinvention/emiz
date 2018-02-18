@@ -5,6 +5,7 @@ Etcher's Mission File Tools
 
 |OSI|
 
+|status|
 |license|
 |av|
 |codacy|
@@ -21,6 +22,10 @@ Etcher's Mission File Tools
 
 .. |OSI| image:: https://badges.frapsoft.com/os/v3/open-source-200x33.png?v=103
     :target: https://github.com/ellerbrock/open-source-badges/
+    :alt: '<3 Open Source'
+.. |status| image:: https://img.shields.io/pypi/status/emiz.svg
+	:target: https://pypi.python.org/pypi/emiz/
+	:alt: 'Cheese shop'
 .. |license| image:: https://img.shields.io/github/license/132nd-etcher/EMIZ.svg
     :alt: 'License'
 .. |av_master| image:: https://img.shields.io/appveyor/ci/132nd-etcher/emiz/master.svg?label=master
