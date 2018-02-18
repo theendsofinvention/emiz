@@ -14,6 +14,7 @@ Etcher's Mission File Tools
 |requires|
 |bch|
 |bp|
+|cf|
 
 |graph|
 
@@ -54,3 +55,6 @@ Etcher's Mission File Tools
 .. |bp| image:: https://bestpractices.coreinfrastructure.org/projects/1600/badge
     :target: https://bestpractices.coreinfrastructure.org/projects/1600
     :alt: 'OSI Best Practices'
+.. |cf| image:: https://www.codefactor.io/repository/github/132nd-etcher/emiz/badge
+    :target: https://www.codefactor.io/repository/github/132nd-etcher/emiz
+    :alt: 'CodeFactor'
