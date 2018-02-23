@@ -1,16 +1,57 @@
 Changelog
 =========
-(unreleased)
-------------
+0.1.28 (2018-01-28)
+-------------------
+Changes
+~~~~~~~
+- Update readme (#11) [132nd-etcher]
+  * chg: update readme
+  * chg: update readme
 Fix
 ~~~
-- Fix visibility in weather report. [132nd-etcher]
-Other
-~~~~~
+- Fix visibility in weather report (#8) [132nd-etcher]
+  * fix: fix visibility in weather report
+  * chg: dev: linting
+  * remove unused values
+  pep8 [auto]
+  sorting imports [auto]
+  update requirements [auto]
+  update changelog [auto]
+  * chg: dev: remove unused variables
+  * chg: dev: remove unused variables
+0.1.27a3 (2018-01-28)
+---------------------
+Changes
+~~~~~~~
+- Update readme. [132nd-etcher]
+0.1.26 (2018-01-28)
+-------------------
+Changes
+~~~~~~~
+- Change license to MIT (#10) [132nd-etcher]
+0.1.25a4 (2018-01-28)
+---------------------
 - Remove unused values. [132nd-etcher]
   pep8 [auto]
   sorting imports [auto]
   update requirements [auto]
+  update changelog [auto]
+0.1.26a1 (2018-01-28)
+---------------------
+Changes
+~~~~~~~
+- Change license to MIT. [132nd-etcher]
+0.1.25 (2018-01-28)
+-------------------
+Fix
+~~~
+- Fix forced temperature not applied in case of snow/snow storm (#9)
+  [132nd-etcher]
+0.1.25a3 (2018-01-28)
+---------------------
+Fix
+~~~
+- Fix visibility in weather report. [132nd-etcher]
 0.1.24 (2018-01-28)
 -------------------
 New
