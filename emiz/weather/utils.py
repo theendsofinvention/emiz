@@ -3,9 +3,9 @@
 Utility function for weather
 """
 
-from emiz import MAIN_LOGGER
+import elib
 
-LOGGER = MAIN_LOGGER.getChild(__name__)
+LOGGER = elib.custom_logging.get_logger('EMIZ')
 
 
 # noinspection SpellCheckingInspection

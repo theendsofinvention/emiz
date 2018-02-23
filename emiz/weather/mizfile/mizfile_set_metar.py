@@ -5,15 +5,15 @@ Applies a METAR to a MIZ file
 import typing
 from pathlib import Path
 
+import elib
 import elib.path
 from metar import Metar
 
-from emiz import MAIN_LOGGER
 from emiz.miz import Miz
 
 from .. import custom_metar, mission_weather
 
-LOGGER = MAIN_LOGGER.getChild(__name__)
+LOGGER = elib.custom_logging.get_logger('EMIZ')
 
 
 def set_weather_from_metar(

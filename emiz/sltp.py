@@ -4,12 +4,10 @@
 """Simple Lua Python Parser"""
 import re
 
+import elib
 from natsort import natsorted
 
-from emiz import MAIN_LOGGER
-
-LOGGER = MAIN_LOGGER.getChild(__name__)
-
+LOGGER = elib.custom_logging.get_logger('EMIZ')
 
 # noinspection SpellCheckingInspection
 ERRORS = {
