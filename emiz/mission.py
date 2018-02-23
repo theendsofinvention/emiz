@@ -6,12 +6,13 @@ import typing
 from itertools import chain
 from time import gmtime, strftime
 
-from emiz import MAIN_LOGGER
+import elib
+
 from emiz.validator import VALID_BOOL, VALID_FLOAT, VALID_INT, VALID_POSITIVE_INT, VALID_STR, Validator
 
 EPOCH_DELTA = 1306886400
 
-LOGGER = MAIN_LOGGER.getChild(__name__)
+LOGGER = elib.custom_logging.get_logger('EMIZ')
 
 validator_group_or_unit_name = Validator(_type=str, _regex=r'[a-zA-Z0-9\_\-\#]+',
                                          exc=ValueError, logger=LOGGER)

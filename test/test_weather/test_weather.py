@@ -1,6 +1,6 @@
 # coding=utf-8
-from hypothesis import strategies as st
 from hypothesis import example, given
+from hypothesis import strategies as st
 
 import emiz.weather
 

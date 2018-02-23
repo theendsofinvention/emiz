@@ -7,14 +7,12 @@ https://avwx.rest/documentation
 
 import json
 
-import requests
+import elib
 import requests.adapters
-
-from emiz import MAIN_LOGGER
 
 from .avwx_result import AVWXResult
 
-LOGGER = MAIN_LOGGER.getChild(__name__)
+LOGGER = elib.custom_logging.get_logger('EMIZ')
 
 
 # pylint: disable=too-few-public-methods

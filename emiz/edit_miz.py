@@ -5,14 +5,15 @@ Allow for batch edit of time and weather of single miz
 
 import typing
 
+import elib
 from metar.Metar import Metar
 
 import emiz.weather
-from emiz import MAIN_LOGGER
 from emiz.mission_time import MissionTime
 from emiz.miz import Miz
 
-LOGGER = MAIN_LOGGER.getChild(__name__)
+LOGGER = elib.custom_logging.get_logger('EMIZ')
+
 
 # pylint: disable=too-many-arguments,too-many-branches,too-many-return-statements
 
