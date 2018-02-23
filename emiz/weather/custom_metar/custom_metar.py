@@ -7,8 +7,8 @@ import typing
 import elib
 from metar.Metar import Metar, ParserError
 
-from .custom_metar_pressure import CustomPressure
 from .. import noaa
+from .custom_metar_pressure import CustomPressure
 
 LOGGER = elib.custom_logging.get_logger('EMIZ')
 
