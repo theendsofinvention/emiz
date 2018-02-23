@@ -9,14 +9,13 @@ from filecmp import dircmp
 from pathlib import Path
 from zipfile import BadZipFile, ZipFile, ZipInfo
 
-import elib.path
+import elib
 
-from emiz import MAIN_LOGGER
 from emiz.dummy_miz import dummy_miz
 from emiz.mission import Mission
 from emiz.sltp import SLTP
 
-LOGGER = MAIN_LOGGER.getChild(__name__)
+LOGGER = elib.custom_logging.get_logger('EMIZ')
 ENCODING = 'iso8859_15'
 
 

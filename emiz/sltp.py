@@ -4,13 +4,11 @@
 """Simple Lua Python Parser"""
 import re
 
+import elib
 import mpmath
 from natsort import natsorted
 
-from emiz import MAIN_LOGGER
-
-LOGGER = MAIN_LOGGER.getChild(__name__)
-
+LOGGER = elib.custom_logging.get_logger('EMIZ')
 
 # noinspection SpellCheckingInspection
 ERRORS = {
@@ -139,7 +137,7 @@ class SLTP:
             self.depth += 1
             # noinspection PyTypeChecker
             if not isinstance(obj, dict) and len(filter(
-                lambda x: isinstance(x, (int, float, mpmath.mpf)) or (isinstance(x, str) and len(x) < 10), obj
+                    lambda x: isinstance(x, (int, float, mpmath.mpf)) or (isinstance(x, str) and len(x) < 10), obj
             )) == len(obj):
                 newline = tab = ''
             dp = tab * self.depth
@@ -249,9 +247,9 @@ class SLTP:
                     if k:
                         o[idx] = k
                     if not numeric_keys and len(
-                        [
-                            key for key in o if type(key) in (str, float, bool, tuple, mpmath.mpf)
-                        ]
+                            [
+                                key for key in o if type(key) in (str, float, bool, tuple, mpmath.mpf)
+                            ]
                     ) == 0:
                         ar = []
                         for key in o:

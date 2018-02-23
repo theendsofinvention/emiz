@@ -33,3 +33,4 @@ Pipfile.lock
 /test/test_files/TRMT_6.4.3/
 /test_recompose.json
 /test_decompose.json
+/doitall.cmd

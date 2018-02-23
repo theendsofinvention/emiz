@@ -6,11 +6,12 @@ Builds a dummy METAR string from a mission file
 import re
 from datetime import datetime
 
+import elib
+
 import emiz.weather.utils
-from emiz import MAIN_LOGGER
 from emiz.miz import Mission, Miz
 
-LOGGER = MAIN_LOGGER.getChild(__name__)
+LOGGER = elib.custom_logging.get_logger('EMIZ')
 
 
 # pylint: disable=too-many-locals

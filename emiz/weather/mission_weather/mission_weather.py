@@ -7,13 +7,12 @@ import random
 import typing
 from datetime import date, datetime
 
+import elib
 from metar.Metar import Metar
-
-from emiz import MAIN_LOGGER
 
 from ..utils import hpa_to_mmhg
 
-LOGGER = MAIN_LOGGER.getChild(__name__)
+LOGGER = elib.custom_logging.get_logger('EMIZ')
 
 Y = 2000
 

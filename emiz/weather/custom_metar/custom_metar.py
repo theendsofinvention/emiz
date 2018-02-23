@@ -4,13 +4,13 @@ Subclass metar.Metar.Metar (sic) to add functionality
 """
 import typing
 
+import elib
 from metar.Metar import Metar, ParserError
 
 from .. import noaa
-from ... import MAIN_LOGGER
 from .custom_metar_pressure import CustomPressure
 
-LOGGER = MAIN_LOGGER.getChild(__name__)
+LOGGER = elib.custom_logging.get_logger('EMIZ')
 
 
 class CustomMetar(Metar):

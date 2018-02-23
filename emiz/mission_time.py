@@ -5,9 +5,9 @@ Manages date and time in a mission
 import datetime
 import re
 
-from emiz import MAIN_LOGGER
+import elib
 
-LOGGER = MAIN_LOGGER.getChild(__name__)
+LOGGER = elib.custom_logging.get_logger('EMIZ')
 
 RE_INPUT_STRING = re.compile(r'^'
                              r'(?P<year>[\d]{4})'

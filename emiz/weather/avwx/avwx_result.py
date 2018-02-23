@@ -4,9 +4,9 @@ Represents the result of a query to AVWX API
 """
 from collections import defaultdict
 
-from emiz import MAIN_LOGGER
+import elib
 
-LOGGER = MAIN_LOGGER.getChild(__name__)
+LOGGER = elib.custom_logging.get_logger('EMIZ')
 
 
 # pylint: disable=too-few-public-methods
