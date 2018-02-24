@@ -35,3 +35,4 @@ Pipfile.lock
 /test_decompose.json
 /doitall.cmd
 lastfailed
+test.miz
