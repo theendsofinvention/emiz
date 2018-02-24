@@ -22,7 +22,9 @@ def pytest_unconfigure(config):
 
 
 @pytest.fixture(autouse=True)
-def all(request, tmpdir):
+def all(request, tmpdir, out_file: Path):
+    if out_file.exists():
+        out_file.unlink()
     if 'nocleandir' in request.keywords:
         yield
     else:
@@ -31,6 +33,8 @@ def all(request, tmpdir):
         yield os.getcwd()
         os.chdir(current_dir)
     unstub()
+    if out_file.exists():
+        out_file.unlink()
 
 
 def pytest_addoption(parser):
@@ -53,20 +57,27 @@ if not SLTP_TEST_FILE.exists():
     raise RuntimeError('cannot find SLTP test files')
 
 
+@pytest.fixture(name='test_files_folder')
+def _test_files_folder():
+    yield TEST_FILES_FOLDER
+
+
 @pytest.fixture(
-    params=[
-        Path(TEST_FILES_FOLDER.joinpath('TRG_KA50.miz')),
-        Path(TEST_FILES_FOLDER.joinpath('test_158.miz')),
-    ],
-    ids=['older version', '1.5.8']
+    params=('TRG_KA50.miz', 'test_158.miz'),
+    ids=('older version', '1.5.8')
 )
-def test_file(request):
-    yield request.param
+def test_file(request, test_files_folder):
+    yield Path(test_files_folder, request.param)
 
 
 @pytest.fixture()
-def out_file():
-    yield Path(TEST_FILES_FOLDER.joinpath('TRG_KA50_EMFT.miz'))
+def out_file(test_files_folder):
+    yield Path(test_files_folder, 'TRG_KA50_EMFT.miz')
+
+
+@pytest.fixture()
+def weather_test_file(test_files_folder):
+    yield Path(test_files_folder, 'weather.miz')
 
 
 @pytest.fixture()
