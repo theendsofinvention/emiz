@@ -24,7 +24,8 @@ class Recompose:
         self._dict = self._recreate_dict_from_folder(self._src)
         Path('test_recompose.json').write_text(ujson.dumps(self._dict, indent=4, ensure_ascii=False), encoding=ENCODING)
 
-    def _sorted(self, dict_: dict) -> dict:
+    @staticmethod
+    def _sorted(dict_: dict) -> dict:
         return {k: dict_[k] for k in natsorted(dict_.keys())}
 
     def _recreate_dict_from_folder(self, folder: Path) -> dict:

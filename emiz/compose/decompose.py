@@ -112,10 +112,14 @@ class Decomposer2:
         self._decompose_dict(self._dict, 'base_info', output_folder)
 
 
-
 if __name__ == '__main__':
+    import elib
     import shutil
+
     test_file = './test/test_files/TRMT_6.4.3.miz'
+    logger = elib.custom_logging.get_logger('EMIZ')
+    elib.custom_logging.set_handler_level('EMIZ', 'ch', 'debug')
+    elib.custom_logging.set_root_logger(logger)
     # test_file = './test/test_files/TRG_KA50.miz'
     test_folder = 'test_decompose'
 
@@ -127,9 +131,11 @@ if __name__ == '__main__':
         shutil.rmtree(test_folder)
     test_folder = Path(test_folder)
     with Miz(test_file) as miz_:
+        # print(miz_.map_res)
         # print(miz_.mission.d['weather'])
         # decomposer = Decomposer(miz_, output_folder)
-        Path('test_decompose.json').write_text(ujson.dumps(miz_.mission.d, indent=4, ensure_ascii=False), encoding=ENCODING)
+        Path('test_decompose.json').write_text(ujson.dumps(miz_.mission.d, indent=4, ensure_ascii=False),
+                                               encoding=ENCODING)
         Decomposer2(miz_).decompose(test_folder)
 
-# TODO: isolate triggers & trigrules (name value is "comment" on trigrules
+# TODO: isolate triggers & trigrules (name value is "comment" on trigrules)
