@@ -8,18 +8,6 @@ import pytest
 from emiz.sltp import SLTP, SLTPParsingError
 from emiz.miz import ENCODING
 
-if os.path.exists('./test_files'):
-    BASE_PATH = os.path.abspath('./test_files/sltp')
-elif os.path.exists('./test/test_files'):
-    BASE_PATH = os.path.abspath('./test/test_files/sltp')
-else:
-    raise RuntimeError('cannot find test files')
-
-TEST_FILES_DIR = os.path.join(BASE_PATH, 'pass')
-TEST_FILES_DIR_FAIL = os.path.join(BASE_PATH, 'fail')
-TEST_FILES_DIR_DIFF = os.path.join(BASE_PATH, 'diff')
-TEST_FILES_DIR_LONG = os.path.join(BASE_PATH, 'long')
-
 
 def _assert_same(input_, output):
 
@@ -59,27 +47,19 @@ def _do_test(test_file, compare_func):
     compare_func(input_, output)
 
 
-@pytest.mark.parametrize('test_file', os.listdir(TEST_FILES_DIR))
-def test_encode_decode_files(test_file):
-    test_file = os.path.join(TEST_FILES_DIR, test_file)
-    _do_test(test_file, _assert_same)
+def test_encode_decode_files(sltp_pass):
+    _do_test(sltp_pass, _assert_same)
 
 
 @pytest.mark.long
-@pytest.mark.parametrize('test_file', os.listdir(TEST_FILES_DIR_LONG))
-def test_encode_decode_files_long(test_file):
-    test_file = os.path.join(TEST_FILES_DIR_LONG, test_file)
-    _do_test(test_file, _assert_same)
+def test_encode_decode_files_long(sltp_long):
+    _do_test(sltp_long, _assert_same)
 
 
-@pytest.mark.parametrize('test_file', os.listdir(TEST_FILES_DIR_FAIL))
-def test_encode_decode_files_fail(test_file):
-    test_file = os.path.join(TEST_FILES_DIR_FAIL, test_file)
+def test_encode_decode_files_fail(sltp_fail):
     with pytest.raises(SLTPParsingError):
-        _do_test(test_file, _assert_same)
+        _do_test(sltp_fail, _assert_same)
 
 
-@pytest.mark.parametrize('test_file', os.listdir(TEST_FILES_DIR_DIFF))
-def test_encode_decode_files_diff(test_file):
-    test_file = os.path.join(TEST_FILES_DIR_DIFF, test_file)
-    _do_test(test_file, _assert_different)
+def test_encode_decode_files_diff(sltp_diff):
+    _do_test(sltp_diff, _assert_different)
