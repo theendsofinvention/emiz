@@ -9,13 +9,13 @@ from emiz.miz import ENCODING, Miz
 
 
 class Decomposer2:
-
     name_fields = ['callsignStr', 'name']
 
     def __init__(self, miz: Miz):
         self._dict = miz.mission.d
         self._l10n = miz.l10n
         self._map = miz.map_res
+        self._resources = miz.resources
         self._version = self._dict['version']
         self._missing_name_counter = 0
 
@@ -23,16 +23,25 @@ class Decomposer2:
         self._missing_name_counter += 1
         return f'__MISSING_NAME #{self._missing_name_counter:03d}'
 
+    def _check_resource(self, resource_name):
+        if resource_name not in self._resources:
+            raise FileNotFoundError(f'resource not found: {resource_name}')
+
     def _translate(self, dict_key):
-        if isinstance(dict_key, str) \
-                and dict_key.startswith('DictKey_'):
-            try:
-                return self._l10n[dict_key]
-            except KeyError:
-                self._l10n[dict_key] = self._missing_name()
-                return self._l10n[dict_key]
-                # TODO: l10n is missing a name !!!
-                pass
+        if isinstance(dict_key, str):
+            if dict_key.startswith('DictKey_'):
+                try:
+                    return self._l10n[dict_key]
+                except KeyError:
+                    self._l10n[dict_key] = self._missing_name()
+                    return self._l10n[dict_key]
+            elif dict_key.startswith('ResKey_'):
+                try:
+                    resource_name = self._map[dict_key]
+                except KeyError:
+                    resource_name = self._missing_name()
+                self._check_resource(resource_name)
+                return resource_name
         return dict_key
 
     def _write_output_to_file(self, file: Path, output: dict):

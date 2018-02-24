@@ -56,6 +56,7 @@ class Miz:
         self._l10n_qual = None
         self._map_res = None
         self._map_res_qual = None
+        self._resources: set = set()
 
     def __enter__(self):
         LOGGER.debug('instantiating new Mission object as a context')
@@ -134,6 +135,15 @@ class Miz:
         if self._map_res is None:
             raise RuntimeError()
         return self._map_res
+
+    @property
+    def resources(self):
+        """
+
+        Returns: resources available to this mission
+
+        """
+        return self._resources
 
     @staticmethod
     def reorder(
@@ -227,6 +237,13 @@ class Miz:
         with open(self.mission_file, encoding=ENCODING) as stream:
             mission_data, self._mission_qual = SLTP().decode(stream.read())
             self._mission = Mission(mission_data, self._l10n)
+
+        LOGGER.debug('gathering resources')
+        for file in Path(self.temp_dir, 'l10n', 'DEFAULT').iterdir():
+            if file.name in ('dictionary', 'mapResource'):
+                continue
+            LOGGER.debug(f'found resource: {file.name}')
+            self._resources.add(file.name)
 
         LOGGER.debug('decoding done')
 
