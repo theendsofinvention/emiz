@@ -14,9 +14,9 @@ import elib
 from emiz.dummy_miz import dummy_miz
 from emiz.mission import Mission
 from emiz.sltp import SLTP
+from emiz import ENCODING
 
 LOGGER = elib.custom_logging.get_logger('EMIZ')
-ENCODING = 'iso8859_15'
 
 
 # pylint: disable=too-many-instance-attributes

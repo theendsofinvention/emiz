@@ -5,9 +5,10 @@ from pathlib import Path
 import pathvalidate
 from natsort import natsorted
 
-from emiz.miz import Miz
-
-VERSION = None
+try:
+    from .. import ENCODING, Miz
+except ValueError:
+    from emiz import Miz, ENCODING
 
 
 class Decomposer2:
@@ -38,7 +39,7 @@ class Decomposer2:
         return dict_key
 
     def _write_output_to_file(self, file: Path, output: dict):
-        file.write_text(ujson.dumps(output, indent=2, ensure_ascii=False), encoding='utf8')
+        file.write_text(ujson.dumps(output, indent=2, ensure_ascii=False), encoding=ENCODING)
 
     def _decompose_list_dict(self, dict_: dict, output_folder: Path):
         count = 1
@@ -122,7 +123,7 @@ if __name__ == '__main__':
     with Miz(test_file) as miz_:
         # print(miz_.mission.d['weather'])
         # decomposer = Decomposer(miz_, output_folder)
-        Path('test_decompose.json').write_text(ujson.dumps(miz_.mission.d, indent=4), encoding='utf8')
+        Path('test_decompose.json').write_text(ujson.dumps(miz_.mission.d, indent=4, ensure_ascii=False), encoding=ENCODING)
         Decomposer2(miz_).decompose(test_folder)
 
 # TODO: isolate triggers & trigrules (name value is "comment" on trigrules

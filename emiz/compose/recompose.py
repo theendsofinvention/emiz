@@ -5,6 +5,13 @@ from pathlib import Path
 from natsort import natsorted
 
 
+
+try:
+    from .. import ENCODING, Miz
+except ValueError:
+    from emiz import Miz, ENCODING
+
+
 def wrong_version(obj_name, obj_version, expected_version):
     print(f'WARNING: {obj_name} version is {obj_version}; expected version: {expected_version}')
 
@@ -13,12 +20,12 @@ class Recompose:
     def __init__(self, src: Path):
         self._src = src.absolute()
         self._dict = {}
-        with Path(src, 'base_info.json').open('rb') as stream:
-            self._version = ujson.load(stream)['version']
+        content = Path(src, 'base_info.json').read_text(encoding=ENCODING)
+        self._version = ujson.loads(content)['version']
 
     def recompose(self):
         self._dict = self._recreate_dict_from_folder(self._src)
-        Path('test_recompose.json').write_text(ujson.dumps(self._dict, indent=4), encoding='utf8')
+        Path('test_recompose.json').write_text(ujson.dumps(self._dict, indent=4, ensure_ascii=False), encoding=ENCODING)
 
     def _sorted(self, dict_: dict) -> dict:
         return {k: dict_[k] for k in natsorted(dict_.keys())}
@@ -46,7 +53,7 @@ class Recompose:
     def _recreate_dict_from_ordered_folder(self, folder: Path) -> dict:
         output = {}
         order_file = Path(folder, '__order__.json')
-        order = ujson.loads(order_file.read_text(encoding='utf8'))
+        order = ujson.loads(order_file.read_text(encoding=ENCODING))
         # order = {v: k for k, v in order.items()}
         # order_file.unlink()
         for obj in folder.iterdir():
@@ -64,23 +71,25 @@ class Recompose:
 
     def _recreate_dict_from_file(self, file: Path) -> dict:
         output = {}
-        with file.open('rb') as stream:
-            dict_ = ujson.load(stream, precise_float=True)
-            assert isinstance(dict_, dict)
+        content = file.read_text(encoding=ENCODING)
+        dict_ = ujson.loads(content, precise_float=True)
+        # with file.open('rb') as stream:
+        #     dict_ = ujson.load(stream, precise_float=True)
+        assert isinstance(dict_, dict)
 
-            dict_version = dict_.pop('__version__')
-            if dict_version != self._version:
-                wrong_version(file.absolute(), dict_version, self._version)
+        dict_version = dict_.pop('__version__')
+        if dict_version != self._version:
+            wrong_version(file.absolute(), dict_version, self._version)
 
-            file_stem = file.name.replace('.json', '')
-            if file_stem == 'base_info':
-                return self._sorted(dict_)
-            else:
-                output[file_stem] = self._sorted(dict_)
+        file_stem = file.name.replace('.json', '')
+        if file_stem == 'base_info':
+            return self._sorted(dict_)
+        else:
+            output[file_stem] = self._sorted(dict_)
 
-            for key in dict_:
-                if isinstance(key, str) and key.startswith('__'):
-                    raise ValueError(f'Unprocessed key: {key}')
+        for key in dict_:
+            if isinstance(key, str) and key.startswith('__'):
+                raise ValueError(f'Unprocessed key: {key}')
         return self._sorted(output)
 
 

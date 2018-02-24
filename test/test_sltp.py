@@ -6,6 +6,7 @@ import datadiff
 import pytest
 
 from emiz.sltp import SLTP, SLTPParsingError
+from emiz import ENCODING
 
 if os.path.exists('./test_files'):
     BASE_PATH = os.path.abspath('./test_files/sltp')
@@ -18,8 +19,6 @@ TEST_FILES_DIR = os.path.join(BASE_PATH, 'pass')
 TEST_FILES_DIR_FAIL = os.path.join(BASE_PATH, 'fail')
 TEST_FILES_DIR_DIFF = os.path.join(BASE_PATH, 'diff')
 TEST_FILES_DIR_LONG = os.path.join(BASE_PATH, 'long')
-
-ENCODING = 'iso8859_15'
 
 
 def _assert_same(input_, output):
