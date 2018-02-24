@@ -5,10 +5,7 @@ from pathlib import Path
 import pathvalidate
 from natsort import natsorted
 
-try:
-    from .. import ENCODING, Miz
-except ValueError:
-    from emiz import Miz, ENCODING
+from emiz.miz import ENCODING, Miz
 
 
 class Decomposer2:

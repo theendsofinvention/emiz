@@ -6,10 +6,7 @@ from natsort import natsorted
 
 
 
-try:
-    from .. import ENCODING, Miz
-except ValueError:
-    from emiz import Miz, ENCODING
+from emiz.miz import ENCODING
 
 
 def wrong_version(obj_name, obj_version, expected_version):

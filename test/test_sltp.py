@@ -6,7 +6,7 @@ import datadiff
 import pytest
 
 from emiz.sltp import SLTP, SLTPParsingError
-from emiz import ENCODING
+from emiz.miz import ENCODING
 
 if os.path.exists('./test_files'):
     BASE_PATH = os.path.abspath('./test_files/sltp')
