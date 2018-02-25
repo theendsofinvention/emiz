@@ -570,7 +570,7 @@ class Coalition(BaseMissionObject):
                 yield group
 
     @property
-    def statics(self) -> typing.Generator['Static']:
+    def statics(self) -> typing.Iterator['Static']:
         """
         Returns: generator over all statics in this coalition
         """
