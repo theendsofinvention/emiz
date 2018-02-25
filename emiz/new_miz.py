@@ -1,4 +1,7 @@
 # coding=utf-8
+"""
+Add JSON composition to Miz object
+"""
 import typing
 import ujson
 from pathlib import Path
@@ -10,11 +13,21 @@ from emiz.miz import Miz, ENCODING
 
 
 def wrong_version(obj_name, obj_version, expected_version):
+    """
+    Triggers when version differs
+
+    Args:
+        obj_name: json object name
+        obj_version: json object version
+        expected_version: expected version
+    """
     print(f'WARNING: {obj_name} version is {obj_version}; expected version: {expected_version}')
 
 
 class NewMiz(Miz):
-
+    """
+    Add JSON composition to Miz object
+    """
 
     name_fields = ['callsignStr', 'name']
 
@@ -54,7 +67,8 @@ class NewMiz(Miz):
                 return resource_name
         return dict_key
 
-    def _write_output_to_file(self, file: Path, output: dict):
+    @staticmethod
+    def _write_output_to_file(file: Path, output: dict):
         file.write_text(ujson.dumps(output, indent=2, ensure_ascii=False), encoding=ENCODING)
 
     def _decompose_list_dict(self, dict_: dict, output_folder: Path):
@@ -165,8 +179,6 @@ class NewMiz(Miz):
         output = {}
         content = file.read_text(encoding=ENCODING)
         dict_ = ujson.loads(content, precise_float=True)
-        # with file.open('rb') as stream:
-        #     dict_ = ujson.load(stream, precise_float=True)
         assert isinstance(dict_, dict)
 
         dict_version = dict_.pop('__version__')
@@ -185,12 +197,25 @@ class NewMiz(Miz):
         return self._sorted(output)
 
     def decompose(self, output_folder: Path):
+        """
+        Decompose this Miz into json
+
+        Args:
+            output_folder: folder to output the json structure
+        """
         self.unzip()
         self.decode()
         self._version = self.mission.d['version']
         self._decompose_dict(self.mission.d, 'base_info', output_folder)
 
     def recompose(self, src: Path, target_file: Path):
+        """
+        Recompose a Miz from json object
+
+        Args:
+            src: folder containing the json structure
+            target_file: target Miz file
+        """
         dict_ = self._recreate_dict_from_folder(src)
         Path('test_recompose.json').write_text(ujson.dumps(dict_, indent=4, ensure_ascii=False), encoding=ENCODING)
         self._encode()
