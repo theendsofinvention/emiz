@@ -1,4 +1,7 @@
 # coding=utf-8
+"""
+Artifact from earlier dev
+"""
 
 import math
 import pickle
@@ -14,14 +17,32 @@ parkings = pickle.loads(parkings)
 
 
 def clear_farps():
+    """
+    Removes all FARPs
+    """
     parkings['FARP'] = {}
 
 
 def add_farp(farp: Static):
+    """
+    Adds a FARP
+
+    Args:
+        farp: FARP object to add
+    """
     parkings['FARP'][farp.static_name] = farp.static_position
 
 
 def unit_pos_to_spot(unit_pos) -> ParkingSpot:
+    """
+    Translates a unit position to a known parking spot
+
+    Args:
+        unit_pos: unit position as Vec2
+
+    Returns: ParkingSpot object
+
+    """
     min_ = 50
     res = None
     for airport in parkings:

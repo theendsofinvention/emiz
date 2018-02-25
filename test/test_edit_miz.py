@@ -1,11 +1,12 @@
 # coding=utf-8
-from mockito import when, verifyStubbedInvocationsAreUsed
 import pytest
+from mockito import verifyStubbedInvocationsAreUsed, when
+
+import emiz.mission_time
 import emiz.weather
 from emiz.edit_miz import edit_miz
-from emiz.new_miz import NewMiz
 from emiz.miz import Miz
-import emiz.mission_time
+from emiz.new_miz import NewMiz
 
 METAR = 'UGTB 240830Z 31017KT CAVOK 11/02 Q1012 R31L/CLRD70 NOSIG'
 TIME = '20180201225000'
@@ -65,5 +66,5 @@ def test_apply_time_failed(test_file, out_file):
 def test_zip_error(test_file, out_file):
     when(Miz).zip(...).thenRaise(OSError)
     assert edit_miz(test_file, out_file, time=TIME) == \
-           f'permission error: cannot edit "{out_file}"; maybe it is in use ?'
+        f'permission error: cannot edit "{out_file}"; maybe it is in use ?'
     verifyStubbedInvocationsAreUsed()

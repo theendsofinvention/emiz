@@ -9,7 +9,6 @@ from emiz.mission import Mission
 from emiz.miz import Miz
 
 
-
 @pytest.mark.parametrize('cls', [Miz])
 def test_init(tmpdir, cls):
     t = Path(str(tmpdir))
@@ -32,9 +31,11 @@ def test_init(tmpdir, cls):
 
     cls(f)
 
+
 def test_unzip(test_file):
     m = Miz(test_file)
     m.unzip()
+
 
 def test_context(test_file):
     with Miz(test_file) as miz:

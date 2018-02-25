@@ -5,8 +5,8 @@ import os
 import datadiff
 import pytest
 
-from emiz.sltp import SLTP, SLTPParsingError
 from emiz.miz import ENCODING
+from emiz.sltp import SLTP, SLTPParsingError
 
 
 def _assert_same(input_, output):

@@ -1,4 +1,7 @@
 # coding=utf-8
+"""
+Artifact from earlier development
+"""
 from collections import defaultdict
 
 import click
@@ -9,6 +12,9 @@ import click
 @click.command()
 @click.argument('miz_path', type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True))
 def main(miz_path):
+    """
+    Artifact from earlier development
+    """
     from emiz.miz import Miz
     with Miz(miz_path) as m:
         mis = m.mission

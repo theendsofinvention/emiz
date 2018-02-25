@@ -3,13 +3,13 @@
 Add JSON composition to Miz object
 """
 import typing
-import ujson
 from pathlib import Path
 
 import pathvalidate
 from natsort import natsorted
 
-from emiz.miz import Miz, ENCODING
+import ujson
+from emiz.miz import ENCODING, Miz
 
 
 def wrong_version(obj_name, obj_version, expected_version):
@@ -69,6 +69,7 @@ class NewMiz(Miz):
 
     @staticmethod
     def _write_output_to_file(file: Path, output: dict):
+        # pylint: disable=c-extension-no-member
         file.write_text(ujson.dumps(output, indent=2, ensure_ascii=False), encoding=ENCODING)
 
     def _decompose_list_dict(self, dict_: dict, output_folder: Path):
@@ -159,9 +160,8 @@ class NewMiz(Miz):
     def _recreate_dict_from_ordered_folder(self, folder: Path) -> dict:
         output = {}
         order_file = Path(folder, '__order__.json')
+        # pylint: disable=c-extension-no-member
         order = ujson.loads(order_file.read_text(encoding=ENCODING))
-        # order = {v: k for k, v in order.items()}
-        # order_file.unlink()
         for obj in folder.iterdir():
             obj_stem = obj.name.replace('.json', '')
             if obj.is_file():
@@ -178,6 +178,7 @@ class NewMiz(Miz):
     def _recreate_dict_from_file(self, file: Path) -> dict:
         output = {}
         content = file.read_text(encoding=ENCODING)
+        # pylint: disable=c-extension-no-member
         dict_ = ujson.loads(content, precise_float=True)
         assert isinstance(dict_, dict)
 
@@ -217,23 +218,7 @@ class NewMiz(Miz):
             target_file: target Miz file
         """
         dict_ = self._recreate_dict_from_folder(src)
+        # pylint: disable=c-extension-no-member
         Path('test_recompose.json').write_text(ujson.dumps(dict_, indent=4, ensure_ascii=False), encoding=ENCODING)
         self._encode()
         self.zip(target_file)
-
-
-if __name__ == '__main__':
-
-    import elib
-    import shutil
-
-    test_file = './test/test_files/TRMT_6.4.3.miz'
-    logger = elib.custom_logging.get_logger('EMIZ')
-    elib.custom_logging.set_handler_level('EMIZ', 'ch', 'debug')
-    elib.custom_logging.set_root_logger(logger)
-    test_folder = Path('test_decompose').absolute()
-    if test_folder.exists():
-        shutil.rmtree(test_folder)
-    miz = NewMiz(test_file)
-    miz.decompose(test_folder)
-    miz.recompose(test_folder, Path('test.miz'))
