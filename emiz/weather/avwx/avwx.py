@@ -7,6 +7,7 @@ https://avwx.rest/documentation
 
 import json
 
+import certifi
 import elib
 import requests.adapters
 
@@ -28,7 +29,7 @@ class AVWX:
     @staticmethod
     def _query(url, params: dict = None) -> AVWXResult:
         LOGGER.debug(f'querying: {url}{params}')
-        req = AVWX.s.get(url, timeout=2, params=params)
+        req = AVWX.s.get(url, timeout=2, params=params, verify=certifi.where())
         if not req.ok:
             msg = f'failed to retrieve: {url}'
             LOGGER.error(msg)
