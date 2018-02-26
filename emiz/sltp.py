@@ -81,7 +81,7 @@ class SLTP:
         self.qual = match.group('value')
         text = qual.sub('', text)
 
-        reg = re.compile(r' -- .*[^\\]$', re.M)
+        reg = re.compile(r' -- .*[^(\\|",)]$', re.M)
         text = reg.sub('', text)
 
         self.text = text
@@ -105,7 +105,6 @@ class SLTP:
             else:
                 LOGGER.error('{}\n{{\n}} -- end of {}\n'.format(qualifier, qualifier.replace('=', '').rstrip()))
                 raise SLTPEmptyObjectError(qualifier)
-                # return '{}\n{{\n}} -- end of {}\n'.format(qualifier, qualifier.replace('=', '').rstrip())
         self.depth = 0
         out = []
         s = self.__encode(obj)
@@ -164,6 +163,15 @@ class SLTP:
                 if dict_name is not None:
                     s += ' -- end of ["{}"]'.format(dict_name)
         return s
+
+    def __get_context(self):
+        offset = 40
+        temp_pos = self.at - offset
+        temp_text = ''
+        while not temp_pos > self.at + offset or temp_pos >= self.len:
+            temp_text += self.text[temp_pos]
+            temp_pos += 1
+        return temp_text
 
     # noinspection PyMissingOrEmptyDocstring
     def white(self):
@@ -304,6 +312,7 @@ class SLTP:
             _n = self.ch
             self.next_chr()
             if not self.ch or not self.ch.isdigit():
+                print(self.__get_context())
                 raise SLTPParsingError(err)
             return _n
 
@@ -323,6 +332,7 @@ class SLTP:
                 n += self.ch
                 self.next_chr()
                 if not self.ch or self.ch not in ('+', '-'):
+                    print(self.__get_context())
                     raise SLTPParsingError(ERRORS['mfnumber_sci'])
                 n += next_digit(ERRORS['mfnumber_sci'])
                 n += self.digit()

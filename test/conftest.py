@@ -22,7 +22,7 @@ def pytest_unconfigure(config):
 
 
 @pytest.fixture(autouse=True)
-def all(request, tmpdir, out_file: Path):
+def _all(request, tmpdir, out_file: Path):
     if out_file.exists():
         out_file.unlink()
     if 'nocleandir' in request.keywords:
@@ -100,9 +100,12 @@ def all_objects():
     yield Path(TEST_FILES_FOLDER.joinpath('all_objects.miz'))
 
 
-@pytest.fixture()
-def large_file():
-    yield Path(TEST_FILES_FOLDER.joinpath('TRMT_2.4.0.miz'))
+@pytest.fixture(
+    params=('TRMT_2.4.0.miz', 'SDCM_1.4.0.127_csar.miz'),
+    ids=('TRMT_2.4.0', 'SDCM_1.4.0.127_csar')
+)
+def large_file(request):
+    yield Path(TEST_FILES_FOLDER.joinpath(request.param))
 
 
 @pytest.fixture()

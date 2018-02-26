@@ -1,5 +1,4 @@
 # coding=utf-8
-import pytest
 from mockito import verifyStubbedInvocationsAreUsed, when
 
 import emiz.mission_time
@@ -66,5 +65,5 @@ def test_apply_time_failed(test_file, out_file):
 def test_zip_error(test_file, out_file):
     when(Miz).zip(...).thenRaise(OSError)
     assert edit_miz(test_file, out_file, time=TIME) == \
-        f'permission error: cannot edit "{out_file}"; maybe it is in use ?'
+           f'permission error: cannot edit "{out_file}"; maybe it is in use ?'
     verifyStubbedInvocationsAreUsed()
