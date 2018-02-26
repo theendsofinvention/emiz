@@ -1,0 +1,46 @@
+dictionary = 
+{
+    ["DictKey_ActionText_3576"] = "AR_Zone_Tskhinvali = ZONE_POLYGON:New(\"AR_Zone_Tskhinvali\", GROUP:FindByName( \"AR_Tskhinvali_Zone\" )) -- polygon zone to define the area in which the Patrols will be spawning and patrolling\
+\
+patrol1 = GROUP:FindByName(\"CSAR_Patrol1\")\
+patrol2 = GROUP:FindByName(\"CSAR_Patrol2\")\
+patrol3 = GROUP:FindByName(\"CSAR_Patrol3\")\
+patrol4 = GROUP:FindByName(\"CSAR_Patrol4\")\
+patrol5 = GROUP:FindByName(\"CSAR_Patrol5\")\
+patrol6 = GROUP:FindByName(\"CSAR_Patrol6\")\
+patrol7 = GROUP:FindByName(\"CSAR_Patrol7\")\
+patrol8 = GROUP:FindByName(\"CSAR_Patrol8\")\
+patrol9 = GROUP:FindByName(\"CSAR_Patrol9\")\
+\
+\
+SCHEDULER:New(nil,function()\
+patrol1:RouteToVec3(AR_Zone_Tskhinvali:GetRandomPointVec3(),14)\
+end,{},60,300,0.5) -- patrol 1 \
+\
+\
+SCHEDULER:New(nil,function()\
+patrol2:RouteToVec3(AR_Zone_Tskhinvali:GetRandomPointVec3(),14)\
+end,{},60,300,0.5) -- patrol 2\
+\
+SCHEDULER:New(nil,function()\
+patrol8:RouteToVec3(AR_Zone_Tskhinvali:GetRandomPointVec3(),14)\
+end,{},60,300,0.5) -- patrol 1 \
+\
+SCHEDULER:New(nil,function()\
+patrol9:RouteToVec3(AR_Zone_Tskhinvali:GetRandomPointVec3(),14)\
+end,{},60,300,0.5) -- patrol 1 ",
+    ["DictKey_UnitName_2149"] = "AMVI A-10C #1",
+    ["DictKey_UnitName_1796"] = "FARP_LONDON_STATIC",
+    ["DictKey_WptName_3360"] = "",
+    ["DictKey_UnitName_1324"] = "KASHURI_REINFORCEMENTS #009",
+    ["DictKey_WptName_2951"] = "",
+    ["DictKey_UnitName_244"] = "5eEVC-M2K#4",
+    ["DictKey_WptName_2765"] = "",
+    ["DictKey_WptName_1008"] = "",
+    ["DictKey_UnitName_230"] = "5eEVC#4",
+    ["DictKey_UnitName_1764"] = "",
+    ["DictKey_WptName_3386"] = "",
+    ["DictKey_UnitName_188"] = "Unit #078",
+    ["DictKey_GroupName_819"] = "CHI:RUS_static_sachere_Mech inf bn #012",
+    ["DictKey_WptName_3601"] = "",
+} -- end of dictionary

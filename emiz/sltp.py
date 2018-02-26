@@ -5,7 +5,6 @@
 import re
 
 import elib
-import mpmath
 from natsort import natsorted
 
 LOGGER = elib.custom_logging.get_logger('EMIZ')
@@ -82,7 +81,7 @@ class SLTP:
         self.qual = match.group('value')
         text = qual.sub('', text)
 
-        reg = re.compile(r' -- .*[^\\]$', re.M)
+        reg = re.compile(r' -- .*[^(\\|",)]$', re.M)
         text = reg.sub('', text)
 
         self.text = text
@@ -106,7 +105,6 @@ class SLTP:
             else:
                 LOGGER.error('{}\n{{\n}} -- end of {}\n'.format(qualifier, qualifier.replace('=', '').rstrip()))
                 raise SLTPEmptyObjectError(qualifier)
-                # return '{}\n{{\n}} -- end of {}\n'.format(qualifier, qualifier.replace('=', '').rstrip())
         self.depth = 0
         out = []
         s = self.__encode(obj)
@@ -127,7 +125,7 @@ class SLTP:
             s += '"%s"' % obj.replace('"', '\\"')
         elif isinstance(obj, bool):
             s += str(obj).lower()
-        elif isinstance(obj, (int, float, complex, mpmath.mpf)):
+        elif isinstance(obj, (int, float, complex)):
             s += str(obj)
         elif isinstance(obj, (list, tuple, dict)):
             # Ladies and gentlemen, please take a minute to behold the following code.
@@ -137,7 +135,7 @@ class SLTP:
             self.depth += 1
             # noinspection PyTypeChecker
             if not isinstance(obj, dict) and len(filter(
-                    lambda x: isinstance(x, (int, float, mpmath.mpf)) or (isinstance(x, str) and len(x) < 10), obj
+                lambda x: isinstance(x, (int, float)) or (isinstance(x, str) and len(x) < 10), obj
             )) == len(obj):
                 newline = tab = ''
             dp = tab * self.depth
@@ -165,6 +163,15 @@ class SLTP:
                 if dict_name is not None:
                     s += ' -- end of ["{}"]'.format(dict_name)
         return s
+
+    def __get_context(self):
+        offset = 40
+        temp_pos = self.at - offset
+        temp_text = ''
+        while not temp_pos > self.at + offset or temp_pos >= self.len:
+            temp_text += self.text[temp_pos]
+            temp_pos += 1
+        return temp_text
 
     # noinspection PyMissingOrEmptyDocstring
     def white(self):
@@ -233,6 +240,7 @@ class SLTP:
         if self.ch and self.ch == '}':
             self.depth -= 1
             self.next_chr()
+            o = {k: o[k] for k in natsorted(o.keys())}
             return o  # Exit here
         else:
             while self.ch:
@@ -247,9 +255,9 @@ class SLTP:
                     if k:
                         o[idx] = k
                     if not numeric_keys and len(
-                            [
-                                key for key in o if type(key) in (str, float, bool, tuple, mpmath.mpf)
-                            ]
+                        [
+                            key for key in o if type(key) in (str, float, bool, tuple)
+                        ]
                     ) == 0:
                         ar = []
                         for key in o:
@@ -304,6 +312,7 @@ class SLTP:
             _n = self.ch
             self.next_chr()
             if not self.ch or not self.ch.isdigit():
+                print(self.__get_context())
                 raise SLTPParsingError(err)
             return _n
 
@@ -323,13 +332,14 @@ class SLTP:
                 n += self.ch
                 self.next_chr()
                 if not self.ch or self.ch not in ('+', '-'):
+                    print(self.__get_context())
                     raise SLTPParsingError(ERRORS['mfnumber_sci'])
                 n += next_digit(ERRORS['mfnumber_sci'])
                 n += self.digit()
         try:
             return int(n, 0)
         except ValueError:
-            return mpmath.mpf(n)
+            return float(n)
 
     # noinspection PyMissingOrEmptyDocstring
     def digit(self):
@@ -342,10 +352,8 @@ class SLTP:
     # noinspection PyMissingOrEmptyDocstring
     def hex(self):
         n = ''
+        # noinspection SpellCheckingInspection
         while self.ch and (self.ch in 'ABCDEFabcdef' or self.ch.isdigit()):
             n += self.ch
             self.next_chr()
         return n
-
-
-sltp = SLTP()

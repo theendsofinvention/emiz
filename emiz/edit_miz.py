@@ -16,8 +16,6 @@ LOGGER = elib.custom_logging.get_logger('EMIZ')
 
 
 # pylint: disable=too-many-arguments,too-many-branches,too-many-return-statements
-
-
 def edit_miz(  # noqa: C901
         infile: str,
         outfile: str = None,

@@ -129,14 +129,14 @@ class CustomMetar(Metar):
                         press = press / 10 + 1000
                     else:
                         press = press / 10 + 900
-                    self.press = CustomPressure(press, 'MB')
+                    self.press = CustomPressure(press)
                     self._remarks.append("sea-level pressure %.1fhPa" % press)
                 else:
-                    self.press = CustomPressure(press, 'MB')
+                    self.press = CustomPressure(press)
             elif press > 2500:
                 self.press = CustomPressure(press / 100, 'IN')
             else:
-                self.press = CustomPressure(press, 'MB')
+                self.press = CustomPressure(press)
 
     # noinspection SpellCheckingInspection
     def _handleSealvlPressRemark(self, d):
@@ -149,5 +149,5 @@ class CustomMetar(Metar):
         else:
             value += 900
         if not self.press:
-            self.press = CustomPressure(value, "MB")
-        self.press_sea_level = CustomPressure(value, "MB")
+            self.press = CustomPressure(value)
+        self.press_sea_level = CustomPressure(value)

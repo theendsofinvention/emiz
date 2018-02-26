@@ -17,6 +17,8 @@ natsort = "*"
 requests = "*"
 "urllib3" = "*"
 elib = "*"
+ujson = "*"
+pathvalidate = "*"
 
 
 [dev-packages]
