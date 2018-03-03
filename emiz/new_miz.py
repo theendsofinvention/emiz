@@ -2,14 +2,22 @@
 """
 Add JSON composition to Miz object
 """
+import shutil
 import typing
 from pathlib import Path
 
+import elib
 import pathvalidate
 from natsort import natsorted
 
 import ujson
 from emiz.miz import ENCODING, Miz
+
+from .dummy_miz import dummy_miz
+
+NAME_FIELDS = ['callsignStr', 'name']
+
+LOGGER = elib.custom_logging.get_logger('EMIZ')
 
 
 def wrong_version(obj_name, obj_version, expected_version):
@@ -28,8 +36,9 @@ class NewMiz(Miz):
     """
     Add JSON composition to Miz object
     """
-
-    name_fields = ['callsignStr', 'name']
+    missing_name_counter = 0
+    version = 0
+    resources = []
 
     def __init__(
             self,
@@ -39,31 +48,33 @@ class NewMiz(Miz):
             overwrite: bool = False
     ):
         Miz.__init__(self, path_to_miz_file, temp_dir, keep_temp_dir, overwrite)
-        self._version = 0
-        self._missing_name_counter = 0
 
-    def _missing_name(self):
-        self._missing_name_counter += 1
-        return f'__MISSING_NAME #{self._missing_name_counter:03d}'
+    @staticmethod
+    def _missing_name():
+        NewMiz.missing_name_counter += 1
+        return f'__MISSING_NAME #{NewMiz.missing_name_counter:03d}'
 
-    def _check_resource(self, resource_name):
-        if resource_name not in self._resources:
+    @staticmethod
+    def _check_resource(resource_name, miz: Miz):
+        if resource_name not in miz.resources:
             raise FileNotFoundError(f'resource not found: {resource_name}')
 
-    def _translate(self, dict_key):
+    @staticmethod
+    def _translate(dict_key, miz: Miz):
         if isinstance(dict_key, str):
             if dict_key.startswith('DictKey_'):
                 try:
-                    return self._l10n[dict_key]
+                    return miz.l10n[dict_key]
                 except KeyError:
-                    self._l10n[dict_key] = self._missing_name()
-                    return self._l10n[dict_key]
+                    miz.l10n[dict_key] = NewMiz._missing_name()
+                    return miz.l10n[dict_key]
             elif dict_key.startswith('ResKey_'):
                 try:
-                    resource_name = self.map_res[dict_key]
+                    resource_name = miz.map_res[dict_key]
                 except KeyError:
-                    resource_name = self._missing_name()
-                self._check_resource(resource_name)
+                    miz.map_res[dict_key] = NewMiz._missing_name()
+                    resource_name = NewMiz._missing_name()
+                NewMiz._check_resource(resource_name, miz)
                 return resource_name
         return dict_key
 
@@ -72,20 +83,21 @@ class NewMiz(Miz):
         # pylint: disable=c-extension-no-member
         file.write_text(ujson.dumps(output, indent=2, ensure_ascii=False), encoding=ENCODING)
 
-    def _decompose_list_dict(self, dict_: dict, output_folder: Path):
+    @staticmethod
+    def _decompose_list_dict(dict_: dict, output_folder: Path, version, miz: Miz):
         count = 1
         order = {}
         for key in dict_:
             sub_dict = dict_[key]
             name = None
-            for name_field in self.name_fields:
+            for name_field in NAME_FIELDS:
                 try:
                     name = sub_dict[name_field]
                 except KeyError:
                     pass
             if name is None:
                 raise ValueError('Name not found')
-            name = self._translate(name)
+            name = NewMiz._translate(name, miz)
             if not name:
                 name = str(key)
             name = pathvalidate.sanitize_filename(name)
@@ -95,11 +107,12 @@ class NewMiz(Miz):
             order[name] = count
             count += 1
             subfolder = Path(output_folder, name)
-            self._decompose_dict(sub_dict, f'__{name}', subfolder)
+            NewMiz._decompose_dict(sub_dict, f'__{name}', subfolder, version, miz)
         order = {k: order[k] for k in natsorted(order.keys())}
-        self._write_output_to_file(Path(output_folder, '__order__.json'), order)
+        NewMiz._write_output_to_file(Path(output_folder, '__order__.json'), order)
 
-    def _decompose_dict(self, dict_: dict, key_name: str, output_folder: Path):
+    @staticmethod
+    def _decompose_dict(dict_: dict, key_name: str, output_folder: Path, version, miz: Miz):
         output = {}
         output_folder.mkdir(exist_ok=True)
         try:
@@ -109,8 +122,8 @@ class NewMiz(Miz):
             first_key = None
             first_value = None
         if first_key and dict_ and isinstance(first_key, int) and isinstance(first_value, dict):
-            if [name_field for name_field in self.name_fields if name_field in first_value]:
-                self._decompose_list_dict(dict_, output_folder)
+            if [name_field for name_field in NAME_FIELDS if name_field in first_value]:
+                NewMiz._decompose_list_dict(dict_, output_folder, version, miz)
                 return
 
         is_single = True
@@ -120,96 +133,146 @@ class NewMiz(Miz):
                 is_single = False
                 subfolder_name = pathvalidate.sanitize_filename(str(key))
                 subfolder = Path(output_folder, subfolder_name)
-                self._decompose_dict(value, f'__{key}', subfolder)
+                NewMiz._decompose_dict(value, f'__{key}', subfolder, version, miz)
             else:
-                output[key] = self._translate(dict_[key])
+                output[key] = NewMiz._translate(dict_[key], miz)
         if output:
-            output['__version__'] = self._version
+            output['__version__'] = version
             key_name = pathvalidate.sanitize_filename(str(key_name))
             if not is_single:
                 file = Path(output_folder, f'{key_name}.json')
             else:
                 output_folder.rmdir()
                 file = Path(f'{output_folder}.json')
-            self._write_output_to_file(file, output)
+            NewMiz._write_output_to_file(file, output)
 
     @staticmethod
     def _sorted(dict_: dict) -> dict:
+        for k in dict_:
+            try:
+                int_key = int(k)
+            except ValueError:
+                pass
+            else:
+                value = dict_[k]
+                del dict_[k]
+                dict_[int_key] = value
         return {k: dict_[k] for k in natsorted(dict_.keys())}
 
-    def _recreate_dict_from_folder(self, folder: Path) -> dict:
+    @staticmethod
+    def _recreate_dict_from_folder(folder: Path, version) -> dict:
         output = {}
         folder_stem = folder.name.replace('.json', '')
         if Path(folder, '__order__.json').exists():
-            output.update(self._recreate_dict_from_ordered_folder(folder))
+            output.update(NewMiz._recreate_dict_from_ordered_folder(folder, version))
         else:
             for obj in folder.iterdir():
                 obj_stem = obj.name.replace('.json', '')
+                try:
+                    obj_stem = int(obj_stem)
+                except ValueError:
+                    pass
                 if obj.is_file():
                     if obj_stem == 'base_info':
-                        output.update(self._recreate_dict_from_file(obj.absolute()))
+                        output.update(NewMiz._recreate_dict_from_file(obj.absolute(), version))
                     else:
                         if obj_stem == f'__{folder_stem}':
-                            output.update(self._recreate_dict_from_file(obj.absolute())[obj_stem])
+                            output.update(NewMiz._recreate_dict_from_file(obj.absolute(), version)[obj_stem])
                         else:
-                            output[obj_stem] = self._recreate_dict_from_file(obj.absolute())[obj_stem]
+                            value = NewMiz._recreate_dict_from_file(obj.absolute(), version)
+                            output[obj_stem] = value[obj_stem]
                 elif obj.is_dir():
-                    output[obj_stem] = self._recreate_dict_from_folder(obj.absolute())
-        return self._sorted(output)
+                    output[obj_stem] = NewMiz._recreate_dict_from_folder(obj.absolute(), version)
+        return NewMiz._sorted(output)
 
-    def _recreate_dict_from_ordered_folder(self, folder: Path) -> dict:
+    @staticmethod
+    def _recreate_dict_from_ordered_folder(folder: Path, version) -> dict:
         output = {}
         order_file = Path(folder, '__order__.json')
         # pylint: disable=c-extension-no-member
         order = ujson.loads(order_file.read_text(encoding=ENCODING))
         for obj in folder.iterdir():
             obj_stem = obj.name.replace('.json', '')
+            try:
+                obj_stem = int(obj_stem)
+            except ValueError:
+                pass
             if obj.is_file():
                 if obj_stem == '__order__':
                     continue
                 index = order[obj.name.replace('.json', '')]
-                output[f'{index}'] = self._recreate_dict_from_file(obj.absolute())[obj_stem]
+                output[int(index)] = NewMiz._recreate_dict_from_file(obj.absolute(), version)[obj_stem]
 
             elif obj.is_dir():
                 index = order[obj.name.replace('.json', '')]
-                output[f'{index}'] = self._recreate_dict_from_folder(obj.absolute())
-        return self._sorted(output)
+                output[int(index)] = NewMiz._recreate_dict_from_folder(obj.absolute(), version)
+        return NewMiz._sorted(output)
 
-    def _recreate_dict_from_file(self, file: Path) -> dict:
+    @staticmethod
+    def _recreate_dict_from_file(file: Path, version) -> dict:
         output = {}
         content = file.read_text(encoding=ENCODING)
         # pylint: disable=c-extension-no-member
         dict_ = ujson.loads(content, precise_float=True)
+
         assert isinstance(dict_, dict)
 
         dict_version = dict_.pop('__version__')
-        if dict_version != self._version:
-            wrong_version(file.absolute(), dict_version, self._version)
+        if dict_version != version:
+            wrong_version(file.absolute(), dict_version, version)
 
         file_stem = file.name.replace('.json', '')
+        try:
+            file_stem = int(file_stem)
+        except ValueError:
+            pass
         if file_stem == 'base_info':
-            return self._sorted(dict_)
+            return NewMiz._sorted(dict_)
         else:
-            output[file_stem] = self._sorted(dict_)
+            output[file_stem] = NewMiz._sorted(dict_)
 
         for key in dict_:
             if isinstance(key, str) and key.startswith('__'):
                 raise ValueError(f'Unprocessed key: {key}')
-        return self._sorted(output)
+        return NewMiz._sorted(output)
 
-    def decompose(self, output_folder: Path):
+    @staticmethod
+    def _get_subfolders(output_folder: Path):
+        mission_folder = output_folder.joinpath('mission').absolute()
+        assets_folder = output_folder.joinpath('assets').absolute()
+        return mission_folder, assets_folder
+
+    @staticmethod
+    def _wipe_folders(*folders: Path):
+        for folder in folders:
+            if folder.exists():
+                LOGGER.info(f'removing: "{folder}"')
+
+    @staticmethod
+    def decompose(miz_file: Path, output_folder: Path):
         """
         Decompose this Miz into json
 
         Args:
-            output_folder: folder to output the json structure
+            output_folder: folder to output the json structure as a Path
+            miz_file: MIZ file path as a Path
         """
-        self.unzip()
-        self.decode()
-        self._version = self.mission.d['version']
-        self._decompose_dict(self.mission.d, 'base_info', output_folder)
+        mission_folder, assets_folder = NewMiz._get_subfolders(output_folder)
+        NewMiz._wipe_folders(mission_folder, assets_folder)
+        LOGGER.info('unzipping mission file')
+        with Miz(miz_file) as miz:
+            version = miz.mission.d['version']
+            LOGGER.debug(f'mission version: "{version}"')
 
-    def recompose(self, src: Path, target_file: Path):
+            LOGGER.info(f'copying assets to: "{assets_folder}"')
+            ignore = shutil.ignore_patterns('mission', 'mapResource', 'dictionary')
+            shutil.copytree(miz.temp_dir, assets_folder, ignore=ignore)
+
+            LOGGER.info(f'decomposing mission table into: "{mission_folder}" (this will take a while)')
+            NewMiz._decompose_dict(miz.mission.d, 'base_info', mission_folder, version, miz)
+
+    @staticmethod
+    def recompose(src: Path, target_file: Path):
         """
         Recompose a Miz from json object
 
@@ -217,8 +280,26 @@ class NewMiz(Miz):
             src: folder containing the json structure
             target_file: target Miz file
         """
-        dict_ = self._recreate_dict_from_folder(src)
+        mission_folder, assets_folder = NewMiz._get_subfolders(src)
         # pylint: disable=c-extension-no-member
-        Path('test_recompose.json').write_text(ujson.dumps(dict_, indent=4, ensure_ascii=False), encoding=ENCODING)
-        self._encode()
-        self.zip(target_file)
+        base_info = ujson.loads(Path(mission_folder, 'base_info.json').read_text(encoding=ENCODING))
+        version = base_info['__version__']
+        target_file.write_bytes(dummy_miz)
+        with Miz(target_file) as miz:
+            LOGGER.info(f're-composing mission table from folder: "{mission_folder}"')
+            miz.mission.d = NewMiz._recreate_dict_from_folder(mission_folder, version)
+            for item in assets_folder.iterdir():
+                target = Path(miz.temp_dir, item.name).absolute()
+                if item.is_dir():
+                    if target.exists():
+                        shutil.rmtree(target)
+                    shutil.copytree(item.absolute(), target)
+                elif item.is_file():
+                    shutil.copy(item.absolute(), target)
+            miz.zip(target_file)
+
+        # dict_ = self.
+        # pylint: disable=c-extension-no-member
+        # self.mi
+        # self._encode()
+        # self.zip(target_file)

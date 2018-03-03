@@ -2,6 +2,7 @@
 """
 Manages MIZ files
 """
+import os
 import shutil
 import tempfile
 import typing
@@ -355,9 +356,10 @@ class Miz:
 
         with ZipFile(str(destination), mode='w', compression=8) as zip_file:
 
-            for zip_content in self.zip_content:
-                file = Path(self.temp_dir.joinpath(zip_content))
-                LOGGER.debug(f'injecting in zip file: {file}')
-                zip_file.write(str(file), arcname=zip_content)
+            for root, _, items in os.walk(self.temp_dir.absolute()):
+                for item in items:
+                    item = Path(root, item).absolute()
+                    print(item.relative_to(self.temp_dir))
+                    zip_file.write(item, arcname=item.relative_to(self.temp_dir))
 
         return str(destination)
