@@ -245,8 +245,10 @@ class NewMiz(Miz):
     @staticmethod
     def _wipe_folders(*folders: Path):
         for folder in folders:
+            folder = Path(folder).absolute()
             if folder.exists():
                 LOGGER.info(f'removing: "{folder}"')
+                shutil.rmtree(folder)
 
     @staticmethod
     def decompose(miz_file: Path, output_folder: Path):
