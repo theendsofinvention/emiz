@@ -36,3 +36,7 @@ Pipfile.lock
 /doitall.cmd
 lastfailed
 test.miz
+/output_test/
+/output/
+/emiz/test.py
+/output.miz

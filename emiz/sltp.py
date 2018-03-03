@@ -135,7 +135,7 @@ class SLTP:
             self.depth += 1
             # noinspection PyTypeChecker
             if not isinstance(obj, dict) and len(filter(
-                lambda x: isinstance(x, (int, float)) or (isinstance(x, str) and len(x) < 10), obj
+                    lambda x: isinstance(x, (int, float)) or (isinstance(x, str) and len(x) < 10), obj
             )) == len(obj):
                 newline = tab = ''
             dp = tab * self.depth
@@ -255,9 +255,9 @@ class SLTP:
                     if k:
                         o[idx] = k
                     if not numeric_keys and len(
-                        [
-                            key for key in o if type(key) in (str, float, bool, tuple)
-                        ]
+                            [
+                                key for key in o if type(key) in (str, float, bool, tuple)
+                            ]
                     ) == 0:
                         ar = []
                         for key in o:
