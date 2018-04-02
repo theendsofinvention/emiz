@@ -332,7 +332,7 @@ class Miz:
 
         LOGGER.debug('all files have been found, miz successfully unzipped')
 
-    def zip(self, destination: typing.Union[str, Path] = None) -> str:
+    def zip(self, destination: typing.Union[str, Path] = None, encode: bool = True) -> str:
         """
         Write mission, dictionary etc. to a MIZ file
 
@@ -342,8 +342,8 @@ class Miz:
         Returns: destination file
 
         """
-
-        self._encode()
+        if encode:
+            self._encode()
 
         if destination is None:
             destination = self.miz_path.parent.joinpath(f'{self.miz_path.stem}_EMIZ.miz')
@@ -359,7 +359,7 @@ class Miz:
             for root, _, items in os.walk(self.temp_dir.absolute()):
                 for item in items:
                     item = Path(root, item).absolute()
-                    print(item.relative_to(self.temp_dir))
+                    # print(item.relative_to(self.temp_dir))
                     zip_file.write(item, arcname=item.relative_to(self.temp_dir))
 
         return str(destination)

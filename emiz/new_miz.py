@@ -12,6 +12,7 @@ from natsort import natsorted
 
 import ujson
 from emiz.miz import ENCODING, Miz
+from emiz.sltp import SLTP
 
 from .dummy_miz import dummy_miz
 
@@ -99,7 +100,7 @@ class NewMiz(Miz):
                 raise ValueError('Name not found')
             name = NewMiz._translate(name, miz)
             if not name:
-                name = str(key)
+                name = str(NewMiz._translate(key, miz))
             name = pathvalidate.sanitize_filename(name)
             sub_count = 1
             while name in order:
@@ -107,7 +108,7 @@ class NewMiz(Miz):
             order[name] = count
             count += 1
             subfolder = Path(output_folder, name)
-            NewMiz._decompose_dict(sub_dict, f'__{name}', subfolder, version, miz)
+            NewMiz._decompose_dict(sub_dict, f'__{NewMiz._translate(name, miz)}', subfolder, version, miz)
         order = {k: order[k] for k in natsorted(order.keys())}
         NewMiz._write_output_to_file(Path(output_folder, '__order__.json'), order)
 
@@ -131,11 +132,12 @@ class NewMiz(Miz):
             value = dict_[key]
             if not key == 'properties' and isinstance(value, dict) and value:
                 is_single = False
-                subfolder_name = pathvalidate.sanitize_filename(str(key))
+                subfolder_name = pathvalidate.sanitize_filename(str(NewMiz._translate(key, miz)))
                 subfolder = Path(output_folder, subfolder_name)
                 NewMiz._decompose_dict(value, f'__{key}', subfolder, version, miz)
             else:
-                output[key] = NewMiz._translate(dict_[key], miz)
+                # output[key] = NewMiz._translate(dict_[key], miz)
+                output[key] = dict_[key]
         if output:
             output['__version__'] = version
             key_name = pathvalidate.sanitize_filename(str(key_name))
@@ -251,6 +253,14 @@ class NewMiz(Miz):
                 shutil.rmtree(folder)
 
     @staticmethod
+    def _reorder_warehouses(assets_folder):
+        path = Path(assets_folder, 'warehouses')
+        if path.exists():
+            parser = SLTP()
+            data, qual = parser.decode(path.read_text(encoding=ENCODING))
+            path.write_text(parser.encode(data, qual), encoding=ENCODING)
+
+    @staticmethod
     def decompose(miz_file: Path, output_folder: Path):
         """
         Decompose this Miz into json
@@ -267,8 +277,10 @@ class NewMiz(Miz):
             LOGGER.debug(f'mission version: "{version}"')
 
             LOGGER.info(f'copying assets to: "{assets_folder}"')
-            ignore = shutil.ignore_patterns('mission', 'mapResource', 'dictionary')
+            ignore = shutil.ignore_patterns('mission')
             shutil.copytree(miz.temp_dir, assets_folder, ignore=ignore)
+
+            NewMiz._reorder_warehouses(assets_folder)
 
             LOGGER.info(f'decomposing mission table into: "{mission_folder}" (this will take a while)')
             NewMiz._decompose_dict(miz.mission.d, 'base_info', mission_folder, version, miz)
@@ -286,7 +298,6 @@ class NewMiz(Miz):
         # pylint: disable=c-extension-no-member
         base_info = ujson.loads(Path(mission_folder, 'base_info.json').read_text(encoding=ENCODING))
         version = base_info['__version__']
-        target_file.write_bytes(dummy_miz)
         with Miz(target_file) as miz:
             LOGGER.info(f're-composing mission table from folder: "{mission_folder}"')
             miz.mission.d = NewMiz._recreate_dict_from_folder(mission_folder, version)
@@ -298,7 +309,7 @@ class NewMiz(Miz):
                     shutil.copytree(item.absolute(), target)
                 elif item.is_file():
                     shutil.copy(item.absolute(), target)
-            miz.zip(target_file)
+            miz.zip(target_file, encode=False)
 
         # dict_ = self.
         # pylint: disable=c-extension-no-member
