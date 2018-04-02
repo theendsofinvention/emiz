@@ -114,8 +114,15 @@ def radio_file():
 
 
 @pytest.fixture()
-def bad_files():
-    yield ['bad_zip_file.miz', 'missing_files.miz']
+def test_files_folder():
+    yield TEST_FILES_FOLDER
+
+
+@pytest.fixture(
+    params=('bad_zip_file.miz', 'missing_files.miz'),
+    ids=('bad_zip_file', 'missing_files'))
+def bad_files(request):
+    yield Path(TEST_FILES_FOLDER.joinpath(request.param))
 
 
 @pytest.fixture(autouse=True)

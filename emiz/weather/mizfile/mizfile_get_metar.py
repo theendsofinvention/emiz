@@ -87,9 +87,9 @@ def get_metar_from_mission(
     with Miz(mission_file) as miz:
         mission = miz.mission
     wind = _get_wind(mission)
-    visibility = min(mission.weather.visibility, 9999)
+    visibility = int(min(mission.weather.visibility, 9999))
     if mission.weather.fog_enabled:
-        visibility = min(mission.weather.fog_visibility, visibility)
+        visibility = int(min(mission.weather.fog_visibility, visibility))
     precipitations = _get_precipitations(mission)
     clouds = _get_clouds(mission)
     temp = _get_temp(mission)

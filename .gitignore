@@ -40,3 +40,4 @@ test.miz
 /output/
 /emiz/test.py
 /output.miz
+/.pytest_cache/

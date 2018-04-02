@@ -2,6 +2,7 @@
 
 import tempfile
 from datetime import datetime
+from pathlib import Path
 
 import elib.path
 import pytest
@@ -89,3 +90,9 @@ def test_fog(setup, fog_visibility):
         assert metar == f'{icao} {time} 00000MPS {fog_visibility:04d}M 10/10 Q1008 NOSIG'
     else:
         assert metar == f'{icao} {time} 00000MPS {fog_visibility:04d}M 10/10 Q1008 NOSIG'
+
+
+def test_float_visibility(test_files_folder: Path):
+    miz_path = test_files_folder.joinpath('TRM_0.1.0.159_edit.miz').absolute()
+    metar = emiz.weather.mizfile.get_metar_from_mission(str(miz_path))
+    assert '12201MPS 2133M 17/17 Q1017 NOSIG' in metar
