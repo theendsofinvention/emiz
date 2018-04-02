@@ -14,8 +14,6 @@ import ujson
 from emiz.miz import ENCODING, Miz
 from emiz.sltp import SLTP
 
-from .dummy_miz import dummy_miz
-
 NAME_FIELDS = ['callsignStr', 'name']
 
 LOGGER = elib.custom_logging.get_logger('EMIZ')
