@@ -40,3 +40,5 @@ test.miz
 /emiz/test.py
 /output.miz
 /.pytest_cache/
+.coverage*
+.mypy_cache
