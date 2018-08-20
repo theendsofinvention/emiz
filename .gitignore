@@ -26,7 +26,6 @@ __version_frozen__.py
 /test/test_files/time/
 /test/test_files/empty/
 /test/test_files/time_output.miz
-Pipfile.lock
 .gitchangelog.rc
 /test_decompose/
 /test/test_files/TRG_KA50/
