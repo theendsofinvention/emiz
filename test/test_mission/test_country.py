@@ -52,3 +52,13 @@ def test_get_country(mission, test_file):
         mission.red_coa.get_country_by_id(2)
     with Miz(test_file) as miz:
         assert isinstance(miz.mission._blue_coa.get_country_by_name('USA'), Country)
+
+
+def test_compare_country(mission):
+    country1 = mission.get_country_by_id(0)
+    country2 = mission.get_country_by_id(1)
+    assert country1 == country1
+    assert country2 == country2
+    assert country1 != country2
+    with pytest.raises(ValueError):
+        assert country1 == mission.weather

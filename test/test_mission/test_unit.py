@@ -70,3 +70,13 @@ def test_get_unit_by_name(mission):
     assert isinstance(unit, BaseUnit)
     assert unit.unit_id == 1
     assert mission.get_unit_by_name('le_caribou_puissant') is None
+
+
+def test_get_unit_by_id_missing(mission):
+    unit = mission.get_unit_by_id(99999)
+    assert unit is None
+
+
+def test_get_unit_by_name_missing(mission):
+    unit = mission.get_unit_by_name('__missing_unit__')
+    assert unit is None

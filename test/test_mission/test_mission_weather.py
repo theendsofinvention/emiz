@@ -173,3 +173,9 @@ def test_precipitations(mission):
     # miz.mission.weather.precipitations = 3
     # miz.mission.weather.season_code = 1
     # assert miz.mission.weather.precipitations == 1
+
+
+def test_compare_weather(mission):
+    assert mission.weather == mission.weather
+    with pytest.raises(ValueError):
+        assert mission.weather == mission.units

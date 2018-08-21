@@ -1,8 +1,12 @@
 # coding=utf-8
+import datetime
+
+import pytest
 from hypothesis import example, given
 from hypothesis import strategies as st
 
 import emiz.weather
+from emiz.weather.mission_weather.mission_weather import _get_season
 
 
 @given(heading=st.integers(min_value=0, max_value=359))
@@ -24,6 +28,20 @@ def test_normalize_direction(heading):
 @example(base_speed=120)
 @example(base_speed=-1)
 def test_deviate_wind_speed(base_speed):
-    val = emiz.weather.mission_weather.MissionWeather._deviate_wind_speed(base_speed)
+    val = emiz.weather.mission_weather.MissionWeather._randomize_speed(base_speed)
     assert 0 <= val <= 50
     assert type(val) is int
+
+
+@pytest.mark.parametrize(
+    'date,season', [
+        (datetime.date(2010, 1, 1), 'winter'),
+        (datetime.date(2010, 4, 1), 'spring'),
+        (datetime.date(2010, 7, 1), 'summer'),
+        (datetime.date(2010, 10, 1), 'autumn'),
+    ]
+)
+def test_get_season(date: datetime, season: str):
+    result_season, result_temp = _get_season(_datetime=date)
+    assert season == result_season
+    assert isinstance(result_temp, int)
