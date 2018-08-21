@@ -1,0 +1,44 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: https://avwx.rest/api/metar/UGTB?options=info%2Cspeech%2Csummary%2Ctranslate
+  response:
+    body: {string: "{\n  \"Altimeter\": \"1020\", \n  \"Cloud-List\": [\n    [\n      \"FEW\",
+        \n      \"041\"\n    ]\n  ], \n  \"Dewpoint\": \"16\", \n  \"Flight-Rules\":
+        \"VFR\", \n  \"Info\": {\n    \"City\": \"Tbilisi\", \n    \"Country\": \"GEO\",
+        \n    \"Elevation\": \"495\", \n    \"IATA\": \"TBS\", \n    \"ICAO\": \"UGTB\",
+        \n    \"Latitude\": \"41.6692009\", \n    \"Longitude\": \"44.95470047\",
+        \n    \"Name\": \"International Airport\", \n    \"Priority\": \"6\", \n    \"State\":
+        \"TB\"\n  }, \n  \"Meta\": {\n    \"Cache-Timestamp\": \"Tue, 21 Aug 2018
+        07:29:27 GMT\", \n    \"Timestamp\": \"Tue, 21 Aug 2018 07:29:27 GMT\"\n  },
+        \n  \"Other-List\": [], \n  \"Raw-Report\": \"UGTB 210530Z VRB02KT 9999 FEW041
+        21/16 Q1020 NOSIG\", \n  \"Remarks\": \"NOSIG\", \n  \"Remarks-Info\": {},
+        \n  \"Runway-Vis-List\": [], \n  \"Speech\": \"Winds Variable at 2kt. Visibility
+        one zero kilometers. Temperature two one degrees Celsius. Dew point one six
+        degrees Celsius. Altimeter one zero two zero. Few clouds at 4100ft\", \n  \"Station\":
+        \"UGTB\", \n  \"Summary\": \"Winds Variable at 02kt, Vis 10km, Temp 21C, Dew
+        16C, Alt 1020hPa, Few clouds at 4100ft\", \n  \"Temperature\": \"21\", \n
+        \ \"Time\": \"210530Z\", \n  \"Translations\": {\n    \"Altimeter\": \"1020hPa
+        (30.12inHg)\", \n    \"Clouds\": \"Few clouds at 4100ft - Reported AGL\",
+        \n    \"Dewpoint\": \"16C (61F)\", \n    \"Other\": \"\", \n    \"Remarks\":
+        {}, \n    \"Temperature\": \"21C (70F)\", \n    \"Visibility\": \"10km (6.2sm)\",
+        \n    \"Wind\": \"Variable at 02kt\"\n  }, \n  \"Units\": {\n    \"Altimeter\":
+        \"hPa\", \n    \"Altitude\": \"ft\", \n    \"Temperature\": \"C\", \n    \"Visibility\":
+        \"m\", \n    \"Wind-Speed\": \"kt\"\n  }, \n  \"Visibility\": \"9999\", \n
+        \ \"Wind-Direction\": \"VRB\", \n  \"Wind-Gust\": \"\", \n  \"Wind-Speed\":
+        \"02\", \n  \"Wind-Variable-Dir\": []\n}\n"}
+    headers:
+      Access-Control-Allow-Origin: ['*']
+      Content-Length: ['1612']
+      Content-Type: [application/json]
+      Date: ['Tue, 21 Aug 2018 07:29:27 GMT']
+      Server: [gunicorn/19.8.1]
+      X-Robots-Tag: [noindex]
+    status: {code: 200, message: OK}
+version: 1

@@ -38,15 +38,18 @@ SKY_COVER = {
 }
 
 
-def _get_season() -> typing.Tuple[str, int]:
+def _get_season(_datetime: typing.Optional[date] = None) -> typing.Tuple[str, int]:
     """
     Finds the current season based on now() and gives a dummy temperature
 
     Returns: tuple of season name, temperature
 
     """
-    now = datetime.now().date().replace(year=Y)
-    return next((season, temp) for season, temp, (start, end) in SEASONS if start <= now <= end)
+    if _datetime is None:
+        _actual_datetime: date = datetime.now().date().replace(year=Y)
+    else:
+        _actual_datetime = _datetime.replace(year=Y)
+    return next((season, temp) for season, temp, (start, end) in SEASONS if start <= _actual_datetime <= end)
 
 
 class MissionWeather:  # pylint: disable=too-many-instance-attributes
@@ -59,13 +62,13 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
             metar: Metar,
             min_wind: int = 0,
             max_wind: int = 40,
-    ):
+    ) -> None:
         self.metar = metar
-        self.wind_dir = None
-        self.wind_speed = None
+        self.wind_dir: typing.Optional[int] = None
+        self._wind_speed: typing.Optional[int] = None
         self._min_wind = min_wind
         self._max_wind = max_wind
-        self.fog_vis = None
+        self.fog_vis: typing.Optional[int] = None
         self.precipitations = 0
         self.cloud_density = 0
         self.cloud_base = 300
@@ -127,7 +130,7 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
         return int(random.gauss(mean, sigma))
 
     @staticmethod
-    def _deviate_wind_speed(base_speed: int, sigma: int = None) -> int:
+    def _randomize_speed(base_speed: int, sigma: int = None) -> int:
         """
         Creates a variation in wind speed
 
@@ -139,14 +142,16 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
 
         """
         if sigma is None:
-            sigma = base_speed / 4
-        val = MissionWeather._gauss(base_speed, sigma)
+            int_sigma = int(base_speed / 4)
+        else:
+            int_sigma = sigma
+        val = MissionWeather._gauss(base_speed, int_sigma)
         if val < 0:
             return 0
         return min(val, 50)
 
     @staticmethod
-    def _deviate_direction(base_heading, sigma) -> int:
+    def _randomize_direction(base_heading, sigma) -> int:
         """
         Creates a variation in direction
 
@@ -183,13 +188,14 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
         Returns: speed of wind at ground level
 
         """
-        if self.metar.wind_speed is None:
-            LOGGER.info('wind speed is missing, making a random value')
-            val = random.randint(self._min_wind, self._max_wind)
-        else:
-            val = int(self.metar.wind_speed.value('MPS'))
-        self.wind_speed = val
-        return val
+        if self._wind_speed is None:
+            if self.metar.wind_speed is None:
+                LOGGER.info('wind speed is missing, making a random value')
+                val = random.randint(self._min_wind, self._max_wind)
+            else:
+                val = int(self.metar.wind_speed.value('MPS'))
+            self._wind_speed = val
+        return int(self._wind_speed)
 
     @property
     def qnh(self) -> int:
@@ -283,9 +289,9 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
         if self.metar.wind_gust is None:
             return 0
         val = int(self.metar.wind_gust.value('MPS'))
-        if self.wind_speed >= val:
+        if self.wind_at_ground_level_speed >= val:
             return 0
-        return int(min((val - self.wind_speed) * 10, 60))
+        return int(min((val - self.wind_at_ground_level_speed) * 10, 60))
 
     def apply_to_miz(self, miz):
         """
@@ -302,10 +308,10 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
 
         miz.mission.weather.wind_at_ground_level_dir = self.wind_at_ground_level_dir
         miz.mission.weather.wind_at_ground_level_speed = self.wind_at_ground_level_speed
-        miz.mission.weather.wind_at2000_dir = self._deviate_direction(self.wind_dir, 40)
-        miz.mission.weather.wind_at2000_speed = self._deviate_wind_speed(5 + self.wind_speed * 2)
-        miz.mission.weather.wind_at8000_dir = self._deviate_direction(self.wind_dir, 80)
-        miz.mission.weather.wind_at8000_speed = self._deviate_wind_speed(10 + self.wind_speed * 3)
+        miz.mission.weather.wind_at2000_dir = self._randomize_direction(self.wind_dir, 40)
+        miz.mission.weather.wind_at2000_speed = self._randomize_speed(5 + self.wind_at_ground_level_speed * 2)
+        miz.mission.weather.wind_at8000_dir = self._randomize_direction(self.wind_dir, 80)
+        miz.mission.weather.wind_at8000_speed = self._randomize_speed(10 + self.wind_at_ground_level_speed * 3)
         miz.mission.weather.turbulence_at_ground_level = self.turbulence
 
         _ground = f'{miz.mission.weather.wind_at_ground_level_dir}/{miz.mission.weather.wind_at_ground_level_speed}'

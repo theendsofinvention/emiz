@@ -24,9 +24,11 @@ class MissionTime:
     Represents date and time in a mission
     """
 
-    def __init__(self, moment: datetime.datetime):
+    def __init__(self, moment: datetime.datetime) -> None:
         self.date = datetime.date(moment.year, moment.month, moment.day)
-        self.time = moment.hour * 3600 + moment.minute * 60 + moment.second
+        self.mission_start_time = moment.hour * 3600 + moment.minute * 60 + moment.second
+        self.time = datetime.time(hour=moment.hour, minute=moment.minute, second=moment.second)
+        self.datetime = datetime.datetime.combine(self.date, self.time)
 
     def apply_to_miz(self, miz):
         """
@@ -41,7 +43,7 @@ class MissionTime:
         miz.mission.day = self.date.day
         miz.mission.month = self.date.month
         miz.mission.year = self.date.year
-        miz.mission.mission_start_time = self.time
+        miz.mission.mission_start_time = self.mission_start_time
 
         return True
 

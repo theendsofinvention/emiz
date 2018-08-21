@@ -2,6 +2,7 @@
 """
 Artifact from earlier dev
 """
+# type: ignore
 
 import math
 import pickle
@@ -23,6 +24,7 @@ def clear_farps():
     parkings['FARP'] = {}
 
 
+# type: ignore
 def add_farp(farp: Static):
     """
     Adds a FARP
@@ -30,9 +32,10 @@ def add_farp(farp: Static):
     Args:
         farp: FARP object to add
     """
-    parkings['FARP'][farp.static_name] = farp.static_position
+    parkings['FARP'][farp.static_name] = farp.static_position  # type: ignore
 
 
+# type: ignore
 def unit_pos_to_spot(unit_pos) -> ParkingSpot:
     """
     Translates a unit position to a known parking spot
@@ -46,10 +49,10 @@ def unit_pos_to_spot(unit_pos) -> ParkingSpot:
     min_ = 50
     res = None
     for airport in parkings:
-        for spot in parkings[airport]:
-            spot_pos = parkings[airport][spot]
+        for spot in parkings[airport]:  # type: ignore
+            spot_pos = parkings[airport][spot]  # type: ignore
             dist = math.hypot(unit_pos[0] - spot_pos[0], unit_pos[1] - spot_pos[1])
             if dist < min_:
-                min_ = dist
+                min_ = dist  # type: ignore
                 res = ParkingSpot(airport=airport, spot=spot)
-    return res
+    return res  # type: ignore

@@ -29,7 +29,7 @@ def retrieve_taf(station_icao) -> typing.Tuple[typing.Union[str, None], typing.U
         return None, resp.content.decode().split('\n')[1]
 
 
-def retrieve_metar(station_icao) -> typing.Tuple[typing.Union[str, None], typing.Union[str, None]]:
+def retrieve_metar(station_icao) -> typing.Tuple[typing.Optional[str], typing.Optional[str]]:
     """
     Retrieves a METAR string from an online database
 

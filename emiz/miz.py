@@ -33,7 +33,7 @@ class Miz:
             temp_dir: typing.Union[str, Path] = None,
             keep_temp_dir: bool = False,
             overwrite: bool = False
-    ):
+    ) -> None:
 
         self.miz_path = elib.path.ensure_file(path_to_miz_file)
 
@@ -50,7 +50,7 @@ class Miz:
         self.temp_dir = Path(tempfile.mkdtemp('EMFT_'))
         LOGGER.debug(f'temporary directory: {self.temp_dir}')
 
-        self.zip_content = None
+        self.zip_content: typing.Optional[typing.List[str]] = None
         self._mission = None
         self._mission_qual = None
         self._l10n = None
@@ -163,15 +163,15 @@ class Miz:
         """
 
         miz_file_path = elib.path.ensure_file(miz_file_path)
-        target_dir = elib.path.ensure_dir(target_dir, must_exist=False)
+        target_dir_path = elib.path.ensure_dir(target_dir, must_exist=False)
 
         LOGGER.debug(f're-ordering miz file: {miz_file_path}')
         LOGGER.debug(f'destination folder: {target_dir}')
         LOGGER.debug(f'{"skipping" if skip_options_file else "including"} option file')
 
-        if not target_dir.exists():
-            LOGGER.debug(f'creating directory {target_dir}')
-            target_dir.mkdir(exist_ok=True)
+        if not target_dir_path.exists():
+            LOGGER.debug(f'creating directory {target_dir_path}')
+            target_dir_path.mkdir(exist_ok=True)
 
         with Miz(miz_file_path, overwrite=True) as miz_:
 
@@ -206,7 +206,7 @@ class Miz:
                         shutil.copy2(str(source), diff_.right)
                 for sub in diff_.subdirs.values():
                     assert isinstance(sub, dircmp)
-                    mirror_dir(sub.left, sub.right)
+                    mirror_dir(Path(sub.left), Path(sub.right))
 
             # pylint: disable=protected-access
             miz_._encode()
@@ -216,7 +216,7 @@ class Miz:
             else:
                 ignore = []
 
-            mirror_dir(miz_.temp_dir, target_dir)
+            mirror_dir(Path(miz_.temp_dir), target_dir_path)
 
     def decode(self):
         """Decodes the mission files into dictionaries"""
@@ -346,20 +346,20 @@ class Miz:
             self._encode()
 
         if destination is None:
-            destination = self.miz_path.parent.joinpath(f'{self.miz_path.stem}_EMIZ.miz')
+            destination_path = self.miz_path.parent.joinpath(f'{self.miz_path.stem}_EMIZ.miz')
         else:
-            destination = elib.path.ensure_file(destination, must_exist=False)
+            destination_path = elib.path.ensure_file(destination, must_exist=False)
 
-        LOGGER.debug('zipping mission to: {}'.format(destination))
+        LOGGER.debug('zipping mission to: {}'.format(destination_path))
 
-        destination.write_bytes(dummy_miz)
+        destination_path.write_bytes(dummy_miz)
 
-        with ZipFile(str(destination), mode='w', compression=8) as zip_file:
+        with ZipFile(str(destination_path), mode='w', compression=8) as zip_file:
 
             for root, _, items in os.walk(self.temp_dir.absolute()):
                 for item in items:
-                    item = Path(root, item).absolute()
-                    # print(item.relative_to(self.temp_dir))
-                    zip_file.write(item, arcname=item.relative_to(self.temp_dir))
+                    item_abs_path = Path(root, item).absolute()
+                    item_rel_path = Path(item_abs_path).relative_to(self.temp_dir)
+                    zip_file.write(item_abs_path, arcname=item_rel_path)
 
-        return str(destination)
+        return str(destination_path)

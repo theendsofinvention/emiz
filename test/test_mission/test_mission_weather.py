@@ -42,7 +42,7 @@ def test_seasons(mission):
         mission.weather.season_code = test[0]
         assert mission.weather.season_name == test[1]
     for wrong_name in (1, -1, None, True, 'caribou'):
-        with pytest.raises(ValueError, msg=wrong_name):
+        with pytest.raises(ValueError, message=wrong_name):
             mission.weather.get_season_code_from_name(wrong_name)
 
 
@@ -54,18 +54,18 @@ def test_wind(mission):
     assert mission.weather.wind_at_ground_level_dir == 0
     assert mission.weather.wind_at_ground_level_speed == 0
     for wrong_speed in [-1, 51, True, None, 'caribou']:
-        with pytest.raises(ValueError, msg=wrong_speed):
+        with pytest.raises(ValueError, message=wrong_speed):
             mission.weather.wind_at_ground_level_speed = wrong_speed
-        with pytest.raises(ValueError, msg=wrong_speed):
+        with pytest.raises(ValueError, message=wrong_speed):
             mission.weather.wind_at8000_speed = wrong_speed
-        with pytest.raises(ValueError, msg=wrong_speed):
+        with pytest.raises(ValueError, message=wrong_speed):
             mission.weather.wind_at2000_speed = wrong_speed
     for wrong_dir in [-1, 360, True, None, 'caribou']:
-        with pytest.raises(ValueError, msg=wrong_dir):
+        with pytest.raises(ValueError, message=wrong_dir):
             mission.weather.wind_at_ground_level_dir = wrong_dir
-        with pytest.raises(ValueError, msg=wrong_dir):
+        with pytest.raises(ValueError, message=wrong_dir):
             mission.weather.wind_at2000_dir = wrong_dir
-        with pytest.raises(ValueError, msg=wrong_dir):
+        with pytest.raises(ValueError, message=wrong_dir):
             mission.weather.wind_at8000_dir = wrong_dir
     for i in range(0, 359, 1):
         mission.weather.wind_at8000_dir = i
@@ -82,7 +82,7 @@ def test_turbulence(mission):
     for i in range(0, 60, 1):
         mission.weather.turbulence_at_ground_level = i
     for wrong_turbulence in [-1, 61, True, None, 'caribou']:
-        with pytest.raises(ValueError, msg=wrong_turbulence):
+        with pytest.raises(ValueError, message=wrong_turbulence):
             mission.weather.turbulence_at_ground_level = wrong_turbulence
 
 
@@ -91,7 +91,7 @@ def test_atmosphere_type(mission):
     mission.weather.atmosphere_type = 1
     assert mission.weather.atmosphere_type == 1
     for wrong_atmo_type in [-1, 2, True, None, 'caribou']:
-        with pytest.raises(ValueError, msg=wrong_atmo_type):
+        with pytest.raises(ValueError, message=wrong_atmo_type):
             mission.weather.atmosphere_type = wrong_atmo_type
 
 
@@ -110,10 +110,10 @@ def test_fog(mission):
     for i in range(0, 1000, 10):
         mission.weather.fog_thickness = i
     for wrong_visibility in [-1, 6001, True, None, 'caribou']:
-        with pytest.raises(ValueError, msg=wrong_visibility):
+        with pytest.raises(ValueError, message=wrong_visibility):
             mission.weather.fog_visibility = wrong_visibility
     for wrong_thickness in [-1, 1001, True, None, 'caribou']:
-        with pytest.raises(ValueError, msg=wrong_thickness):
+        with pytest.raises(ValueError, message=wrong_thickness):
             mission.weather.fog_thickness = wrong_thickness
 
 
@@ -123,7 +123,7 @@ def test_clouds(mission):
     for i in range(0, 10):
         mission.weather.cloud_density = i
     for wrong_density in [-1, 11, True, None, 'caribou']:
-        with pytest.raises(ValueError, msg=wrong_density):
+        with pytest.raises(ValueError, message=wrong_density):
             mission.weather.cloud_density = wrong_density
     for i in range(300, 5000, 100):
         mission.weather.cloud_base = i
@@ -143,12 +143,12 @@ def test_precipitations(mission):
     mission.weather.temperature = 1
     mission.weather.precipitations = 0
     for i in range(1, 4):
-        with pytest.raises(ValueError, msg=i):
+        with pytest.raises(ValueError, message=i):
             mission.weather.precipitations = i
     mission.weather.cloud_density = 5
     mission.weather.precipitations = 1
     for i in range(2, 4):
-        with pytest.raises(ValueError, msg=i):
+        with pytest.raises(ValueError, message=i):
             mission.weather.precipitations = i
     mission.weather.cloud_density = 9
     for i in range(0, 2):
@@ -160,7 +160,7 @@ def test_precipitations(mission):
     for i in range(3, 4):
         mission.weather.precipitations = i
     for i in range(1, 2):
-        with pytest.raises(ValueError, msg=i):
+        with pytest.raises(ValueError, message=i):
             mission.weather.precipitations = i
     mission.weather.precipitations = 4
     # Season code has been deprecated by ED
@@ -173,3 +173,9 @@ def test_precipitations(mission):
     # miz.mission.weather.precipitations = 3
     # miz.mission.weather.season_code = 1
     # assert miz.mission.weather.precipitations == 1
+
+
+def test_compare_weather(mission):
+    assert mission.weather == mission.weather
+    with pytest.raises(ValueError):
+        assert mission.weather == mission.units

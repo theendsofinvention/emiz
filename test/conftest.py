@@ -4,6 +4,7 @@ import os
 import sys
 from pathlib import Path
 
+import elib
 import pytest
 from mockito import unstub
 
@@ -19,6 +20,14 @@ def pytest_configure(config):
 def pytest_unconfigure(config):
     # noinspection PyUnresolvedReferences,PyProtectedMember
     del sys._called_from_test
+
+
+@pytest.fixture(scope='session', autouse=True)
+def _setup_logging():
+    logger = elib.custom_logging.get_logger('EMIZ')
+    elib.custom_logging.set_root_logger(logger)
+    for handler in logger.handlers:
+        handler.setLevel(10)
 
 
 @pytest.fixture(autouse=True)

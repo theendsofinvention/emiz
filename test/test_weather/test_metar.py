@@ -2,7 +2,6 @@
 import random
 from pathlib import Path
 
-import elib.path
 import pytest
 from metar.Metar import Metar
 
@@ -30,7 +29,8 @@ def _randomize_weather(mission: Mission):
     mission.weather.wind_at8000_dir = random.randint(0, 359)
 
 
-@pytest.mark.parametrize('icao', ['UGTB', 'UGTO', 'UGKO', 'UGSA', 'UGDT', 'URSS', 'EBBR'])
+@pytest.mark.vcr()
+@pytest.mark.parametrize('icao', ['UGTB', 'UGKO', 'URSS', 'EBBR'])
 def test_set_weather_from_icao(icao, weather_test_file, out_file):
     result = emiz.weather.mizfile.set_weather_from_metar(icao, weather_test_file, out_file)
     assert isinstance(result, tuple)
@@ -47,27 +47,44 @@ def test_set_weather_from_icao(icao, weather_test_file, out_file):
     assert m1.weather != m2.weather
 
 
+@pytest.mark.vcr()
+@pytest.mark.parametrize('icao', ['KU31', 'KILC', 'KYUC'])
+def test_station_not_found(icao):
+    with pytest.raises(emiz.weather.avwx.StationNotFound):
+        emiz.weather.avwx.AVWX.query_icao(icao)
+
+
 @pytest.mark.parametrize('metar,out', [
     ('UGTB 211300Z 13014KT CAVOK 33/07 Q1016 R13R/CLRD70 NOSIG',
-     {'visibility': 10000, 'cloud_thickness': 200, 'atmosphere_type': 0,
-      'cloud_base': 300, 'cloud_density': 0, 'turbulence_at_ground_level': 0,
-      'wind_at_ground_level_speed': 7, 'precipitations': 0, 'qnh': 762}),
+     {
+         'visibility': 10000, 'cloud_thickness': 200, 'atmosphere_type': 0,
+         'cloud_base': 300, 'cloud_density': 0, 'turbulence_at_ground_level': 0,
+         'wind_at_ground_level_speed': 7, 'precipitations': 0, 'qnh': 762
+     }),
     ('UGTB 220830Z 31017KT CAVOK 11/02 Q1012 R31L/CLRD70 NOSIG',
-     {'visibility': 10000, 'cloud_thickness': 200, 'atmosphere_type': 0,
-      'cloud_base': 300, 'cloud_density': 0, 'turbulence_at_ground_level': 0,
-      'wind_at_ground_level_speed': 8, 'precipitations': 0, 'qnh': 759}),
+     {
+         'visibility': 10000, 'cloud_thickness': 200, 'atmosphere_type': 0,
+         'cloud_base': 300, 'cloud_density': 0, 'turbulence_at_ground_level': 0,
+         'wind_at_ground_level_speed': 8, 'precipitations': 0, 'qnh': 759
+     }),
     ('UGTB 230820Z 09009KT 060V120 CAVOK M03/M12 Q1022 NOSIG',
-     {'visibility': 10000, 'cloud_thickness': 200, 'atmosphere_type': 0,
-      'cloud_base': 300, 'cloud_density': 0, 'turbulence_at_ground_level': 0,
-      'wind_at_ground_level_speed': 4, 'precipitations': 0, 'qnh': 766}),
+     {
+         'visibility': 10000, 'cloud_thickness': 200, 'atmosphere_type': 0,
+         'cloud_base': 300, 'cloud_density': 0, 'turbulence_at_ground_level': 0,
+         'wind_at_ground_level_speed': 4, 'precipitations': 0, 'qnh': 766
+     }),
     ('UGTB 240930Z 00000MPS 8000 -SHRA BKN009 OVC050CB 08/06 Q1014 R06/290055 NOSIG RMK R02/00000MPS MT OBSC QFE759',
-     {'visibility': 8000, 'cloud_thickness': (1800, 2000), 'atmosphere_type': 0,
-      'cloud_base': 1523, 'cloud_density': (9, 10), 'turbulence_at_ground_level': 0,
-      'wind_at_ground_level_speed': 0, 'precipitations': 1, 'qnh': 760}),
+     {
+         'visibility': 8000, 'cloud_thickness': (1800, 2000), 'atmosphere_type': 0,
+         'cloud_base': 1523, 'cloud_density': (9, 10), 'turbulence_at_ground_level': 0,
+         'wind_at_ground_level_speed': 0, 'precipitations': 1, 'qnh': 760
+     }),
     ('ENGM 240850Z 16003KT 9999 -SN FEW014 OVC028 M07/M09 Q1038 TEMPO BKN014',
-     {'visibility': 10000, 'cloud_thickness': (1800, 2000), 'atmosphere_type': 0,
-      'cloud_base': 853, 'cloud_density': (9, 10), 'turbulence_at_ground_level': 0,
-      'wind_at_ground_level_speed': 1, 'precipitations': 3, 'qnh': 778}),
+     {
+         'visibility': 10000, 'cloud_thickness': (1800, 2000), 'atmosphere_type': 0,
+         'cloud_base': 853, 'cloud_density': (9, 10), 'turbulence_at_ground_level': 0,
+         'wind_at_ground_level_speed': 1, 'precipitations': 3, 'qnh': 778
+     }),
 ])
 def test_set_weather_from_metar(metar, out, weather_test_file, out_file):
     in_metar = Metar(metar)

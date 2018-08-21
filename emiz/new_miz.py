@@ -37,7 +37,6 @@ class NewMiz(Miz):
     """
     missing_name_counter = 0
     version = 0
-    resources = []
 
     def __init__(
             self,
@@ -45,7 +44,7 @@ class NewMiz(Miz):
             temp_dir: typing.Union[str, Path] = None,
             keep_temp_dir: bool = False,
             overwrite: bool = False
-    ):
+    ) -> None:
         Miz.__init__(self, path_to_miz_file, temp_dir, keep_temp_dir, overwrite)
 
     @staticmethod
@@ -85,7 +84,7 @@ class NewMiz(Miz):
     @staticmethod
     def _decompose_list_dict(dict_: dict, output_folder: Path, version, miz: Miz):
         count = 1
-        order = {}
+        order: typing.Dict[str, int] = {}
         for key in dict_:
             sub_dict = dict_[key]
             name = None
@@ -167,7 +166,7 @@ class NewMiz(Miz):
             output.update(NewMiz._recreate_dict_from_ordered_folder(folder, version))
         else:
             for obj in folder.iterdir():
-                obj_stem = obj.name.replace('.json', '')
+                obj_stem: typing.Union[str, int] = obj.name.replace('.json', '')
                 try:
                     obj_stem = int(obj_stem)
                 except ValueError:
@@ -192,7 +191,7 @@ class NewMiz(Miz):
         # pylint: disable=c-extension-no-member
         order = ujson.loads(order_file.read_text(encoding=ENCODING))
         for obj in folder.iterdir():
-            obj_stem = obj.name.replace('.json', '')
+            obj_stem: typing.Union[str, int] = obj.name.replace('.json', '')
             try:
                 obj_stem = int(obj_stem)
             except ValueError:
@@ -221,15 +220,15 @@ class NewMiz(Miz):
         if dict_version != version:
             wrong_version(file.absolute(), dict_version, version)
 
-        file_stem = file.name.replace('.json', '')
+        file_stem: typing.Union[str, int] = file.name.replace('.json', '')
         try:
             file_stem = int(file_stem)
         except ValueError:
             pass
         if file_stem == 'base_info':
             return NewMiz._sorted(dict_)
-        else:
-            output[file_stem] = NewMiz._sorted(dict_)
+
+        output[file_stem] = NewMiz._sorted(dict_)
 
         for key in dict_:
             if isinstance(key, str) and key.startswith('__'):
