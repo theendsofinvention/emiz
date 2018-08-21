@@ -8,6 +8,7 @@ import elib
 from metar.Metar import Metar, ParserError
 
 from emiz.weather.awc.awc import AWC
+
 from .custom_metar_pressure import CustomPressure
 
 LOGGER = elib.custom_logging.get_logger('EMIZ')

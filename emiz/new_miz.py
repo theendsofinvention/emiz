@@ -4,13 +4,13 @@ Add JSON composition to Miz object
 """
 import shutil
 import typing
-import ujson
 from pathlib import Path
 
 import elib
 import pathvalidate
 from natsort import natsorted
 
+import ujson
 from emiz.miz import ENCODING, Miz
 from emiz.sltp import SLTP
 

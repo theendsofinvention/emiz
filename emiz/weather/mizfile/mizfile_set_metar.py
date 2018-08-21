@@ -10,6 +10,7 @@ import elib.path
 from metar import Metar
 
 from emiz.miz import Miz
+
 from .. import custom_metar, mission_weather
 
 LOGGER = elib.custom_logging.get_logger('EMIZ')
