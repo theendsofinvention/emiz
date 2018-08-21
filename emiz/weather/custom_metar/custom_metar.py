@@ -7,7 +7,7 @@ import typing
 import elib
 from metar.Metar import Metar, ParserError
 
-from .. import noaa
+from emiz.weather.awc.awc import AWC
 from .custom_metar_pressure import CustomPressure
 
 LOGGER = elib.custom_logging.get_logger('EMIZ')
@@ -36,14 +36,18 @@ class CustomMetar(Metar):
         Returns: CustomMetar object
 
         """
-        error = None
+        error: typing.Optional[str] = None
         if isinstance(metar, CustomMetar):
             return None, metar
-        elif isinstance(metar, str):
+
+        if isinstance(metar, str):
             LOGGER.debug(f'building CustomMetar from: {metar}')
             if len(metar) == 4:
                 LOGGER.debug('retrieving METAR from ICAO')
-                error, metar = noaa.retrieve_metar(metar)
+                # NOAA has discontinued their hosting of raw METAR text files ...
+                # error, metar = noaa.retrieve_metar(metar)
+                # metar = avwx.AVWX.query_icao(metar).rawreport
+                metar = AWC.query_icao(metar).raw_metar
         else:
             error = f'expected a string or or a CustomMetar object, got: {type(metar)}'
 
