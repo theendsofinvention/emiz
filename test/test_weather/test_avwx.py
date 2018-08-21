@@ -5,6 +5,7 @@ import pytest
 from emiz.weather import AVWX, AVWXResult
 
 
+@pytest.mark.vcr()
 def test_query_icao_ugtb():
     data = AVWX.query_icao('UGTB')
     assert isinstance(data, AVWXResult)
@@ -31,6 +32,7 @@ def test_query_icao_ugtb():
         assert isinstance(getattr(data, x), dict), x
 
 
+@pytest.mark.vcr()
 @pytest.mark.parametrize('icao', ['UGTB', 'UGKO', 'KJFK', 'LFPG', 'URSS', 'EBBR'])
 def test_query_icao(icao):
     data = AVWX.query_icao(icao)
@@ -53,6 +55,7 @@ def test_query_icao(icao):
         assert isinstance(getattr(data, x), dict), x
 
 
+@pytest.mark.vcr()
 def test_speech():
     speech = AVWX.metar_to_speech('KJFK 241051Z 35007KT 10SM SCT200 BKN250 03/M02 A3016 RMK AO2 SLP211 T00281017')
     assert 'Winds three five zero at 7kt. Visibility one zero ' \

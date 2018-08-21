@@ -30,7 +30,8 @@ def _randomize_weather(mission: Mission):
     mission.weather.wind_at8000_dir = random.randint(0, 359)
 
 
-@pytest.mark.parametrize('icao', ['UGTB', 'UGTO', 'UGKO', 'UGSA', 'UGDT', 'URSS', 'EBBR'])
+@pytest.mark.vcr()
+@pytest.mark.parametrize('icao', ['UGTB', 'UGKO', 'URSS', 'EBBR'])
 def test_set_weather_from_icao(icao, weather_test_file, out_file):
     result = emiz.weather.mizfile.set_weather_from_metar(icao, weather_test_file, out_file)
     assert isinstance(result, tuple)
@@ -45,6 +46,13 @@ def test_set_weather_from_icao(icao, weather_test_file, out_file):
         for attr in ('_section_bullseye', '_section_coalition', '_section_country', '_section_nav_points'):
             assert getattr(coa1, attr) == getattr(coa2, attr)
     assert m1.weather != m2.weather
+
+
+@pytest.mark.vcr()
+@pytest.mark.parametrize('icao', ['KU31', 'KILC', 'KYUC'])
+def test_station_not_found(icao):
+    with pytest.raises(emiz.weather.avwx.StationNotFound):
+        emiz.weather.avwx.AVWX.query_icao(icao)
 
 
 @pytest.mark.parametrize('metar,out', [

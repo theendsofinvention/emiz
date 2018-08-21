@@ -1,0 +1,23 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: https://avwx.rest/api/metar/KJFK?options=info%2Cspeech%2Csummary%2Ctranslate
+  response:
+    body: {string: "{\n  \"Error\": \"Station Lookup Error: METAR not found for KJFK.
+        There might not be a current report in ADDS\", \n  \"Meta\": {\n    \"Timestamp\":
+        \"Tue, 21 Aug 2018 08:52:29 GMT\"\n  }\n}\n"}
+    headers:
+      Access-Control-Allow-Origin: ['*']
+      Content-Length: ['176']
+      Content-Type: [application/json]
+      Date: ['Tue, 21 Aug 2018 08:52:28 GMT']
+      Server: [gunicorn/19.8.1]
+      X-Robots-Tag: [noindex]
+    status: {code: 400, message: BAD REQUEST}
+version: 1

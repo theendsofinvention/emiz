@@ -1,0 +1,48 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: https://avwx.rest/api/parse/metar?report=KJFK+241051Z+35007KT+10SM+SCT200+BKN250+03%2FM02+A3016+RMK+AO2+SLP211+T00281017&options=info%2Cspeech%2Csummary
+  response:
+    body: {string: "{\n  \"Altimeter\": \"3016\", \n  \"Cloud-List\": [\n    [\n      \"SCT\",
+        \n      \"200\"\n    ], \n    [\n      \"BKN\", \n      \"250\"\n    ]\n  ],
+        \n  \"Dewpoint\": \"M02\", \n  \"Flight-Rules\": \"VFR\", \n  \"Info\": {\n
+        \   \"City\": \"New York City\", \n    \"Country\": \"USA\", \n    \"Elevation\":
+        \"4.3\", \n    \"IATA\": \"JFK\", \n    \"ICAO\": \"KJFK\", \n    \"Latitude\":
+        \"40.63975111\", \n    \"Longitude\": \"-73.77892556\", \n    \"Name\": \"John
+        F Kennedy International Airport\", \n    \"Priority\": \"1\", \n    \"State\":
+        \"NY\"\n  }, \n  \"Meta\": {\n    \"Timestamp\": \"Tue, 21 Aug 2018 07:29:16
+        GMT\"\n  }, \n  \"Other-List\": [], \n  \"Remarks\": \"RMK AO2 SLP211 T00281017\",
+        \n  \"Remarks-Info\": {\n    \"Dew-Decimal\": \"-1.7\", \n    \"Temp-Decimal\":
+        \"2.8\"\n  }, \n  \"Runway-Vis-List\": [], \n  \"Speech\": \"Winds three five
+        zero at 7kt. Visibility one zero miles. Temperature three degrees Celsius.
+        Dew point minus two degrees Celsius. Altimeter three zero point one six. Scattered
+        clouds at 20000ft. Broken layer at 25000ft\", \n  \"Station\": \"KJFK\", \n
+        \ \"Summary\": \"Winds N-350 at 07kt, Vis 10sm, Temp 03C, Dew -02C, Alt 30.16inHg,
+        Scattered clouds at 20000ft, Broken layer at 25000ft\", \n  \"Temperature\":
+        \"03\", \n  \"Time\": \"241051Z\", \n  \"Translations\": {\n    \"Altimeter\":
+        \"30.16inHg (1021hPa)\", \n    \"Clouds\": \"Scattered clouds at 20000ft,
+        Broken layer at 25000ft - Reported AGL\", \n    \"Dewpoint\": \"-02C (28F)\",
+        \n    \"Other\": \"\", \n    \"Remarks\": {\n      \"AO2\": \"Automated with
+        precipitation sensor\", \n      \"SLP211\": \"Sea level pressure: 1021.1 hPa\",
+        \n      \"T00281017\": \"Temperature 2.8\\u00b0C and dewpoint -1.7\\u00b0C\"\n
+        \   }, \n    \"Temperature\": \"03C (37F)\", \n    \"Visibility\": \"10sm
+        (16.1km)\", \n    \"Wind\": \"N-350 at 07kt\"\n  }, \n  \"Units\": {\n    \"Altimeter\":
+        \"inHg\", \n    \"Altitude\": \"ft\", \n    \"Temperature\": \"C\", \n    \"Visibility\":
+        \"sm\", \n    \"Wind-Speed\": \"kt\"\n  }, \n  \"Visibility\": \"10\", \n
+        \ \"Wind-Direction\": \"350\", \n  \"Wind-Gust\": \"\", \n  \"Wind-Speed\":
+        \"07\", \n  \"Wind-Variable-Dir\": []\n}\n"}
+    headers:
+      Access-Control-Allow-Origin: ['*']
+      Content-Length: ['1906']
+      Content-Type: [application/json]
+      Date: ['Tue, 21 Aug 2018 07:29:15 GMT']
+      Server: [gunicorn/19.8.1]
+      X-Robots-Tag: [noindex]
+    status: {code: 200, message: OK}
+version: 1

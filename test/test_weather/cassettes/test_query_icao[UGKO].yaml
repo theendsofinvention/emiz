@@ -1,0 +1,43 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: https://avwx.rest/api/metar/UGKO?options=info%2Cspeech%2Csummary%2Ctranslate
+  response:
+    body: {string: "{\n  \"Altimeter\": \"1011\", \n  \"Cloud-List\": [], \n  \"Dewpoint\":
+        \"15\", \n  \"Flight-Rules\": \"VFR\", \n  \"Info\": {\n    \"City\": \"Kutaisi\",
+        \n    \"Country\": \"GEO\", \n    \"Elevation\": \"68\", \n    \"IATA\": \"KUT\",
+        \n    \"ICAO\": \"UGKO\", \n    \"Latitude\": \"42.183\", \n    \"Longitude\":
+        \"42.483\", \n    \"Name\": \"Kopitnari Airport\", \n    \"Priority\": \"6\",
+        \n    \"State\": \"\"\n  }, \n  \"Meta\": {\n    \"Cache-Timestamp\": \"Tue,
+        21 Aug 2018 07:29:27 GMT\", \n    \"Timestamp\": \"Tue, 21 Aug 2018 07:29:27
+        GMT\"\n  }, \n  \"Other-List\": [], \n  \"Raw-Report\": \"UGKO 210530Z 09016KT
+        CAVOK 27/15 Q1011 NOSIG\", \n  \"Remarks\": \"NOSIG\", \n  \"Remarks-Info\":
+        {}, \n  \"Runway-Vis-List\": [], \n  \"Speech\": \"Winds zero nine zero at
+        16kt. Visibility one zero kilometers. Temperature two seven degrees Celsius.
+        Dew point one five degrees Celsius. Altimeter one zero one one. Sky clear\",
+        \n  \"Station\": \"UGKO\", \n  \"Summary\": \"Winds E-090 at 16kt, Vis 10km,
+        Temp 27C, Dew 15C, Alt 1011hPa, Sky clear\", \n  \"Temperature\": \"27\",
+        \n  \"Time\": \"210530Z\", \n  \"Translations\": {\n    \"Altimeter\": \"1011hPa
+        (29.85inHg)\", \n    \"Clouds\": \"Sky clear\", \n    \"Dewpoint\": \"15C
+        (59F)\", \n    \"Other\": \"\", \n    \"Remarks\": {}, \n    \"Temperature\":
+        \"27C (81F)\", \n    \"Visibility\": \"10km (6.2sm)\", \n    \"Wind\": \"E-090
+        at 16kt\"\n  }, \n  \"Units\": {\n    \"Altimeter\": \"hPa\", \n    \"Altitude\":
+        \"ft\", \n    \"Temperature\": \"C\", \n    \"Visibility\": \"m\", \n    \"Wind-Speed\":
+        \"kt\"\n  }, \n  \"Visibility\": \"9999\", \n  \"Wind-Direction\": \"090\",
+        \n  \"Wind-Gust\": \"\", \n  \"Wind-Speed\": \"16\", \n  \"Wind-Variable-Dir\":
+        []\n}\n"}
+    headers:
+      Access-Control-Allow-Origin: ['*']
+      Content-Length: ['1504']
+      Content-Type: [application/json]
+      Date: ['Tue, 21 Aug 2018 07:29:27 GMT']
+      Server: [gunicorn/19.8.1]
+      X-Robots-Tag: [noindex]
+    status: {code: 200, message: OK}
+version: 1
