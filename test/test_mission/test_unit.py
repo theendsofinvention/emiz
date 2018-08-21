@@ -45,7 +45,7 @@ def test_get_unit_by_id(mission):
     for unit_id in range(9, 41):
         assert isinstance(mission.red_coa.get_unit_by_id(unit_id), BaseUnit)
     for wrong_unit_id in (-1, False, None, True, 'caribou'):
-        with pytest.raises(ValueError, msg=wrong_unit_id):
+        with pytest.raises(ValueError, message=wrong_unit_id):
             mission.red_coa.get_unit_by_id(wrong_unit_id)
     for non_existing_unit_id in (42, 50, 100, 150, mission.next_unit_id):
         assert mission.red_coa.get_group_by_id(non_existing_unit_id) is None
@@ -58,7 +58,7 @@ def test_unit_by_name(mission):
     for i in range(1, 33):
         assert isinstance(mission.red_coa.get_unit_by_name('Unit #{}'.format(str(i).zfill(3))), BaseUnit)
     for wrong_unit_name in (-1, 0, 1, False, True, None):
-        with pytest.raises(ValueError, msg=wrong_unit_name):
+        with pytest.raises(ValueError, message=wrong_unit_name):
             mission.blue_coa.get_unit_by_name(wrong_unit_name)
     for non_existing_unit_name in ('yup', 'yop', 'unit #017', 'Gilles', 'etcheR'):
         assert mission.red_coa.get_unit_by_name(non_existing_unit_name) is None

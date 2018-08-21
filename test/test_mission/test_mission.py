@@ -166,7 +166,7 @@ def test_ground_control(mission):
     ]:
         assert getattr(mission.ground_control, attrib) == 0
         for wrong_param in [-1, 101, True, None, 'caribou']:
-            with pytest.raises(ValueError, msg=wrong_param):
+            with pytest.raises(ValueError, message=wrong_param):
                 setattr(mission.ground_control, attrib, wrong_param)
         for i in range(0, 60, 5):
             setattr(mission.ground_control, attrib, i)
@@ -187,10 +187,10 @@ def test_objects(all_objects):
             for unit in country.get_units_from_category(category):
                 assert isinstance(unit, BaseUnit)
         for wrong_category in (True, -1, 0, 1, False, None, 'caribou'):
-            with pytest.raises(ValueError, msg=wrong_category):
+            with pytest.raises(ValueError, message=wrong_category):
                 for _ in country.get_groups_from_category(wrong_category):
                     pass
-            with pytest.raises(ValueError, msg=wrong_category):
+            with pytest.raises(ValueError, message=wrong_category):
                 for _ in country.get_units_from_category(wrong_category):
                     pass
         for id_ in (1, 2, 3, 4):

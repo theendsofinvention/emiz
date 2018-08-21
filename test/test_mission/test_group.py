@@ -43,7 +43,7 @@ def test_get_group_by_id(mission):
     for group_id in range(9, 41):
         assert isinstance(mission.red_coa.get_group_by_id(group_id), Group)
     for wrong_group_id in (-1, False, None, True, 'caribou'):
-        with pytest.raises(ValueError, msg=wrong_group_id):
+        with pytest.raises(ValueError, message=wrong_group_id):
             mission.red_coa.get_group_by_id(wrong_group_id)
     for non_existing_group_id in (42, 50, 100, 150, mission.next_group_id):
         assert mission.red_coa.get_group_by_id(non_existing_group_id) is None
@@ -57,7 +57,7 @@ def test_group_by_name(mission):
         assert isinstance(mission.red_coa.get_group_by_name('New Vehicle Group #{}'.format(str(i).zfill(3))),
                           Group)
     for wrong_group_name in (-1, 0, 1, False, True, None):
-        with pytest.raises(ValueError, msg=wrong_group_name):
+        with pytest.raises(ValueError, message=wrong_group_name):
             mission.blue_coa.get_group_by_name(wrong_group_name)
     for non_existing_group_name in ('yup', 'yop', 'New Vehicle group #019', 'Gilles', 'etcheR'):
         assert mission.red_coa.get_group_by_name(non_existing_group_name) is None

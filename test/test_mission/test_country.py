@@ -30,16 +30,16 @@ def test_get_country_by_name(mission):
     assert isinstance(mission.blue_coa.get_country_by_name('USA'), Country)
     assert isinstance(mission.blue_coa.get_country_by_id(2), Country)
     for wrong_country_name in (1, -1, 0, False, None, True):
-        with pytest.raises(ValueError, msg=wrong_country_name):
+        with pytest.raises(ValueError, message=wrong_country_name):
             mission.blue_coa.get_country_by_name(wrong_country_name)
     for wrong_country_id in (-1, False, None, True, 'caribou'):
-        with pytest.raises(ValueError, msg=wrong_country_id):
+        with pytest.raises(ValueError, message=wrong_country_id):
             mission.blue_coa.get_country_by_id(wrong_country_id)
     for unknown_country_name in ('nope', 'nope too'):
-        with pytest.raises(ValueError, msg=unknown_country_name):
+        with pytest.raises(ValueError, message=unknown_country_name):
             mission.blue_coa.get_country_by_name(unknown_country_name)
     for unknown_country_id in (150,):
-        with pytest.raises(ValueError, msg=unknown_country_id):
+        with pytest.raises(ValueError, message=unknown_country_id):
             mission.blue_coa.get_country_by_id(unknown_country_id)
 
 
