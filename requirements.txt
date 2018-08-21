@@ -28,6 +28,6 @@ raven==6.9.0
 requests==2.19.1
 six==1.11.0
 smmap2==2.0.4
-tqdm==4.24.0
+tqdm==4.25.0
 ujson==1.35
 urllib3==1.23
