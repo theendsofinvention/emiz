@@ -18,6 +18,6 @@ ujson = "*"
 pathvalidate = "*"
 
 [dev-packages]
-
+pip = ">=18"
 epab = "*"
 datadiff = "*"
