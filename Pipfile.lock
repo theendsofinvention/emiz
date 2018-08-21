@@ -67,10 +67,10 @@
         },
         "elib": {
             "hashes": [
-                "sha256:6934d8c2293682baa999026246cdfb912f59b59551548c0eb158486daaddbbfa"
+                "sha256:ad93a936aede82d7ee1154ce7808675e0548ee5b507fba0384f3158be9dc25fa"
             ],
             "index": "pypi",
-            "version": "==2018.8.20.2"
+            "version": "==2018.8.21.1"
         },
         "everett": {
             "hashes": [
@@ -396,10 +396,10 @@
         },
         "epab": {
             "hashes": [
-                "sha256:3143d5be1d79957fbfa34b6d2544a4cf05e5aca67eca5b609208f013ee6c637f"
+                "sha256:8d6c65bd7c4df3c32094c4b663b4e8252769a6501b7d46d7688e618fc32e2f49"
             ],
             "index": "pypi",
-            "version": "==2018.8.20.1"
+            "version": "==2018.8.21.1"
         },
         "execnet": {
             "hashes": [
@@ -444,7 +444,9 @@
         },
         "hypothesis": {
             "hashes": [
-                "sha256:7ca43f68bbf0880600ca70d41c0f76fef65da0c02ad19241c15be74fb8988e83"
+                "sha256:7ca43f68bbf0880600ca70d41c0f76fef65da0c02ad19241c15be74fb8988e83",
+                "sha256:c29d9d0bed9d21d9de407f4044e8632708d3a911c06738a2ce346a49858eb55d",
+                "sha256:c734f263a5f35f4bd2acadf0e9a36511d4500286eae04ba0a090d1be47c7d1ba"
             ],
             "version": "==3.69.1"
         },
@@ -772,6 +774,7 @@
                 "sha256:edb04bdd45bfd76c8292c4d9654568efaedf76fe78eb246dde69bdb13b2dad87",
                 "sha256:f19f2a4f547505fe9072e15f6f4ae714af51b5a681a97f187971f50c283193b6"
             ],
+            "markers": "python_version < '3.7' and implementation_name == 'cpython'",
             "version": "==1.1.0"
         },
         "urllib3": {
