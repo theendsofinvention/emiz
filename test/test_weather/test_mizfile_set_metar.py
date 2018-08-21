@@ -1,8 +1,5 @@
 # coding=utf-8
 
-from pathlib import Path
-
-import pytest
 from mockito import verify, verifyStubbedInvocationsAreUsed, when
 
 from emiz.miz import Miz

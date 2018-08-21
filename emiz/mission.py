@@ -604,16 +604,6 @@ class Coalition(BaseMissionObject):
             if group.group_category == category:
                 yield group
 
-    @property
-    def units(self) -> typing.Iterator['BaseUnit']:
-        """
-        Returns: generator over all units of this coalition
-        """
-        for group in self.groups:
-            assert isinstance(group, Group)
-            for unit in group.units:
-                yield unit
-
     def get_units_from_category(self, category) -> typing.Iterator['BaseUnit']:
         """
         Args:
@@ -639,51 +629,6 @@ class Coalition(BaseMissionObject):
             assert isinstance(group, Group)
             if group.group_id == group_id:
                 return group
-
-        return None
-
-    def get_group_by_name(self, group_name) -> typing.Optional['Group']:
-        """
-        Args:
-            group_name: group name
-
-        Returns: Group
-        """
-        VALID_STR.validate(group_name, 'get_group_by_name')
-        for group in self.groups:
-            assert isinstance(group, Group)
-            if group.group_name == group_name:
-                return group
-
-        return None
-
-    def get_unit_by_name(self, unit_name) -> typing.Optional['BaseUnit']:
-        """
-        Args:
-            unit_name: unit name
-
-        Returns: Unit
-        """
-        VALID_STR.validate(unit_name, 'get_unit_by_name')
-        for unit in self.units:
-            assert isinstance(unit, BaseUnit)
-            if unit.unit_name == unit_name:
-                return unit
-
-        return None
-
-    def get_unit_by_id(self, unit_id) -> typing.Optional['BaseUnit']:
-        """
-        Args:
-            unit_id:
-
-        Returns:
-        """
-        VALID_POSITIVE_INT.validate(unit_id, 'get_unit_by_id')
-        for unit in self.units:
-            assert isinstance(unit, BaseUnit)
-            if unit.unit_id == unit_id:
-                return unit
 
         return None
 
@@ -1316,71 +1261,6 @@ class Country(Coalition):
 
         return None
 
-    def get_group_by_name(self, group_name) -> typing.Optional['Group']:
-        """
-        Args:
-            group_name: group name
-
-        Returns: Group
-        """
-        for group in self.groups:
-            assert isinstance(group, Group)
-            if group.group_name == group_name:
-                return group
-
-        return None
-
-    @property
-    def units(self) -> typing.Iterator['BaseUnit']:
-        """
-        Returns: generator over all units in this country
-        """
-        for group in self.groups:
-            assert isinstance(group, Group)
-            for unit in group.units:
-                yield unit
-
-    def get_unit_by_name(self, unit_name) -> typing.Optional['BaseUnit']:
-        """
-        Args:
-            unit_name: unit name
-
-        Returns: Unit
-        """
-        for unit in self.units:
-            assert isinstance(unit, BaseUnit)
-            if unit.unit_name == unit_name:
-                return unit
-
-        return None
-
-    def get_unit_by_id(self, unit_id) -> typing.Optional['BaseUnit']:
-        """
-        Args:
-            unit_id: unit Id
-
-        Returns: Unit
-        """
-        for unit in self.units:
-            assert isinstance(unit, BaseUnit)
-            if unit.unit_id == unit_id:
-                return unit
-
-        return None
-
-    def get_units_from_category(self, category) -> typing.Iterator['BaseUnit']:
-        """
-        Args:
-            category: category
-
-        Returns: generator over all units of this category in this country
-        """
-        Mission.validator_group_category.validate(category, 'group category')
-        for unit in self.units:
-            assert isinstance(unit, BaseUnit)
-            if unit.group_category == category:
-                yield unit
-
 
 class Static(Country):
     """
@@ -1633,32 +1513,6 @@ class Group(Country):
         Returns: amount of units in this group
         """
         return len(list(self.units))
-
-    def get_unit_by_name(self, unit_name) -> typing.Optional['BaseUnit']:
-        """
-        Args:
-            unit_name: unit name
-
-        Returns: a unit of this group
-        """
-        for unit in self.units:
-            assert isinstance(unit, BaseUnit)
-            if unit.unit_name == unit_name:
-                return unit
-        return None
-
-    def get_unit_by_id(self, unit_id) -> typing.Optional['BaseUnit']:
-        """
-        Args:
-            unit_id: unit id
-
-        Returns: a unit of this group
-        """
-        for unit in self.units:
-            assert isinstance(unit, BaseUnit)
-            if unit.unit_id == unit_id:
-                return unit
-        return None
 
     def get_unit_by_index(self, unit_index) -> typing.Optional['BaseUnit']:
         """

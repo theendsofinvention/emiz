@@ -1,7 +1,5 @@
 # coding=utf-8
 
-import os
-
 import datadiff
 import pytest
 
@@ -10,7 +8,6 @@ from emiz.sltp import SLTP, SLTPParsingError
 
 
 def _assert_same(input_, output):
-
     for x in input_:
         try:
             assert x in output
@@ -22,7 +19,6 @@ def _assert_same(input_, output):
 
 
 def _assert_different(input_, output):
-
     for x in input_:
         try:
             assert x in output
