@@ -26,7 +26,7 @@ class BaseMissionObject:
     Serves as base mission (dictionary) object
     """
 
-    def __init__(self, mission_dict: dict, l10n: dict):
+    def __init__(self, mission_dict: dict, l10n: dict) -> None:
         super().__init__()
 
         if not isinstance(mission_dict, dict):
@@ -43,10 +43,10 @@ class BaseMissionObject:
         self._red_coa = None
         self.ground_control = None
 
-        self._countries_by_name = {}
-        self._countries_by_id = {}
+        self._countries_by_name: typing.Dict[str, 'Country'] = {}
+        self._countries_by_id: typing.Dict[int, 'Country'] = {}
 
-    def get_country_by_name(self, country_name: str) -> 'Country':
+    def get_country_by_name(self, country_name: str) -> typing.Optional['Country']:
         """
         Gets a country from its name
 
@@ -66,7 +66,7 @@ class BaseMissionObject:
         else:
             return self._countries_by_name[country_name]
 
-    def get_country_by_id(self, country_id: str) -> 'Country':
+    def get_country_by_id(self, country_id: int) -> typing.Optional['Country']:
         """
         Gets a country from its name
 
@@ -218,8 +218,8 @@ class BaseMissionObject:
         """
         Returns: next free GroupId
         """
-        ids = set()
-        for group in chain(self._blue_coa.groups, self._red_coa.groups):
+        ids: typing.Set[int] = set()
+        for group in chain(self._blue_coa.groups, self._red_coa.groups):  # type: ignore
             assert isinstance(group, Group)
             id_ = group.group_id
             if id_ in ids:
@@ -232,8 +232,8 @@ class BaseMissionObject:
         """
         Returns: next free Unit ID
         """
-        ids = set()
-        for unit in chain(self._blue_coa.units, self._red_coa.units):
+        ids: typing.Set[int] = set()
+        for unit in chain(self._blue_coa.units, self._red_coa.units):  # type: ignore
             assert isinstance(unit, BaseUnit)
             id_ = unit.unit_id
             if id_ in ids:
@@ -426,22 +426,23 @@ class Mission(BaseMissionObject):
         """
         Returns: blue coalition
         """
-        return self._blue_coa
+        return self._blue_coa  # type: ignore
 
     @property
     def red_coa(self) -> 'Coalition':
         """
         Returns: red coalitions
         """
-        return self._red_coa
+        return self._red_coa  # type: ignore
 
     def farps(self) -> typing.Iterator['Static']:
         """
         Returns: generator over all FARPs objects
         """
         for coa in [self._blue_coa, self._red_coa]:
-            for farp in coa.farps:
-                yield farp
+            if coa is not None:
+                for farp in coa.farps:
+                    yield farp
 
 
 # noinspection PyProtectedMember
@@ -626,7 +627,7 @@ class Coalition(BaseMissionObject):
             if unit.group_category == category:
                 yield unit
 
-    def get_group_by_id(self, group_id) -> 'Group':
+    def get_group_by_id(self, group_id) -> typing.Optional['Group']:
         """
         Args:
             group_id: group ID
@@ -639,7 +640,9 @@ class Coalition(BaseMissionObject):
             if group.group_id == group_id:
                 return group
 
-    def get_group_by_name(self, group_name) -> 'Group':
+        return None
+
+    def get_group_by_name(self, group_name) -> typing.Optional['Group']:
         """
         Args:
             group_name: group name
@@ -651,6 +654,8 @@ class Coalition(BaseMissionObject):
             assert isinstance(group, Group)
             if group.group_name == group_name:
                 return group
+
+        return None
 
     def get_unit_by_name(self, unit_name) -> typing.Optional['BaseUnit']:
         """
@@ -924,7 +929,7 @@ class Weather(BaseMissionObject):
         Returns: season code
         """
         self.validator_season_name.validate(season_name, 'get_season_code_from_name')
-        return self.seasons_enum[season_name]
+        return self.seasons_enum[season_name]  # type: ignore
 
     @property
     def _section_wind_at_ground_level(self):
@@ -1092,7 +1097,7 @@ class Weather(BaseMissionObject):
         """
         Returns: name of the season
         """
-        return self.seasons_enum[self.season_code]['name']
+        return self.seasons_enum[self.season_code]['name']  # type: ignore
 
     @property
     def qnh(self) -> int:
@@ -1297,7 +1302,7 @@ class Country(Coalition):
             if group.group_category == category:
                 yield group
 
-    def get_group_by_id(self, group_id) -> 'Group':
+    def get_group_by_id(self, group_id) -> typing.Optional['Group']:
         """
         Args:
             group_id: group id
@@ -1309,7 +1314,9 @@ class Country(Coalition):
             if group.group_id == group_id:
                 return group
 
-    def get_group_by_name(self, group_name) -> 'Group':
+        return None
+
+    def get_group_by_name(self, group_name) -> typing.Optional['Group']:
         """
         Args:
             group_name: group name
@@ -1321,6 +1328,8 @@ class Country(Coalition):
             if group.group_name == group_name:
                 return group
 
+        return None
+
     @property
     def units(self) -> typing.Iterator['BaseUnit']:
         """
@@ -1331,7 +1340,7 @@ class Country(Coalition):
             for unit in group.units:
                 yield unit
 
-    def get_unit_by_name(self, unit_name) -> 'BaseUnit':
+    def get_unit_by_name(self, unit_name) -> typing.Optional['BaseUnit']:
         """
         Args:
             unit_name: unit name
@@ -1343,7 +1352,9 @@ class Country(Coalition):
             if unit.unit_name == unit_name:
                 return unit
 
-    def get_unit_by_id(self, unit_id) -> 'BaseUnit':
+        return None
+
+    def get_unit_by_id(self, unit_id) -> typing.Optional['BaseUnit']:
         """
         Args:
             unit_id: unit Id
@@ -1354,6 +1365,8 @@ class Country(Coalition):
             assert isinstance(unit, BaseUnit)
             if unit.unit_id == unit_id:
                 return unit
+
+        return None
 
     def get_units_from_category(self, category) -> typing.Iterator['BaseUnit']:
         """
@@ -1444,6 +1457,7 @@ class Group(Country):
         """
         Represents a set of waypoints
         """
+
         class Point:
             """
             Represents a waypoint
@@ -1600,10 +1614,11 @@ class Group(Country):
         """
         for unit_index in self._section_group['units']:
             if unit_index not in self.__units.keys():
-                self.__units[unit_index] = self.units_class_enum[self.group_category](self.d, self.l10n, self.coa_color,
-                                                                                      self.country_index,
-                                                                                      self.group_category,
-                                                                                      self.group_index, unit_index)
+                _category = self.units_class_enum[self.group_category]  # type: ignore
+                self.__units[unit_index] = _category(self.d, self.l10n, self.coa_color,
+                                                     self.country_index,
+                                                     self.group_category,
+                                                     self.group_index, unit_index)
             yield self.__units[unit_index]
 
     @property
@@ -1654,10 +1669,11 @@ class Group(Country):
         """
         if unit_index in self._section_group['units'].keys():
             if unit_index not in self.__units.keys():
-                self.__units[unit_index] = self.units_class_enum[self.group_category](self.d, self.l10n, self.coa_color,
-                                                                                      self.country_index,
-                                                                                      self.group_category,
-                                                                                      self.group_index, unit_index)
+                _category = self.units_class_enum[self.group_category]  # type: ignore
+                self.__units[unit_index] = _category(self.d, self.l10n, self.coa_color,
+                                                     self.country_index,
+                                                     self.group_category,
+                                                     self.group_index, unit_index)
             return self.__units[unit_index]
         return None
 
@@ -1999,28 +2015,28 @@ class FlyingUnit(BaseUnit):
             """
             Returns: name of the radio
             """
-            return self.radio_enum[self.parent_unit.unit_type][self.radio_num]['radio_name']
+            return self.radio_enum[self.parent_unit.unit_type][self.radio_num]['radio_name']  # type: ignore
 
         @property
         def channels_qty(self) -> int:
             """
             Returns: amount of channels
             """
-            return self.radio_enum[self.parent_unit.unit_type][self.radio_num]['channels_qty']
+            return self.radio_enum[self.parent_unit.unit_type][self.radio_num]['channels_qty']  # type: ignore
 
         @property
         def min(self) -> float:
             """
             Returns: minimum frequency
             """
-            return float(self.radio_enum[self.parent_unit.unit_type][self.radio_num]['min'])
+            return float(self.radio_enum[self.parent_unit.unit_type][self.radio_num]['min'])  # type: ignore
 
         @property
         def max(self) -> float:
             """
             Returns: maximum frequency
             """
-            return float(self.radio_enum[self.parent_unit.unit_type][self.radio_num]['max'])
+            return float(self.radio_enum[self.parent_unit.unit_type][self.radio_num]['max'])  # type: ignore
 
         @property
         def _section_radio(self):
