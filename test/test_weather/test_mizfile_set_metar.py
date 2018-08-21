@@ -10,10 +10,9 @@ _DUMMY_METAR = 'UGTB 210500Z VRB02KT 9999 FEW041 21/15 Q1020 NOSIG'
 
 
 def test_set_metar(test_file, out_file):
-    # when(Miz).zip(...)
     error, result = mizfile_set_metar.set_weather_from_metar(_DUMMY_METAR, test_file, out_file)
-    # verifyStubbedInvocationsAreUsed()
     assert f'successfully applied METAR to {test_file}' == result
+    assert error is None
     with Miz(out_file) as miz:
         assert miz.mission.weather.temperature == 21
 
@@ -24,6 +23,7 @@ def test_no_out_file(test_file):
     verifyStubbedInvocationsAreUsed()
     verify(Miz).zip(str(test_file))
     assert f'successfully applied METAR to {test_file}' == result
+    assert error is None
 
 
 def test_error_when_retrieving_metar(test_file):
