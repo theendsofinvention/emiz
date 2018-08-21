@@ -33,7 +33,8 @@ def test_query_icao_ugtb():
 
 
 @pytest.mark.vcr()
-@pytest.mark.parametrize('icao', ['UGTB', 'UGKO', 'KJFK', 'LFPG', 'URSS', 'EBBR'])
+# @pytest.mark.parametrize('icao', ['UGTB', 'UGKO', 'KJFK', 'LFPG', 'URSS', 'EBBR'])
+@pytest.mark.parametrize('icao', ['UGTB', 'UGKO', 'LFPG'])
 def test_query_icao(icao):
     data = AVWX.query_icao(icao)
     assert isinstance(data, AVWXResult)
