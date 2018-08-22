@@ -1,0 +1,44 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: https://avwx.rest/api/metar/URSS?options=info%2Cspeech%2Csummary%2Ctranslate
+  response:
+    body: {string: "{\n  \"Altimeter\": \"1012\", \n  \"Cloud-List\": [], \n  \"Dewpoint\":
+        \"18\", \n  \"Flight-Rules\": \"VFR\", \n  \"Info\": {\n    \"City\": \"Sochi\",
+        \n    \"Country\": \"RUS\", \n    \"Elevation\": \"27\", \n    \"IATA\": \"AER\",
+        \n    \"ICAO\": \"URSS\", \n    \"Latitude\": \"43.4333\", \n    \"Longitude\":
+        \"39.9333\", \n    \"Name\": \"Airport\", \n    \"Priority\": \"6\", \n    \"State\":
+        \"KDA\"\n  }, \n  \"Meta\": {\n    \"Cache-Timestamp\": \"Wed, 22 Aug 2018
+        03:11:04 GMT\", \n    \"Timestamp\": \"Wed, 22 Aug 2018 03:11:04 GMT\"\n  },
+        \n  \"Other-List\": [], \n  \"Raw-Report\": \"URSS 220300Z 05004MPS 9999 NSC
+        22/18 Q1012 R02/090070 R06/090070 NOSIG RMK R06/07005MPS QFE757\", \n  \"Remarks\":
+        \"R02/090070 R06/090070 NOSIG RMK R06/07005MPS QFE757\", \n  \"Remarks-Info\":
+        {}, \n  \"Runway-Vis-List\": [], \n  \"Speech\": \"Winds zero five zero at
+        4m/s. Visibility one zero kilometers. Temperature two two degrees Celsius.
+        Dew point one eight degrees Celsius. Altimeter one zero one two. Sky clear\",
+        \n  \"Station\": \"URSS\", \n  \"Summary\": \"Winds NE-050 at 04m/s, Vis 10km,
+        Temp 22C, Dew 18C, Alt 1012hPa, Sky clear\", \n  \"Temperature\": \"22\",
+        \n  \"Time\": \"220300Z\", \n  \"Translations\": {\n    \"Altimeter\": \"1012hPa
+        (29.88inHg)\", \n    \"Clouds\": \"Sky clear\", \n    \"Dewpoint\": \"18C
+        (64F)\", \n    \"Other\": \"\", \n    \"Remarks\": {}, \n    \"Temperature\":
+        \"22C (72F)\", \n    \"Visibility\": \"10km (6.2sm)\", \n    \"Wind\": \"NE-050
+        at 04m/s\"\n  }, \n  \"Units\": {\n    \"Altimeter\": \"hPa\", \n    \"Altitude\":
+        \"ft\", \n    \"Temperature\": \"C\", \n    \"Visibility\": \"m\", \n    \"Wind-Speed\":
+        \"m/s\"\n  }, \n  \"Visibility\": \"9999\", \n  \"Wind-Direction\": \"050\",
+        \n  \"Wind-Gust\": \"\", \n  \"Wind-Speed\": \"04\", \n  \"Wind-Variable-Dir\":
+        []\n}\n"}
+    headers:
+      Access-Control-Allow-Origin: ['*']
+      Content-Length: ['1597']
+      Content-Type: [application/json]
+      Date: ['Wed, 22 Aug 2018 03:11:04 GMT']
+      Server: [gunicorn/19.8.1]
+      X-Robots-Tag: [noindex]
+    status: {code: 200, message: OK}
+version: 1
