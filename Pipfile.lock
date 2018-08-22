@@ -127,10 +127,10 @@
         },
         "metar": {
             "hashes": [
-                "sha256:1a1cc2047b7fe0fd3444ad0fb4d432c2950bc67e9904f29cc4349270802c287a"
+                "sha256:3f63910815f8050e1c4e276e87aacfd1b86fde4304eac91029dd20884f5d189b"
             ],
             "index": "pypi",
-            "version": "==1.5.0"
+            "version": "==1.6.0"
         },
         "mpmath": {
             "hashes": [
@@ -774,7 +774,6 @@
                 "sha256:edb04bdd45bfd76c8292c4d9654568efaedf76fe78eb246dde69bdb13b2dad87",
                 "sha256:f19f2a4f547505fe9072e15f6f4ae714af51b5a681a97f187971f50c283193b6"
             ],
-            "markers": "python_version < '3.7' and implementation_name == 'cpython'",
             "version": "==1.1.0"
         },
         "urllib3": {

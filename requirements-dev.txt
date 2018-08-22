@@ -53,7 +53,7 @@ six==1.11.0
 smmap2==2.0.4
 tqdm==4.25.0
 twine==1.11.0
-typed-ast==1.1.0; python_version < '3.7' and implementation_name == 'cpython'
+typed-ast==1.1.0
 urllib3==1.23
 vcrpy==1.13.0
 wheel==0.31.1
