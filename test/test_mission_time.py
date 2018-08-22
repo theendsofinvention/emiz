@@ -51,7 +51,7 @@ def test_now():
     min_value=_DUMMY_DT.replace(year=1900),
     max_value=_DUMMY_DT.replace(year=2050),
 ))
-@settings(max_examples=10)
+@settings(max_examples=10, deadline=1200)
 def test_apply_to_miz(test_file, example_datetime):
     example_datetime = example_datetime.replace(tzinfo=None, microsecond=0)
     if example_datetime.day == 31:
