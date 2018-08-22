@@ -1,0 +1,45 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: https://avwx.rest/api/metar/EBBR?options=info%2Cspeech%2Csummary%2Ctranslate
+  response:
+    body: {string: "{\n  \"Altimeter\": \"1018\", \n  \"Cloud-List\": [], \n  \"Dewpoint\":
+        \"17\", \n  \"Flight-Rules\": \"IFR\", \n  \"Info\": {\n    \"City\": \"Brussels\",
+        \n    \"Country\": \"BEL\", \n    \"Elevation\": \"55\", \n    \"IATA\": \"BRU\",
+        \n    \"ICAO\": \"EBBR\", \n    \"Latitude\": \"50.9\", \n    \"Longitude\":
+        \"4.533333333\", \n    \"Name\": \"National Airport\", \n    \"Priority\":
+        \"6\", \n    \"State\": \"VLG\"\n  }, \n  \"Meta\": {\n    \"Cache-Timestamp\":
+        \"Wed, 22 Aug 2018 03:11:02 GMT\", \n    \"Timestamp\": \"Wed, 22 Aug 2018
+        03:11:05 GMT\"\n  }, \n  \"Other-List\": [\n    \"BR\"\n  ], \n  \"Raw-Report\":
+        \"EBBR 220250Z 31003KT 280V350 3500 BR NSC 18/17 Q1018 TEMPO 2500 BR\", \n
+        \ \"Remarks\": \"TEMPO 2500 BR\", \n  \"Remarks-Info\": {}, \n  \"Runway-Vis-List\":
+        [], \n  \"Speech\": \"Winds three one zero (variable two eight zero to three
+        five zero) at 3kt. Visibility three point five kilometers. Temperature one
+        eight degrees Celsius. Dew point one seven degrees Celsius. Altimeter one
+        zero one eight. Mist. Sky clear\", \n  \"Station\": \"EBBR\", \n  \"Summary\":
+        \"Winds NW-310 (variable 280 to 350) at 03kt, Vis 3.5km, Temp 18C, Dew 17C,
+        Alt 1018hPa, Mist, Sky clear\", \n  \"Temperature\": \"18\", \n  \"Time\":
+        \"220250Z\", \n  \"Translations\": {\n    \"Altimeter\": \"1018hPa (30.06inHg)\",
+        \n    \"Clouds\": \"Sky clear\", \n    \"Dewpoint\": \"17C (63F)\", \n    \"Other\":
+        \"Mist\", \n    \"Remarks\": {}, \n    \"Temperature\": \"18C (64F)\", \n
+        \   \"Visibility\": \"3.5km (2.2sm)\", \n    \"Wind\": \"NW-310 (variable
+        280 to 350) at 03kt\"\n  }, \n  \"Units\": {\n    \"Altimeter\": \"hPa\",
+        \n    \"Altitude\": \"ft\", \n    \"Temperature\": \"C\", \n    \"Visibility\":
+        \"m\", \n    \"Wind-Speed\": \"kt\"\n  }, \n  \"Visibility\": \"3500\", \n
+        \ \"Wind-Direction\": \"310\", \n  \"Wind-Gust\": \"\", \n  \"Wind-Speed\":
+        \"03\", \n  \"Wind-Variable-Dir\": [\n    \"280\", \n    \"350\"\n  ]\n}\n"}
+    headers:
+      Access-Control-Allow-Origin: ['*']
+      Content-Length: ['1696']
+      Content-Type: [application/json]
+      Date: ['Wed, 22 Aug 2018 03:11:04 GMT']
+      Server: [gunicorn/19.8.1]
+      X-Robots-Tag: [noindex]
+    status: {code: 200, message: OK}
+version: 1
