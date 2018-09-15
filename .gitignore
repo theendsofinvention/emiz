@@ -43,3 +43,4 @@ test.miz
 .coverage*
 .mypy_cache
 .venv
+/pyproject.toml.example
