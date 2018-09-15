@@ -7,39 +7,58 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.19.1]
     method: GET
-    uri: https://avwx.rest/api/metar/EBBR?options=info%2Cspeech%2Csummary%2Ctranslate
+    uri: https://avwx.rest/api/metar/EBBR?options=info%2Cspeech%2Csummary%2Ctranslate&format=json&onfail=cache
   response:
-    body: {string: "{\n  \"Altimeter\": \"1018\", \n  \"Cloud-List\": [], \n  \"Dewpoint\":
-        \"17\", \n  \"Flight-Rules\": \"IFR\", \n  \"Info\": {\n    \"City\": \"Brussels\",
-        \n    \"Country\": \"BEL\", \n    \"Elevation\": \"55\", \n    \"IATA\": \"BRU\",
-        \n    \"ICAO\": \"EBBR\", \n    \"Latitude\": \"50.9\", \n    \"Longitude\":
-        \"4.533333333\", \n    \"Name\": \"National Airport\", \n    \"Priority\":
-        \"6\", \n    \"State\": \"VLG\"\n  }, \n  \"Meta\": {\n    \"Cache-Timestamp\":
-        \"Wed, 22 Aug 2018 03:11:02 GMT\", \n    \"Timestamp\": \"Wed, 22 Aug 2018
-        03:11:05 GMT\"\n  }, \n  \"Other-List\": [\n    \"BR\"\n  ], \n  \"Raw-Report\":
-        \"EBBR 220250Z 31003KT 280V350 3500 BR NSC 18/17 Q1018 TEMPO 2500 BR\", \n
-        \ \"Remarks\": \"TEMPO 2500 BR\", \n  \"Remarks-Info\": {}, \n  \"Runway-Vis-List\":
-        [], \n  \"Speech\": \"Winds three one zero (variable two eight zero to three
-        five zero) at 3kt. Visibility three point five kilometers. Temperature one
-        eight degrees Celsius. Dew point one seven degrees Celsius. Altimeter one
-        zero one eight. Mist. Sky clear\", \n  \"Station\": \"EBBR\", \n  \"Summary\":
-        \"Winds NW-310 (variable 280 to 350) at 03kt, Vis 3.5km, Temp 18C, Dew 17C,
-        Alt 1018hPa, Mist, Sky clear\", \n  \"Temperature\": \"18\", \n  \"Time\":
-        \"220250Z\", \n  \"Translations\": {\n    \"Altimeter\": \"1018hPa (30.06inHg)\",
-        \n    \"Clouds\": \"Sky clear\", \n    \"Dewpoint\": \"17C (63F)\", \n    \"Other\":
-        \"Mist\", \n    \"Remarks\": {}, \n    \"Temperature\": \"18C (64F)\", \n
-        \   \"Visibility\": \"3.5km (2.2sm)\", \n    \"Wind\": \"NW-310 (variable
-        280 to 350) at 03kt\"\n  }, \n  \"Units\": {\n    \"Altimeter\": \"hPa\",
-        \n    \"Altitude\": \"ft\", \n    \"Temperature\": \"C\", \n    \"Visibility\":
-        \"m\", \n    \"Wind-Speed\": \"kt\"\n  }, \n  \"Visibility\": \"3500\", \n
-        \ \"Wind-Direction\": \"310\", \n  \"Wind-Gust\": \"\", \n  \"Wind-Speed\":
-        \"03\", \n  \"Wind-Variable-Dir\": [\n    \"280\", \n    \"350\"\n  ]\n}\n"}
+    body: {string: '{"Altimeter":"1024","Cloud-List":[],"Dewpoint":"09","Flight-Rules":"VFR","Info":{"City":"Brussels","Country":"BEL","Elevation":55.0,"Iata":"BRU","Icao":"EBBR","Latitude":50.9,"Longitude":4.533333333,"Name":"National
+        Airport","Priority":6,"State":"VLG"},"Meta":{"Cache-Timestamp":"Sat, 15 Sep
+        2018 18:05:24 GMT","Timestamp":"Sat, 15 Sep 2018 18:07:15 GMT"},"Other-List":[],"Raw-Report":"EBBR
+        151750Z 03001KT CAVOK 17/09 Q1024 NOSIG","Remarks":"NOSIG","Remarks-Info":{"Dew-Decimal":"","Temp-Decimal":""},"Runway-Vis-List":[],"Sanitized":"EBBR
+        151750Z 03001KT CAVOK 17/09 Q1024 NOSIG","Speech":"Winds zero three zero at
+        1kt. Visibility one zero kilometers. Temperature one seven degrees Celsius.
+        Dew point nine degrees Celsius. Altimeter one zero two four. Sky clear","Station":"EBBR","Summary":"Winds
+        NNE-030 at 1kt, Vis 10km, Temp 17\u00b0C, Dew 9\u00b0C, Alt 1024 hPa, Sky
+        clear","Temperature":"17","Time":"151750Z","Translate":{"Altimeter":"1024
+        hPa (30.24 inHg)","Cloud-List":"Sky clear","Dewpoint":"9\u00b0C (48\u00b0F)","Other-List":"","Remarks":{},"Temperature":"17\u00b0C
+        (63\u00b0F)","Visibility":"10km (6.2sm)","Wind":"NNE-030 at 1kt"},"Units":{"Altimeter":"hPa","Altitude":"ft","Temperature":"C","Visibility":"m","Wind-Speed":"kt"},"Visibility":"CAVOK","Wind-Direction":"030","Wind-Gust":"","Wind-Speed":"01","Wind-Variable-Dir":[]}
+
+'}
     headers:
       Access-Control-Allow-Origin: ['*']
-      Content-Length: ['1696']
+      Content-Length: ['1342']
       Content-Type: [application/json]
-      Date: ['Wed, 22 Aug 2018 03:11:04 GMT']
-      Server: [gunicorn/19.8.1]
+      Date: ['Sat, 15 Sep 2018 18:07:15 GMT']
+      Server: [gunicorn/19.9.0]
+      X-Robots-Tag: [noindex]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: https://avwx.rest/api/metar/EBBR?options=info%2Cspeech%2Csummary%2Ctranslate&format=json&onfail=cache
+  response:
+    body: {string: '{"Altimeter":"1024","Cloud-List":[],"Dewpoint":"09","Flight-Rules":"VFR","Info":{"City":"Brussels","Country":"BEL","Elevation":55.0,"Iata":"BRU","Icao":"EBBR","Latitude":50.9,"Longitude":4.533333333,"Name":"National
+        Airport","Priority":6,"State":"VLG"},"Meta":{"Cache-Timestamp":"Sat, 15 Sep
+        2018 18:17:47 GMT","Timestamp":"Sat, 15 Sep 2018 18:18:15 GMT"},"Other-List":[],"Raw-Report":"EBBR
+        151750Z 03001KT CAVOK 17/09 Q1024 NOSIG","Remarks":"NOSIG","Remarks-Info":{"Dew-Decimal":"","Temp-Decimal":""},"Runway-Vis-List":[],"Sanitized":"EBBR
+        151750Z 03001KT CAVOK 17/09 Q1024 NOSIG","Speech":"Winds zero three zero at
+        1kt. Visibility one zero kilometers. Temperature one seven degrees Celsius.
+        Dew point nine degrees Celsius. Altimeter one zero two four. Sky clear","Station":"EBBR","Summary":"Winds
+        NNE-030 at 1kt, Vis 10km, Temp 17\u00b0C, Dew 9\u00b0C, Alt 1024 hPa, Sky
+        clear","Temperature":"17","Time":"151750Z","Translate":{"Altimeter":"1024
+        hPa (30.24 inHg)","Cloud-List":"Sky clear","Dewpoint":"9\u00b0C (48\u00b0F)","Other-List":"","Remarks":{},"Temperature":"17\u00b0C
+        (63\u00b0F)","Visibility":"10km (6.2sm)","Wind":"NNE-030 at 1kt"},"Units":{"Altimeter":"hPa","Altitude":"ft","Temperature":"C","Visibility":"m","Wind-Speed":"kt"},"Visibility":"CAVOK","Wind-Direction":"030","Wind-Gust":"","Wind-Speed":"01","Wind-Variable-Dir":[]}
+
+'}
+    headers:
+      Access-Control-Allow-Origin: ['*']
+      Content-Length: ['1342']
+      Content-Type: [application/json]
+      Date: ['Sat, 15 Sep 2018 18:18:14 GMT']
+      Server: [gunicorn/19.9.0]
       X-Robots-Tag: [noindex]
     status: {code: 200, message: OK}
 version: 1

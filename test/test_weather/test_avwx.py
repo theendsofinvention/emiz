@@ -28,10 +28,10 @@ def test_query_icao_ugtb():
     data = AVWX.query_icao('UGTB')
     assert isinstance(data, AVWXResult)
     assert isinstance(data.altimeter, str)
-    assert data.info['Elevation'] == '495'
+    assert data.info['Elevation'] == 495.0
     assert data.info['City'] == 'Tbilisi'
     assert data.info['Country'] == 'GEO'
-    assert data.info['ICAO'] == data.station == 'UGTB'
+    assert data.info['Icao'] == data.station == 'UGTB'
     assert data.info['Name'] == 'International Airport'
     _check_data(data)
 

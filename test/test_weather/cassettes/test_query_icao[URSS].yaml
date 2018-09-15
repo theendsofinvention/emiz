@@ -7,38 +7,66 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.19.1]
     method: GET
-    uri: https://avwx.rest/api/metar/URSS?options=info%2Cspeech%2Csummary%2Ctranslate
+    uri: https://avwx.rest/api/metar/URSS?options=info%2Cspeech%2Csummary%2Ctranslate&format=json&onfail=cache
   response:
-    body: {string: "{\n  \"Altimeter\": \"1012\", \n  \"Cloud-List\": [], \n  \"Dewpoint\":
-        \"18\", \n  \"Flight-Rules\": \"VFR\", \n  \"Info\": {\n    \"City\": \"Sochi\",
-        \n    \"Country\": \"RUS\", \n    \"Elevation\": \"27\", \n    \"IATA\": \"AER\",
-        \n    \"ICAO\": \"URSS\", \n    \"Latitude\": \"43.4333\", \n    \"Longitude\":
-        \"39.9333\", \n    \"Name\": \"Airport\", \n    \"Priority\": \"6\", \n    \"State\":
-        \"KDA\"\n  }, \n  \"Meta\": {\n    \"Cache-Timestamp\": \"Wed, 22 Aug 2018
-        03:11:04 GMT\", \n    \"Timestamp\": \"Wed, 22 Aug 2018 03:11:04 GMT\"\n  },
-        \n  \"Other-List\": [], \n  \"Raw-Report\": \"URSS 220300Z 05004MPS 9999 NSC
-        22/18 Q1012 R02/090070 R06/090070 NOSIG RMK R06/07005MPS QFE757\", \n  \"Remarks\":
-        \"R02/090070 R06/090070 NOSIG RMK R06/07005MPS QFE757\", \n  \"Remarks-Info\":
-        {}, \n  \"Runway-Vis-List\": [], \n  \"Speech\": \"Winds zero five zero at
-        4m/s. Visibility one zero kilometers. Temperature two two degrees Celsius.
-        Dew point one eight degrees Celsius. Altimeter one zero one two. Sky clear\",
-        \n  \"Station\": \"URSS\", \n  \"Summary\": \"Winds NE-050 at 04m/s, Vis 10km,
-        Temp 22C, Dew 18C, Alt 1012hPa, Sky clear\", \n  \"Temperature\": \"22\",
-        \n  \"Time\": \"220300Z\", \n  \"Translations\": {\n    \"Altimeter\": \"1012hPa
-        (29.88inHg)\", \n    \"Clouds\": \"Sky clear\", \n    \"Dewpoint\": \"18C
-        (64F)\", \n    \"Other\": \"\", \n    \"Remarks\": {}, \n    \"Temperature\":
-        \"22C (72F)\", \n    \"Visibility\": \"10km (6.2sm)\", \n    \"Wind\": \"NE-050
-        at 04m/s\"\n  }, \n  \"Units\": {\n    \"Altimeter\": \"hPa\", \n    \"Altitude\":
-        \"ft\", \n    \"Temperature\": \"C\", \n    \"Visibility\": \"m\", \n    \"Wind-Speed\":
-        \"m/s\"\n  }, \n  \"Visibility\": \"9999\", \n  \"Wind-Direction\": \"050\",
-        \n  \"Wind-Gust\": \"\", \n  \"Wind-Speed\": \"04\", \n  \"Wind-Variable-Dir\":
-        []\n}\n"}
+    body: {string: '{"Altimeter":"1014","Cloud-List":[["FEW","026"],["BKN","072"]],"Dewpoint":"19","Flight-Rules":"VFR","Info":{"City":"Sochi","Country":"RUS","Elevation":27.0,"Iata":"AER","Icao":"URSS","Latitude":43.4333,"Longitude":39.9333,"Name":"Airport","Priority":6,"State":"KDA"},"Meta":{"Cache-Timestamp":"Sat,
+        15 Sep 2018 18:07:15 GMT","Timestamp":"Sat, 15 Sep 2018 18:07:15 GMT"},"Other-List":[],"Raw-Report":"URSS
+        151730Z 05002MPS 9999 FEW026 BKN072 21/19 Q1014 WS ALL RWY R02/090070 R06/090070
+        NOSIG RMK R06/09003MPS MT OBSC QFE759","Remarks":"WS ALL RWY R02/090070 R06/090070
+        NOSIG RMK R06/09003MPS MT OBSC QFE759","Remarks-Info":{"Dew-Decimal":"","Temp-Decimal":""},"Runway-Vis-List":[],"Sanitized":"URSS
+        151730Z 05002MPS 9999 FEW026 BKN072 21/19 Q1014 WS ALL RWY R02/090070 R06/090070
+        NOSIG RMK R06/09003MPS MT OBSC QFE759","Speech":"Winds zero five zero at 2m/s.
+        Visibility one zero kilometers. Temperature two one degrees Celsius. Dew point
+        one nine degrees Celsius. Altimeter one zero one four. Few clouds at 2600ft.
+        Broken layer at 7200ft","Station":"URSS","Summary":"Winds NE-050 at 2m/s,
+        Vis 10km, Temp 21\u00b0C, Dew 19\u00b0C, Alt 1014 hPa, Few clouds at 2600ft,
+        Broken layer at 7200ft","Temperature":"21","Time":"151730Z","Translate":{"Altimeter":"1014
+        hPa (29.94 inHg)","Cloud-List":"Few clouds at 2600ft, Broken layer at 7200ft
+        - Reported AGL","Dewpoint":"19\u00b0C (66\u00b0F)","Other-List":"","Remarks":{},"Temperature":"21\u00b0C
+        (70\u00b0F)","Visibility":"10km (6.2sm)","Wind":"NE-050 at 2m/s"},"Units":{"Altimeter":"hPa","Altitude":"ft","Temperature":"C","Visibility":"m","Wind-Speed":"m/s"},"Visibility":"9999","Wind-Direction":"050","Wind-Gust":"","Wind-Speed":"02","Wind-Variable-Dir":[]}
+
+'}
     headers:
       Access-Control-Allow-Origin: ['*']
-      Content-Length: ['1597']
+      Content-Length: ['1703']
       Content-Type: [application/json]
-      Date: ['Wed, 22 Aug 2018 03:11:04 GMT']
-      Server: [gunicorn/19.8.1]
+      Date: ['Sat, 15 Sep 2018 18:07:14 GMT']
+      Server: [gunicorn/19.9.0]
+      X-Robots-Tag: [noindex]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: https://avwx.rest/api/metar/URSS?options=info%2Cspeech%2Csummary%2Ctranslate&format=json&onfail=cache
+  response:
+    body: {string: '{"Altimeter":"1015","Cloud-List":[["FEW","026"],["BKN","070"]],"Dewpoint":"19","Flight-Rules":"VFR","Info":{"City":"Sochi","Country":"RUS","Elevation":27.0,"Iata":"AER","Icao":"URSS","Latitude":43.4333,"Longitude":39.9333,"Name":"Airport","Priority":6,"State":"KDA"},"Meta":{"Cache-Timestamp":"Sat,
+        15 Sep 2018 18:18:14 GMT","Timestamp":"Sat, 15 Sep 2018 18:18:14 GMT"},"Other-List":[],"Raw-Report":"URSS
+        151800Z 03002MPS 9999 FEW026 BKN070 21/19 Q1015 WS ALL RWY R02/090070 R06/090070
+        NOSIG RMK R06/07003MPS MT OBSC QFE759","Remarks":"WS ALL RWY R02/090070 R06/090070
+        NOSIG RMK R06/07003MPS MT OBSC QFE759","Remarks-Info":{"Dew-Decimal":"","Temp-Decimal":""},"Runway-Vis-List":[],"Sanitized":"URSS
+        151800Z 03002MPS 9999 FEW026 BKN070 21/19 Q1015 WS ALL RWY R02/090070 R06/090070
+        NOSIG RMK R06/07003MPS MT OBSC QFE759","Speech":"Winds zero three zero at
+        2m/s. Visibility one zero kilometers. Temperature two one degrees Celsius.
+        Dew point one nine degrees Celsius. Altimeter one zero one five. Few clouds
+        at 2600ft. Broken layer at 7000ft","Station":"URSS","Summary":"Winds NNE-030
+        at 2m/s, Vis 10km, Temp 21\u00b0C, Dew 19\u00b0C, Alt 1015 hPa, Few clouds
+        at 2600ft, Broken layer at 7000ft","Temperature":"21","Time":"151800Z","Translate":{"Altimeter":"1015
+        hPa (29.97 inHg)","Cloud-List":"Few clouds at 2600ft, Broken layer at 7000ft
+        - Reported AGL","Dewpoint":"19\u00b0C (66\u00b0F)","Other-List":"","Remarks":{},"Temperature":"21\u00b0C
+        (70\u00b0F)","Visibility":"10km (6.2sm)","Wind":"NNE-030 at 2m/s"},"Units":{"Altimeter":"hPa","Altitude":"ft","Temperature":"C","Visibility":"m","Wind-Speed":"m/s"},"Visibility":"9999","Wind-Direction":"030","Wind-Gust":"","Wind-Speed":"02","Wind-Variable-Dir":[]}
+
+'}
+    headers:
+      Access-Control-Allow-Origin: ['*']
+      Content-Length: ['1706']
+      Content-Type: [application/json]
+      Date: ['Sat, 15 Sep 2018 18:18:14 GMT']
+      Server: [gunicorn/19.9.0]
       X-Robots-Tag: [noindex]
     status: {code: 200, message: OK}
 version: 1

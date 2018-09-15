@@ -5,8 +5,6 @@ Access to AVWX API
 https://avwx.rest/documentation
 """
 
-import json
-
 import certifi
 import elib
 import requests.adapters
@@ -29,39 +27,40 @@ class AVWX:
     s.mount('https://avwx.rest', requests.adapters.HTTPAdapter(max_retries=3))
 
     @staticmethod
-    def _failed_request(req: requests.Response, url: str):
+    def _failed_request(req: requests.Response, url: str, icao: str):
         if req.reason == 'BAD REQUEST':
             _json = req.json()
             if 'Error' in _json:
-                if 'Station Lookup Error: METAR not found for ' in _json['Error']:
-                    station = _json['Error'].replace(
-                        'Station Lookup Error: METAR not found for ', ''
-                    ).replace('. There might not be a current report in ADDS', '')
-                    raise StationNotFound(station)
+                if _json['Error'] == 'No report or cache was found for the requested station':
+                    raise StationNotFound(icao)
         msg = f'failed to retrieve: {url}'
         LOGGER.error(msg)
         raise ConnectionError(msg)
 
     @staticmethod
-    def _query(url, params: dict = None) -> AVWXResult:
-        LOGGER.debug(f'querying: {url}{params}')
-        req = AVWX.s.get(url, timeout=2, params=params, verify=certifi.where())
-        if not req.ok:
-            AVWX._failed_request(req, url)
-        LOGGER.debug('parsing data')
-        orig_data = json.loads(req.content)
-        new_data = {}
+    def _sanitize_result(data: dict) -> dict:
+        result = {}
         LOGGER.debug('sanitizing data keys')
-        for key in orig_data:
+        for key in data:
             new_key = str(key).replace('-', '')
             new_key = new_key.lower()
-            new_data[new_key] = orig_data[key]
+            result[new_key] = data[key]
+        return result
+
+    @staticmethod
+    def _query(url, icao: str, params: dict = None) -> AVWXResult:
+        LOGGER.debug('querying: %s %s', url, params)
+        req = AVWX.s.get(url, timeout=2, params=params, verify=certifi.where())
+        if not req.ok:
+            AVWX._failed_request(req, url, icao)
+        LOGGER.debug('parsing data')
+        result = AVWX._sanitize_result(req.json())
         try:
             LOGGER.debug('returning AVWXResult instance')
-            return AVWXResult(**new_data)
+            return AVWXResult(**result)
         except TypeError:
             import pprint
-            LOGGER.error(f'invalid data was:\n{pprint.pformat(orig_data)}')
+            LOGGER.error('invalid data was:\n%s', pprint.pformat(result))
             raise
 
     @staticmethod
@@ -76,13 +75,26 @@ class AVWX:
 
         """
         params = {
-            'options': 'info,speech,summary,translate'
+            'options': 'info,speech,summary,translate',
+            'format': 'json',
+            'onfail': 'cache',
         }
-        LOGGER.info(f'getting METAR info for ICAO: {icao}')
+        LOGGER.info('getting METAR info for ICAO: %s', icao)
         try:
-            return AVWX._query(f'https://avwx.rest/api/metar/{icao}', params=params)
+            return AVWX._query(f'https://avwx.rest/api/metar/{icao}', params=params, icao=icao)
         except RequestsConnectionError:
             raise AVWXRequestFailedError('failed to obtain requested data from AVWX')
+
+    @staticmethod
+    def _post(url: str, body: str, params: dict) -> str:
+        LOGGER.debug('posting request for METAR parsing')
+        resp = AVWX.s.post(url=url, data=body.encode('utf8'), params=params)
+        if not resp.ok:
+            LOGGER.error('post request failed')
+            AVWX._failed_request(resp, url, 'none')
+        LOGGER.debug('post request success')
+        result = AVWX._sanitize_result(resp.json())
+        return result['speech']
 
     @staticmethod
     def metar_to_speech(metar: str) -> str:
@@ -95,12 +107,15 @@ class AVWX:
         Returns: speakable METAR for TTS
 
         """
-        LOGGER.info(f'getting speech text from METAR: {metar}')
+        LOGGER.info('getting speech text from METAR: %s', metar)
         params = {
-            'report': metar,
             'options': 'info,speech,summary'
         }
-        result = AVWX._query(f'https://avwx.rest/api/parse/metar', params=params)
-        speech = str(result.speech).replace('Altimeter', 'Q N H')
-        LOGGER.debug(f'resulting speech: {speech}')
+        speech = AVWX._post(
+            url='http://avwx.rest/api/metar/parse',
+            body=metar,
+            params=params
+        )
+        speech = str(speech).replace('Altimeter', 'Q N H')
+        LOGGER.debug('resulting speech: %s', speech)
         return speech

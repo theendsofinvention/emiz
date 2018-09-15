@@ -80,7 +80,7 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
 
     @staticmethod
     def _random_direction() -> int:
-        return random.randint(0, 359)
+        return random.randint(0, 359)  # nosec
 
     @staticmethod
     def reverse_direction(heading: int) -> int:
@@ -191,7 +191,7 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
         if self._wind_speed is None:
             if self.metar.wind_speed is None:
                 LOGGER.info('wind speed is missing, making a random value')
-                val = random.randint(self._min_wind, self._max_wind)
+                val = random.randint(self._min_wind, self._max_wind)  # nosec
             else:
                 val = int(self.metar.wind_speed.value('MPS'))
             self._wind_speed = val
@@ -257,7 +257,7 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
                 height = int(height.value('M'))
                 height = max(height, 300)
                 height = min(height, 5000)
-                cover = random.randint(*SKY_COVER[cover])
+                cover = random.randint(*SKY_COVER[cover])  # nosec
                 layers[cover] = height
         if layers:
             max_cover = max([key for key in layers])
@@ -274,7 +274,7 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
         """
         if self.metar.temp is None:
             season, temp = _get_season()
-            LOGGER.debug(f'no temperature given, since it is {season}, defaulting to {temp}')
+            LOGGER.debug('no temperature given, since it is %s, defaulting to %s', season, temp)
             return temp
         value = min(self.force_temperature, int(self.metar.temp.value('C')))
         return value
@@ -367,6 +367,6 @@ class MissionWeather:  # pylint: disable=too-many-instance-attributes
 
         report.append(clouds)
 
-        LOGGER.debug(f'applying weather: {report}')
+        LOGGER.debug('applying weather: %s', report)
 
         return True

@@ -6,6 +6,7 @@ from collections import defaultdict
 
 import click
 
+
 # pylint: skip-file
 
 
@@ -26,7 +27,7 @@ def main(miz_path):
         # print(airport, int(spot), unit.unit_position)
         result[airport][spot] = unit.unit_position
 
-    import pickle
+    import pickle  # nosec
     with open('_parking_spots.py', mode='w') as f:
         f.write('parkings = {}\n'.format(pickle.dumps(result)))
 

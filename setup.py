@@ -19,8 +19,11 @@ requirements = [
     'pathvalidate',
 ]
 test_requirements = [
+    'pip',
+    'pytest-vcr',
     'epab',
     'datadiff',
+    'pytz',
 ]
 
 CLASSIFIERS = filter(None, map(str.strip,

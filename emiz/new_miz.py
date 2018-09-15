@@ -4,13 +4,13 @@ Add JSON composition to Miz object
 """
 import shutil
 import typing
+import ujson
 from pathlib import Path
 
 import elib
 import pathvalidate
 from natsort import natsorted
 
-import ujson
 from emiz.miz import ENCODING, Miz
 from emiz.sltp import SLTP
 
@@ -214,8 +214,6 @@ class NewMiz(Miz):
         # pylint: disable=c-extension-no-member
         dict_ = ujson.loads(content, precise_float=True)
 
-        assert isinstance(dict_, dict)
-
         dict_version = dict_.pop('__version__')
         if dict_version != version:
             wrong_version(file.absolute(), dict_version, version)
@@ -246,7 +244,7 @@ class NewMiz(Miz):
         for folder in folders:
             folder = Path(folder).absolute()
             if folder.exists():
-                LOGGER.info(f'removing: "{folder}"')
+                LOGGER.info('removing: %s', folder)
                 shutil.rmtree(folder)
 
     @staticmethod
@@ -271,15 +269,15 @@ class NewMiz(Miz):
         LOGGER.info('unzipping mission file')
         with Miz(miz_file) as miz:
             version = miz.mission.d['version']
-            LOGGER.debug(f'mission version: "{version}"')
+            LOGGER.debug(f'mission version: "%s"', version)
 
-            LOGGER.info(f'copying assets to: "{assets_folder}"')
+            LOGGER.info('copying assets to: "%s"', assets_folder)
             ignore = shutil.ignore_patterns('mission')
-            shutil.copytree(miz.temp_dir, assets_folder, ignore=ignore)
+            shutil.copytree(str(miz.temp_dir), str(assets_folder), ignore=ignore)
 
             NewMiz._reorder_warehouses(assets_folder)
 
-            LOGGER.info(f'decomposing mission table into: "{mission_folder}" (this will take a while)')
+            LOGGER.info('decomposing mission table into: "%s" (this will take a while)', mission_folder)
             NewMiz._decompose_dict(miz.mission.d, 'base_info', mission_folder, version, miz)
 
     @staticmethod
@@ -296,7 +294,7 @@ class NewMiz(Miz):
         base_info = ujson.loads(Path(mission_folder, 'base_info.json').read_text(encoding=ENCODING))
         version = base_info['__version__']
         with Miz(target_file) as miz:
-            LOGGER.info(f're-composing mission table from folder: "{mission_folder}"')
+            LOGGER.info('re-composing mission table from folder: "%s"', mission_folder)
             miz.mission.d = NewMiz._recreate_dict_from_folder(mission_folder, version)
             for item in assets_folder.iterdir():
                 target = Path(miz.temp_dir, item.name).absolute()

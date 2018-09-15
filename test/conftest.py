@@ -66,9 +66,9 @@ if not SLTP_TEST_FILE.exists():
     raise RuntimeError('cannot find SLTP test files')
 
 
-@pytest.fixture(name='test_files_folder')
-def _test_files_folder():
-    yield TEST_FILES_FOLDER
+# @pytest.fixture(name='test_files_folder')
+# def _test_files_folder():
+#     yield TEST_FILES_FOLDER
 
 
 @pytest.fixture(
@@ -127,11 +127,11 @@ def test_files_folder():
     yield TEST_FILES_FOLDER
 
 
-@pytest.fixture(
-    params=('bad_zip_file.miz', 'missing_files.miz'),
-    ids=('bad_zip_file', 'missing_files'))
-def bad_files(request):
-    yield Path(TEST_FILES_FOLDER.joinpath(request.param))
+# @pytest.fixture(
+#     params=('bad_zip_file.miz', 'missing_files.miz'),
+#     ids=('bad_zip_file', 'missing_files'))
+# def bad_files(request):
+#     yield Path(TEST_FILES_FOLDER.joinpath(request.param))
 
 
 @pytest.fixture(autouse=True)
@@ -154,14 +154,14 @@ def mission():
     yield Mission(copy.deepcopy(DUMMY_MISSION.d), copy.deepcopy(DUMMY_MISSION.l10n))
 
 
-@pytest.fixture()
-def mission_dict():
-    yield copy.deepcopy(DUMMY_MISSION.d)
+# @pytest.fixture()
+# def mission_dict():
+#     yield copy.deepcopy(DUMMY_MISSION.d)
 
 
-@pytest.fixture()
-def mission_l10n():
-    yield copy.deepcopy(DUMMY_MISSION.l10n)
+# @pytest.fixture()
+# def mission_l10n():
+#     yield copy.deepcopy(DUMMY_MISSION.l10n)
 
 
 @pytest.fixture(params=list(Path(SLTP_TEST_FILE, 'pass').iterdir()))
