@@ -42,3 +42,4 @@ test.miz
 /.pytest_cache/
 .coverage*
 .mypy_cache
+.venv
