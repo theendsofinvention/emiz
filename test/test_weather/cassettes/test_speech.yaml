@@ -9,40 +9,74 @@ interactions:
     method: GET
     uri: https://avwx.rest/api/parse/metar?report=KJFK+241051Z+35007KT+10SM+SCT200+BKN250+03%2FM02+A3016+RMK+AO2+SLP211+T00281017&options=info%2Cspeech%2Csummary
   response:
-    body: {string: "{\n  \"Altimeter\": \"3016\", \n  \"Cloud-List\": [\n    [\n      \"SCT\",
-        \n      \"200\"\n    ], \n    [\n      \"BKN\", \n      \"250\"\n    ]\n  ],
-        \n  \"Dewpoint\": \"M02\", \n  \"Flight-Rules\": \"VFR\", \n  \"Info\": {\n
-        \   \"City\": \"New York City\", \n    \"Country\": \"USA\", \n    \"Elevation\":
-        \"4.3\", \n    \"IATA\": \"JFK\", \n    \"ICAO\": \"KJFK\", \n    \"Latitude\":
-        \"40.63975111\", \n    \"Longitude\": \"-73.77892556\", \n    \"Name\": \"John
-        F Kennedy International Airport\", \n    \"Priority\": \"1\", \n    \"State\":
-        \"NY\"\n  }, \n  \"Meta\": {\n    \"Timestamp\": \"Tue, 21 Aug 2018 07:29:16
-        GMT\"\n  }, \n  \"Other-List\": [], \n  \"Remarks\": \"RMK AO2 SLP211 T00281017\",
-        \n  \"Remarks-Info\": {\n    \"Dew-Decimal\": \"-1.7\", \n    \"Temp-Decimal\":
-        \"2.8\"\n  }, \n  \"Runway-Vis-List\": [], \n  \"Speech\": \"Winds three five
-        zero at 7kt. Visibility one zero miles. Temperature three degrees Celsius.
-        Dew point minus two degrees Celsius. Altimeter three zero point one six. Scattered
-        clouds at 20000ft. Broken layer at 25000ft\", \n  \"Station\": \"KJFK\", \n
-        \ \"Summary\": \"Winds N-350 at 07kt, Vis 10sm, Temp 03C, Dew -02C, Alt 30.16inHg,
-        Scattered clouds at 20000ft, Broken layer at 25000ft\", \n  \"Temperature\":
-        \"03\", \n  \"Time\": \"241051Z\", \n  \"Translations\": {\n    \"Altimeter\":
-        \"30.16inHg (1021hPa)\", \n    \"Clouds\": \"Scattered clouds at 20000ft,
-        Broken layer at 25000ft - Reported AGL\", \n    \"Dewpoint\": \"-02C (28F)\",
-        \n    \"Other\": \"\", \n    \"Remarks\": {\n      \"AO2\": \"Automated with
-        precipitation sensor\", \n      \"SLP211\": \"Sea level pressure: 1021.1 hPa\",
-        \n      \"T00281017\": \"Temperature 2.8\\u00b0C and dewpoint -1.7\\u00b0C\"\n
-        \   }, \n    \"Temperature\": \"03C (37F)\", \n    \"Visibility\": \"10sm
-        (16.1km)\", \n    \"Wind\": \"N-350 at 07kt\"\n  }, \n  \"Units\": {\n    \"Altimeter\":
-        \"inHg\", \n    \"Altitude\": \"ft\", \n    \"Temperature\": \"C\", \n    \"Visibility\":
-        \"sm\", \n    \"Wind-Speed\": \"kt\"\n  }, \n  \"Visibility\": \"10\", \n
-        \ \"Wind-Direction\": \"350\", \n  \"Wind-Gust\": \"\", \n  \"Wind-Speed\":
-        \"07\", \n  \"Wind-Variable-Dir\": []\n}\n"}
+    body: {string: '{"error":"value is not allowed","help":"Weather report type (metar,
+        taf)","param":"report_type"}
+
+'}
     headers:
       Access-Control-Allow-Origin: ['*']
-      Content-Length: ['1906']
+      Content-Length: ['97']
       Content-Type: [application/json]
-      Date: ['Tue, 21 Aug 2018 07:29:15 GMT']
-      Server: [gunicorn/19.8.1]
+      Date: ['Sat, 15 Sep 2018 18:09:45 GMT']
+      Server: [gunicorn/19.9.0]
+      X-Robots-Tag: [noindex]
+    status: {code: 400, message: BAD REQUEST}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: https://avwx.rest/api/parse/metar?report=KJFK+241051Z+35007KT+10SM+SCT200+BKN250+03%2FM02+A3016+RMK+AO2+SLP211+T00281017&options=info%2Cspeech%2Csummary
+  response:
+    body: {string: '{"error":"value is not allowed","help":"Weather report type (metar,
+        taf)","param":"report_type"}
+
+'}
+    headers:
+      Access-Control-Allow-Origin: ['*']
+      Content-Length: ['97']
+      Content-Type: [application/json]
+      Date: ['Sat, 15 Sep 2018 18:19:09 GMT']
+      Server: [gunicorn/19.9.0]
+      X-Robots-Tag: [noindex]
+    status: {code: 400, message: BAD REQUEST}
+- request:
+    body: KJFK 241051Z 35007KT 10SM SCT200 BKN250 03/M02 A3016 RMK AO2 SLP211 T00281017
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['77']
+      User-Agent: [python-requests/2.19.1]
+    method: POST
+    uri: http://avwx.rest/api/metar/parse?options=info%2Cspeech%2Csummary
+  response:
+    body: {string: '{"altimeter":{"repr":"3016","spoken":"three zero point one six","value":30.16},"clouds":[{"altitude":200,"modifier":null,"repr":"SCT200","type":"SCT"},{"altitude":250,"modifier":null,"repr":"BKN250","type":"BKN"}],"dewpoint":{"repr":"M02","spoken":"minus
+        two","value":-2},"flight_rules":"VFR","info":{"city":"New York City","country":"USA","elevation":4.3,"iata":"JFK","icao":"KJFK","latitude":40.63975111,"longitude":-73.77892556,"name":"John
+        F Kennedy International Airport","priority":1,"state":"NY"},"meta":{"timestamp":"Sat,
+        15 Sep 2018 18:28:20 GMT"},"other":[],"raw":"KJFK 241051Z 35007KT 10SM SCT200
+        BKN250 03/M02 A3016 RMK AO2 SLP211 T00281017","remarks":"RMK AO2 SLP211 T00281017","remarks_info":{"dewpoint_decimal":{"repr":"-1.7","spoken":"minus
+        one point seven","value":-1.7},"temperature_decimal":{"repr":"2.8","spoken":"two
+        point eight","value":2.8}},"runway_visibility":[],"sanitized":"KJFK 241051Z
+        35007KT 10SM SCT200 BKN250 03/M02 A3016 RMK AO2 SLP211 T00281017","speech":"Winds
+        three five zero at 7kt. Visibility one zero miles. Temperature three degrees
+        Celsius. Dew point minus two degrees Celsius. Altimeter three zero point one
+        six. Scattered clouds at 20000ft. Broken layer at 25000ft","station":"KJFK","summary":"Winds
+        N-350 at 7kt, Vis 10sm, Temp 3\u00b0C, Dew -2\u00b0C, Alt 30.16 inHg, Scattered
+        clouds at 20000ft, Broken layer at 25000ft","temperature":{"repr":"03","spoken":"three","value":3},"time":{"dt":"Fri,
+        24 Aug 2018 10:51:00 GMT","repr":"241051Z"},"visibility":{"repr":"10","spoken":"one
+        zero","value":10},"wind_direction":{"repr":"350","spoken":"three five zero","value":350},"wind_gust":null,"wind_speed":{"repr":"07","spoken":"seven","value":7},"wind_variable_direction":[]}
+
+'}
+    headers:
+      Access-Control-Allow-Origin: ['*']
+      Content-Length: ['1715']
+      Content-Type: [application/json]
+      Date: ['Sat, 15 Sep 2018 18:28:19 GMT']
+      Server: [gunicorn/19.9.0]
       X-Robots-Tag: [noindex]
     status: {code: 200, message: OK}
 version: 1

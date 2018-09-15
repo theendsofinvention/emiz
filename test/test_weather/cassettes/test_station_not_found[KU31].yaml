@@ -7,17 +7,40 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.19.1]
     method: GET
-    uri: https://avwx.rest/api/metar/KU31?options=info%2Cspeech%2Csummary%2Ctranslate
+    uri: https://avwx.rest/api/metar/KU31?options=info%2Cspeech%2Csummary%2Ctranslate&format=json&onfail=cache
   response:
-    body: {string: "{\n  \"Error\": \"Station Lookup Error: METAR not found for KU31.
-        There might not be a current report in ADDS\", \n  \"Meta\": {\n    \"Timestamp\":
-        \"Tue, 21 Aug 2018 07:31:31 GMT\"\n  }\n}\n"}
+    body: {string: '{"Error":"No report or cache was found for the requested station","Meta":{"Timestamp":"Sat,
+        15 Sep 2018 18:09:48 GMT"}}
+
+'}
     headers:
       Access-Control-Allow-Origin: ['*']
-      Content-Length: ['176']
+      Content-Length: ['120']
       Content-Type: [application/json]
-      Date: ['Tue, 21 Aug 2018 07:31:31 GMT']
-      Server: [gunicorn/19.8.1]
+      Date: ['Sat, 15 Sep 2018 18:09:47 GMT']
+      Server: [gunicorn/19.9.0]
+      X-Robots-Tag: [noindex]
+    status: {code: 400, message: BAD REQUEST}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: https://avwx.rest/api/metar/KU31?options=info%2Cspeech%2Csummary%2Ctranslate&format=json&onfail=cache
+  response:
+    body: {string: '{"Error":"No report or cache was found for the requested station","Meta":{"Timestamp":"Sat,
+        15 Sep 2018 18:18:16 GMT"}}
+
+'}
+    headers:
+      Access-Control-Allow-Origin: ['*']
+      Content-Length: ['120']
+      Content-Type: [application/json]
+      Date: ['Sat, 15 Sep 2018 18:18:15 GMT']
+      Server: [gunicorn/19.9.0]
       X-Robots-Tag: [noindex]
     status: {code: 400, message: BAD REQUEST}
 version: 1

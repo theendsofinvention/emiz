@@ -7,46 +7,113 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.19.1]
     method: GET
-    uri: https://avwx.rest/api/metar/KJFK?options=info%2Cspeech%2Csummary%2Ctranslate
+    uri: https://avwx.rest/api/metar/KJFK?options=info%2Cspeech%2Csummary%2Ctranslate&format=json&onfail=cache
   response:
-    body: {string: "{\n  \"Altimeter\": \"2992\", \n  \"Cloud-List\": [\n    [\n      \"FEW\",
-        \n      \"011\"\n    ], \n    [\n      \"OVC\", \n      \"033\"\n    ]\n  ],
-        \n  \"Dewpoint\": \"21\", \n  \"Flight-Rules\": \"VFR\", \n  \"Info\": {\n
-        \   \"City\": \"New York City\", \n    \"Country\": \"USA\", \n    \"Elevation\":
-        \"4.3\", \n    \"IATA\": \"JFK\", \n    \"ICAO\": \"KJFK\", \n    \"Latitude\":
-        \"40.63975111\", \n    \"Longitude\": \"-73.77892556\", \n    \"Name\": \"John
-        F Kennedy International Airport\", \n    \"Priority\": \"1\", \n    \"State\":
-        \"NY\"\n  }, \n  \"Meta\": {\n    \"Cache-Timestamp\": \"Wed, 22 Aug 2018
-        03:11:04 GMT\", \n    \"Timestamp\": \"Wed, 22 Aug 2018 03:11:04 GMT\"\n  },
-        \n  \"Other-List\": [], \n  \"Raw-Report\": \"KJFK 220251Z 12009KT 10SM FEW011
-        OVC033 23/21 A2992 RMK AO2 SLP132 T02280211 58018\", \n  \"Remarks\": \"RMK
-        AO2 SLP132 T02280211 58018\", \n  \"Remarks-Info\": {\n    \"Dew-Decimal\":
-        \"21.1\", \n    \"Temp-Decimal\": \"22.8\"\n  }, \n  \"Runway-Vis-List\":
-        [], \n  \"Speech\": \"Winds one two zero at 9kt. Visibility one zero miles.
-        Temperature two three degrees Celsius. Dew point two one degrees Celsius.
-        Altimeter two nine point nine two. Few clouds at 1100ft. Overcast layer at
-        3300ft\", \n  \"Station\": \"KJFK\", \n  \"Summary\": \"Winds ESE-120 at 09kt,
-        Vis 10sm, Temp 23C, Dew 21C, Alt 29.92inHg, Few clouds at 1100ft, Overcast
-        layer at 3300ft\", \n  \"Temperature\": \"23\", \n  \"Time\": \"220251Z\",
-        \n  \"Translations\": {\n    \"Altimeter\": \"29.92inHg (1013hPa)\", \n    \"Clouds\":
-        \"Few clouds at 1100ft, Overcast layer at 3300ft - Reported AGL\", \n    \"Dewpoint\":
-        \"21C (70F)\", \n    \"Other\": \"\", \n    \"Remarks\": {\n      \"58018\":
-        \"3-hour pressure difference: +/- 1.8 mb - Steady or increasing, then decreasing\",
-        \n      \"AO2\": \"Automated with precipitation sensor\", \n      \"SLP132\":
-        \"Sea level pressure: 1013.2 hPa\", \n      \"T02280211\": \"Temperature 22.8\\u00b0C
-        and dewpoint 21.1\\u00b0C\"\n    }, \n    \"Temperature\": \"23C (73F)\",
-        \n    \"Visibility\": \"10sm (16.1km)\", \n    \"Wind\": \"ESE-120 at 09kt\"\n
-        \ }, \n  \"Units\": {\n    \"Altimeter\": \"inHg\", \n    \"Altitude\": \"ft\",
-        \n    \"Temperature\": \"C\", \n    \"Visibility\": \"sm\", \n    \"Wind-Speed\":
-        \"kt\"\n  }, \n  \"Visibility\": \"10\", \n  \"Wind-Direction\": \"120\",
-        \n  \"Wind-Gust\": \"\", \n  \"Wind-Speed\": \"09\", \n  \"Wind-Variable-Dir\":
-        []\n}\n"}
+    body: {string: '{"Altimeter":"3020","Cloud-List":[["BKN","031"],["BKN","200"]],"Dewpoint":"21","Flight-Rules":"VFR","Info":{"City":"New
+        York City","Country":"USA","Elevation":4.3,"Iata":"JFK","Icao":"KJFK","Latitude":40.63975111,"Longitude":-73.77892556,"Name":"John
+        F Kennedy International Airport","Priority":1,"State":"NY"},"Meta":{"Cache-Timestamp":"Sat,
+        15 Sep 2018 18:05:15 GMT","Timestamp":"Sat, 15 Sep 2018 18:07:14 GMT"},"Other-List":[],"Raw-Report":"KJFK
+        151751Z 20004KT 10SM BKN031 BKN200 25/21 A3020 RMK AO2 SLP228 T02500206 10261
+        20200 58008","Remarks":"RMK AO2 SLP228 T02500206 10261 20200 58008","Remarks-Info":{"Dew-Decimal":"20.6","Temp-Decimal":"25.0"},"Runway-Vis-List":[],"Sanitized":"KJFK
+        151751Z 20004KT 10SM BKN031 BKN200 25/21 A3020 RMK AO2 SLP228 T02500206 10261
+        20200 58008","Speech":"Winds two zero zero at 4kt. Visibility one zero miles.
+        Temperature two five degrees Celsius. Dew point two one degrees Celsius. Altimeter
+        three zero point two zero. Broken layer at 3100ft. Broken layer at 20000ft","Station":"KJFK","Summary":"Winds
+        SSW-200 at 4kt, Vis 10sm, Temp 25\u00b0C, Dew 21\u00b0C, Alt 30.20 inHg, Broken
+        layer at 3100ft, Broken layer at 20000ft","Temperature":"25","Time":"151751Z","Translate":{"Altimeter":"30.20
+        inHg (1023 hPa)","Cloud-List":"Broken layer at 3100ft, Broken layer at 20000ft
+        - Reported AGL","Dewpoint":"21\u00b0C (70\u00b0F)","Other-List":"","Remarks":{"10261":"6-hour
+        maximum temperature 26.1\u00b0C","20200":"6-hour minimum temperature 20.0\u00b0C","58008":"3-hour
+        pressure difference: +/- 0.8 mb - Steady or increasing, then decreasing","Ao2":"Automated
+        with precipitation sensor","Slp228":"Sea level pressure: 1022.8 hPa","T02500206":"Temperature
+        25.0\u00b0C and dewpoint 20.6\u00b0C"},"Temperature":"25\u00b0C (77\u00b0F)","Visibility":"10sm
+        (16.1km)","Wind":"SSW-200 at 4kt"},"Units":{"Altimeter":"inHg","Altitude":"ft","Temperature":"C","Visibility":"sm","Wind-Speed":"kt"},"Visibility":"10","Wind-Direction":"200","Wind-Gust":"","Wind-Speed":"04","Wind-Variable-Dir":[]}
+
+'}
     headers:
       Access-Control-Allow-Origin: ['*']
-      Content-Length: ['2153']
+      Content-Length: ['2016']
       Content-Type: [application/json]
-      Date: ['Wed, 22 Aug 2018 03:11:03 GMT']
-      Server: [gunicorn/19.8.1]
+      Date: ['Sat, 15 Sep 2018 18:07:13 GMT']
+      Server: [gunicorn/19.9.0]
+      X-Robots-Tag: [noindex]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: https://avwx.rest/api/metar/KJFK?options=info%2Cspeech%2Csummary%2Ctranslate&format=json&onfail=cache
+  response:
+    body: {string: '{"Altimeter":"3020","Cloud-List":[["BKN","031"],["BKN","200"]],"Dewpoint":"21","Flight-Rules":"VFR","Info":{"City":"New
+        York City","Country":"USA","Elevation":4.3,"Iata":"JFK","Icao":"KJFK","Latitude":40.63975111,"Longitude":-73.77892556,"Name":"John
+        F Kennedy International Airport","Priority":1,"State":"NY"},"Meta":{"Cache-Timestamp":"Sat,
+        15 Sep 2018 18:17:16 GMT","Timestamp":"Sat, 15 Sep 2018 18:17:16 GMT"},"Other-List":[],"Raw-Report":"KJFK
+        151751Z 20004KT 10SM BKN031 BKN200 25/21 A3020 RMK AO2 SLP228 T02500206 10261
+        20200 58008","Remarks":"RMK AO2 SLP228 T02500206 10261 20200 58008","Remarks-Info":{"Dew-Decimal":"20.6","Temp-Decimal":"25.0"},"Runway-Vis-List":[],"Sanitized":"KJFK
+        151751Z 20004KT 10SM BKN031 BKN200 25/21 A3020 RMK AO2 SLP228 T02500206 10261
+        20200 58008","Speech":"Winds two zero zero at 4kt. Visibility one zero miles.
+        Temperature two five degrees Celsius. Dew point two one degrees Celsius. Altimeter
+        three zero point two zero. Broken layer at 3100ft. Broken layer at 20000ft","Station":"KJFK","Summary":"Winds
+        SSW-200 at 4kt, Vis 10sm, Temp 25\u00b0C, Dew 21\u00b0C, Alt 30.20 inHg, Broken
+        layer at 3100ft, Broken layer at 20000ft","Temperature":"25","Time":"151751Z","Translate":{"Altimeter":"30.20
+        inHg (1023 hPa)","Cloud-List":"Broken layer at 3100ft, Broken layer at 20000ft
+        - Reported AGL","Dewpoint":"21\u00b0C (70\u00b0F)","Other-List":"","Remarks":{"10261":"6-hour
+        maximum temperature 26.1\u00b0C","20200":"6-hour minimum temperature 20.0\u00b0C","58008":"3-hour
+        pressure difference: +/- 0.8 mb - Steady or increasing, then decreasing","Ao2":"Automated
+        with precipitation sensor","Slp228":"Sea level pressure: 1022.8 hPa","T02500206":"Temperature
+        25.0\u00b0C and dewpoint 20.6\u00b0C"},"Temperature":"25\u00b0C (77\u00b0F)","Visibility":"10sm
+        (16.1km)","Wind":"SSW-200 at 4kt"},"Units":{"Altimeter":"inHg","Altitude":"ft","Temperature":"C","Visibility":"sm","Wind-Speed":"kt"},"Visibility":"10","Wind-Direction":"200","Wind-Gust":"","Wind-Speed":"04","Wind-Variable-Dir":[]}
+
+'}
+    headers:
+      Access-Control-Allow-Origin: ['*']
+      Content-Length: ['2016']
+      Content-Type: [application/json]
+      Date: ['Sat, 15 Sep 2018 18:17:16 GMT']
+      Server: [gunicorn/19.9.0]
+      X-Robots-Tag: [noindex]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.19.1]
+    method: GET
+    uri: https://avwx.rest/api/metar/KJFK?options=info%2Cspeech%2Csummary%2Ctranslate&format=json&onfail=cache
+  response:
+    body: {string: '{"Altimeter":"3020","Cloud-List":[["BKN","031"],["BKN","200"]],"Dewpoint":"21","Flight-Rules":"VFR","Info":{"City":"New
+        York City","Country":"USA","Elevation":4.3,"Iata":"JFK","Icao":"KJFK","Latitude":40.63975111,"Longitude":-73.77892556,"Name":"John
+        F Kennedy International Airport","Priority":1,"State":"NY"},"Meta":{"Cache-Timestamp":"Sat,
+        15 Sep 2018 18:17:16 GMT","Timestamp":"Sat, 15 Sep 2018 18:18:13 GMT"},"Other-List":[],"Raw-Report":"KJFK
+        151751Z 20004KT 10SM BKN031 BKN200 25/21 A3020 RMK AO2 SLP228 T02500206 10261
+        20200 58008","Remarks":"RMK AO2 SLP228 T02500206 10261 20200 58008","Remarks-Info":{"Dew-Decimal":"20.6","Temp-Decimal":"25.0"},"Runway-Vis-List":[],"Sanitized":"KJFK
+        151751Z 20004KT 10SM BKN031 BKN200 25/21 A3020 RMK AO2 SLP228 T02500206 10261
+        20200 58008","Speech":"Winds two zero zero at 4kt. Visibility one zero miles.
+        Temperature two five degrees Celsius. Dew point two one degrees Celsius. Altimeter
+        three zero point two zero. Broken layer at 3100ft. Broken layer at 20000ft","Station":"KJFK","Summary":"Winds
+        SSW-200 at 4kt, Vis 10sm, Temp 25\u00b0C, Dew 21\u00b0C, Alt 30.20 inHg, Broken
+        layer at 3100ft, Broken layer at 20000ft","Temperature":"25","Time":"151751Z","Translate":{"Altimeter":"30.20
+        inHg (1023 hPa)","Cloud-List":"Broken layer at 3100ft, Broken layer at 20000ft
+        - Reported AGL","Dewpoint":"21\u00b0C (70\u00b0F)","Other-List":"","Remarks":{"10261":"6-hour
+        maximum temperature 26.1\u00b0C","20200":"6-hour minimum temperature 20.0\u00b0C","58008":"3-hour
+        pressure difference: +/- 0.8 mb - Steady or increasing, then decreasing","Ao2":"Automated
+        with precipitation sensor","Slp228":"Sea level pressure: 1022.8 hPa","T02500206":"Temperature
+        25.0\u00b0C and dewpoint 20.6\u00b0C"},"Temperature":"25\u00b0C (77\u00b0F)","Visibility":"10sm
+        (16.1km)","Wind":"SSW-200 at 4kt"},"Units":{"Altimeter":"inHg","Altitude":"ft","Temperature":"C","Visibility":"sm","Wind-Speed":"kt"},"Visibility":"10","Wind-Direction":"200","Wind-Gust":"","Wind-Speed":"04","Wind-Variable-Dir":[]}
+
+'}
+    headers:
+      Access-Control-Allow-Origin: ['*']
+      Content-Length: ['2016']
+      Content-Type: [application/json]
+      Date: ['Sat, 15 Sep 2018 18:18:12 GMT']
+      Server: [gunicorn/19.9.0]
       X-Robots-Tag: [noindex]
     status: {code: 200, message: OK}
 version: 1
