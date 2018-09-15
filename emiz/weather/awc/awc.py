@@ -33,7 +33,7 @@ class AWC:
     @staticmethod
     def _query(params: dict) -> AWCResult:
         # LOGGER.debug(f'querying: {url}{params}')
-        LOGGER.debug(f'requesting METAR for station: {params["stationString"]}')
+        LOGGER.debug('requesting METAR for station: %s', params["stationString"])
         req = AWC.s.get(
             url='https://aviationweather.gov/adds/dataserver_current/httpparam',
             timeout=2, params=params, verify=certifi.where()

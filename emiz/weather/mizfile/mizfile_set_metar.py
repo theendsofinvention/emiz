@@ -10,7 +10,6 @@ import elib.path
 from metar import Metar
 
 from emiz.miz import Miz
-
 from .. import custom_metar, mission_weather
 
 LOGGER = elib.custom_logging.get_logger('EMIZ')
@@ -37,8 +36,8 @@ def set_weather_from_metar(
     if error:
         return error, None
 
-    assert isinstance(metar, custom_metar.CustomMetar)
-    LOGGER.debug(f'METAR: {metar.code}')
+    if metar:
+        LOGGER.debug('METAR: %s', metar.code)
 
     in_file = elib.path.ensure_file(in_file)
 
@@ -46,7 +45,7 @@ def set_weather_from_metar(
         out_file = in_file
     else:
         out_file = elib.path.ensure_file(out_file, must_exist=False)
-    LOGGER.debug(f'applying metar: {in_file} -> {out_file}')
+    LOGGER.debug('applying metar: %s -> %s', in_file, out_file)
 
     try:
         LOGGER.debug('building MissionWeather')

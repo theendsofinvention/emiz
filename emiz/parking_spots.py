@@ -5,7 +5,7 @@ Artifact from earlier dev
 # type: ignore
 
 import math
-import pickle
+import pickle  # nosec
 from collections import namedtuple
 
 # pylint: skip-file
@@ -14,7 +14,7 @@ from emiz._parking_spots import parkings
 from emiz.mission import Static
 
 ParkingSpot = namedtuple('ParkingSpot', 'airport spot')
-parkings = pickle.loads(parkings)
+parkings = pickle.loads(parkings)  # nosec
 
 
 def clear_farps():

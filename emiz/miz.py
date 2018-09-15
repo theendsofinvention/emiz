@@ -8,7 +8,7 @@ import tempfile
 import typing
 from filecmp import dircmp
 from pathlib import Path
-from zipfile import BadZipFile, ZipFile, ZipInfo
+from zipfile import BadZipFile, ZipFile
 
 import elib
 
@@ -48,7 +48,7 @@ class Miz:
         self.overwrite = overwrite
 
         self.temp_dir = Path(tempfile.mkdtemp('EMFT_'))
-        LOGGER.debug(f'temporary directory: {self.temp_dir}')
+        LOGGER.debug('temporary directory: %s', self.temp_dir)
 
         self.zip_content: typing.Optional[typing.List[str]] = None
         self._mission = None
@@ -67,13 +67,13 @@ class Miz:
 
     def __exit__(self, exc_type, exc_val, _):
         if exc_type:
-            LOGGER.error(f'there were error with this mission, keeping temp dir at "{self.temp_dir}"')
-            LOGGER.error('{}\n{}'.format(exc_type, exc_val))
+            LOGGER.error('there were error with this mission, keeping temp dir at "%s"', self.temp_dir)
+            LOGGER.error('%s\n%s', exc_type, exc_val)
             return False
 
         LOGGER.debug('closing Mission object context')
         if not self.keep_temp_dir:
-            LOGGER.debug(f'removing temp dir: {self.temp_dir}')
+            LOGGER.debug('removing temp dir: %s', self.temp_dir)
             self._remove_temp_dir()
         return True
 
@@ -165,12 +165,12 @@ class Miz:
         miz_file_path = elib.path.ensure_file(miz_file_path)
         target_dir_path = elib.path.ensure_dir(target_dir, must_exist=False)
 
-        LOGGER.debug(f're-ordering miz file: {miz_file_path}')
-        LOGGER.debug(f'destination folder: {target_dir}')
-        LOGGER.debug(f'{"skipping" if skip_options_file else "including"} option file')
+        LOGGER.debug('re-ordering miz file: %s', miz_file_path)
+        LOGGER.debug('destination folder: %s', target_dir)
+        LOGGER.debug('%s option file', "skipping" if skip_options_file else "including")
 
         if not target_dir_path.exists():
-            LOGGER.debug(f'creating directory {target_dir_path}')
+            LOGGER.debug('creating directory %s', target_dir_path)
             target_dir_path.mkdir(exist_ok=True)
 
         with Miz(miz_file_path, overwrite=True) as miz_:
@@ -183,29 +183,29 @@ class Miz:
                     src: source folder
                     dst: destination folder
                 """
-                LOGGER.debug(f'mirroring: {src} -> {dst}')
+                LOGGER.debug('mirroring: %s -> %s', src, dst)
 
                 LOGGER.debug('comparing directories')
                 diff_ = dircmp(str(src), str(dst), ignore)
 
                 diff_list = diff_.left_only + diff_.diff_files
-                LOGGER.debug(f'differences: {diff_list}')
+                LOGGER.debug('differences: %s', diff_list)
 
                 for __diff in diff_list:
                     source = Path(diff_.left, __diff)
                     target = Path(diff_.right, __diff)
-                    LOGGER.debug(f'looking at: {__diff}')
+                    LOGGER.debug('looking at: %s', __diff)
                     if source.is_dir():
-                        LOGGER.debug('isdir: {}'.format(__diff))
+                        LOGGER.debug('isdir: %s', __diff)
                         if not target.exists():
-                            LOGGER.debug(f'creating: {__diff}')
+                            LOGGER.debug('creating: %s', __diff)
                             target.mkdir()
                         mirror_dir(source, target)
                     else:
-                        LOGGER.debug(f'copying: {__diff}')
+                        LOGGER.debug('copying: %s', __diff)
                         shutil.copy2(str(source), diff_.right)
                 for sub in diff_.subdirs.values():
-                    assert isinstance(sub, dircmp)
+
                     mirror_dir(Path(sub.left), Path(sub.right))
 
             # pylint: disable=protected-access
@@ -243,7 +243,7 @@ class Miz:
         for file in Path(self.temp_dir, 'l10n', 'DEFAULT').iterdir():
             if file.name in ('dictionary', 'mapResource'):
                 continue
-            LOGGER.debug(f'found resource: {file.name}')
+            LOGGER.debug('found resource: %s', file.name)
             self._resources.add(file.name)
 
         LOGGER.debug('decoding done')
@@ -276,14 +276,13 @@ class Miz:
     def _extract_files_from_zip(self, zip_file):
 
         for item in zip_file.infolist():  # not using ZipFile.extractall() for security reasons
-            assert isinstance(item, ZipInfo)
 
-            LOGGER.debug(f'unzipping item: {item.filename}')
+            LOGGER.debug('unzipping item: %s', item.filename)
 
             try:
                 zip_file.extract(item, str(self.temp_dir))
             except:  # noqa: E722
-                LOGGER.error(f'failed to extract archive member: {item.filename}')
+                LOGGER.error('failed to extract archive member: %s', item.filename)
                 raise
 
     def _remove_temp_dir(self):
@@ -317,7 +316,7 @@ class Miz:
             raise BadZipFile(str(self.miz_path))
 
         except:  # noqa: E722
-            LOGGER.exception(f'error while unzipping miz file: {self.miz_path}')
+            LOGGER.exception('error while unzipping miz file: %s', self.miz_path)
             raise
 
         LOGGER.debug('checking miz content')
@@ -325,7 +324,7 @@ class Miz:
         # noinspection PyTypeChecker
         for miz_item in ['mission', 'options', 'warehouses', 'l10n/DEFAULT/dictionary', 'l10n/DEFAULT/mapResource']:
             if not Path(self.temp_dir.joinpath(miz_item)).exists():
-                LOGGER.error('missing file in miz: {}'.format(miz_item))
+                LOGGER.error('missing file in miz: %s', miz_item)
                 raise FileNotFoundError(miz_item)
 
         self._check_extracted_content()
@@ -350,7 +349,7 @@ class Miz:
         else:
             destination_path = elib.path.ensure_file(destination, must_exist=False)
 
-        LOGGER.debug('zipping mission to: {}'.format(destination_path))
+        LOGGER.debug('zipping mission to: %s', destination_path)
 
         destination_path.write_bytes(dummy_miz)
 

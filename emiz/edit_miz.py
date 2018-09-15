@@ -40,10 +40,10 @@ def edit_miz(  # noqa: C901
         String containing error
     """
     if outfile is None:
-        LOGGER.debug(f'editing in place: {infile}')
+        LOGGER.debug('editing in place: %s', infile)
         outfile = infile
     else:
-        LOGGER.debug(f'editing miz file: {infile} -> {outfile}')
+        LOGGER.debug('editing miz file: %s -> %s', infile, outfile)
 
     mission_weather = mission_time = None
 

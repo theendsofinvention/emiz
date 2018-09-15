@@ -8,7 +8,6 @@ import elib
 from metar.Metar import Metar, ParserError
 
 from emiz.weather.awc.awc import AWC
-
 from .custom_metar_pressure import CustomPressure
 
 LOGGER = elib.custom_logging.get_logger('EMIZ')
@@ -20,7 +19,7 @@ class CustomMetar(Metar):
     """
 
     def __init__(self, metar_code, month=None, year=None, utc_delta=None):
-        LOGGER.debug(f'creating METAR from: {metar_code}')
+        LOGGER.debug('creating METAR from: %s', metar_code)
         Metar.__init__(self, metar_code, month, year, utc_delta)
         self.press = CustomPressure(self.press.value('mb'))
 
@@ -42,7 +41,7 @@ class CustomMetar(Metar):
             return None, metar
 
         if isinstance(metar, str):
-            LOGGER.debug(f'building CustomMetar from: {metar}')
+            LOGGER.debug('building CustomMetar from: %s', metar)
             if len(metar) == 4:
                 LOGGER.debug('retrieving METAR from ICAO')
                 # NOAA has discontinued their hosting of raw METAR text files ...

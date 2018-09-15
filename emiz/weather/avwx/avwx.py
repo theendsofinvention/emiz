@@ -5,8 +5,6 @@ Access to AVWX API
 https://avwx.rest/documentation
 """
 
-import json
-
 import certifi
 import elib
 import requests.adapters
@@ -51,7 +49,7 @@ class AVWX:
 
     @staticmethod
     def _query(url, icao: str, params: dict = None) -> AVWXResult:
-        LOGGER.debug(f'querying: {url}{params}')
+        LOGGER.debug('querying: %s %s', url, params)
         req = AVWX.s.get(url, timeout=2, params=params, verify=certifi.where())
         if not req.ok:
             AVWX._failed_request(req, url, icao)
@@ -62,7 +60,7 @@ class AVWX:
             return AVWXResult(**result)
         except TypeError:
             import pprint
-            LOGGER.error(f'invalid data was:\n{pprint.pformat(result)}')
+            LOGGER.error('invalid data was:\n%s', pprint.pformat(result))
             raise
 
     @staticmethod
@@ -81,7 +79,7 @@ class AVWX:
             'format': 'json',
             'onfail': 'cache',
         }
-        LOGGER.info(f'getting METAR info for ICAO: {icao}')
+        LOGGER.info('getting METAR info for ICAO: %s', icao)
         try:
             return AVWX._query(f'https://avwx.rest/api/metar/{icao}', params=params, icao=icao)
         except RequestsConnectionError:
@@ -90,7 +88,7 @@ class AVWX:
     @staticmethod
     def _post(url: str, body: str, params: dict) -> str:
         LOGGER.debug('posting request for METAR parsing')
-        resp = AVWX.s.post(url=url, data=body, params=params)
+        resp = AVWX.s.post(url=url, data=body.encode('utf8'), params=params)
         if not resp.ok:
             LOGGER.error('post request failed')
             AVWX._failed_request(resp, url, 'none')
@@ -109,7 +107,7 @@ class AVWX:
         Returns: speakable METAR for TTS
 
         """
-        LOGGER.info(f'getting speech text from METAR: {metar}')
+        LOGGER.info('getting speech text from METAR: %s', metar)
         params = {
             'options': 'info,speech,summary'
         }
@@ -119,5 +117,5 @@ class AVWX:
             params=params
         )
         speech = str(speech).replace('Altimeter', 'Q N H')
-        LOGGER.debug(f'resulting speech: {speech}')
+        LOGGER.debug('resulting speech: %s', speech)
         return speech

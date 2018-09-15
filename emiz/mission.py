@@ -58,7 +58,7 @@ class BaseMissionObject:
         VALID_STR.validate(country_name, 'get_country_by_name', exc=ValueError)
         if country_name not in self._countries_by_name.keys():
             for country in self.countries:
-                assert isinstance(country, Country)
+
                 if country.country_name == country_name:
                     self._countries_by_name[country_name] = country
                     return country
@@ -78,7 +78,7 @@ class BaseMissionObject:
         VALID_POSITIVE_INT.validate(country_id, 'get_country_by_id')
         if country_id not in self._countries_by_id.keys():
             for country in self.countries:
-                assert isinstance(country, Country)
+
                 if country.country_id == country_id:
                     self._countries_by_id[country_id] = country
                     return country
@@ -125,7 +125,7 @@ class BaseMissionObject:
         """
         VALID_POSITIVE_INT.validate(group_id, 'get_group_by_id', exc=ValueError)
         for group in self.groups:
-            assert isinstance(group, Group)
+
             if group.group_id == group_id:
                 return group
         return None
@@ -137,7 +137,7 @@ class BaseMissionObject:
         Returns: generator of Groups
         """
         for group in self.groups:
-            assert isinstance(group, Group)
+
             if group.group_is_client_group:
                 yield group
 
@@ -152,7 +152,7 @@ class BaseMissionObject:
         """
         VALID_STR.validate(group_name, 'get_group_by_name')
         for group in self.groups:
-            assert isinstance(group, Group)
+
             if group.group_name == group_name:
                 return group
         return None
@@ -168,7 +168,7 @@ class BaseMissionObject:
         """
         VALID_STR.validate(unit_name, 'get_unit_by_name')
         for unit in self.units:
-            assert isinstance(unit, BaseUnit)
+
             if unit.unit_name == unit_name:
                 return unit
         return None
@@ -184,7 +184,7 @@ class BaseMissionObject:
         """
         VALID_POSITIVE_INT.validate(unit_id, 'get_unit_by_id')
         for unit in self.units:
-            assert isinstance(unit, BaseUnit)
+
             if unit.unit_id == unit_id:
                 return unit
         return None
@@ -198,7 +198,7 @@ class BaseMissionObject:
         """
         for group in self.groups:
             for unit in group.units:
-                assert isinstance(unit, BaseUnit)
+
                 yield unit
 
     @property
@@ -210,7 +210,7 @@ class BaseMissionObject:
         """
         for country in self.countries:
             for group in country.groups:
-                assert isinstance(group, Group)
+
                 yield group
 
     @property
@@ -220,7 +220,7 @@ class BaseMissionObject:
         """
         ids: typing.Set[int] = set()
         for group in chain(self._blue_coa.groups, self._red_coa.groups):  # type: ignore
-            assert isinstance(group, Group)
+
             id_ = group.group_id
             if id_ in ids:
                 raise IndexError(group.group_name)
@@ -234,7 +234,7 @@ class BaseMissionObject:
         """
         ids: typing.Set[int] = set()
         for unit in chain(self._blue_coa.units, self._red_coa.units):  # type: ignore
-            assert isinstance(unit, BaseUnit)
+
             id_ = unit.unit_id
             if id_ in ids:
                 raise IndexError(unit.unit_name)
@@ -247,8 +247,8 @@ class BaseMissionObject:
         Returns: generator over all coalitions
         """
         for coalition in [self._blue_coa, self._red_coa]:
-            assert isinstance(coalition, Coalition)
-            yield coalition
+
+            yield coalition  # type: ignore
 
     @property
     def countries(self) -> typing.Iterator['Country']:
@@ -257,7 +257,7 @@ class BaseMissionObject:
         """
         for coalition in self.coalitions:
             for country in coalition.countries:
-                assert isinstance(country, Country)
+
                 yield country
 
     @property
@@ -533,7 +533,7 @@ class Coalition(BaseMissionObject):
         VALID_STR.validate(country_name, 'get_country_by_name', exc=ValueError)
         if country_name not in self._countries_by_name.keys():
             for country in self.countries:
-                assert isinstance(country, Country)
+
                 if country.country_name == country_name:
                     return country
             raise ValueError(country_name)
@@ -552,7 +552,7 @@ class Coalition(BaseMissionObject):
         VALID_POSITIVE_INT.validate(country_id, 'get_country_by_id', exc=ValueError)
         if country_id not in self._countries_by_id.keys():
             for country in self.countries:
-                assert isinstance(country, Country)
+
                 if country.country_id == country_id:
                     return country
             raise ValueError(country_id)
@@ -565,9 +565,9 @@ class Coalition(BaseMissionObject):
         Returns: generator over all groups in this coalition
         """
         for country in self.countries:
-            assert isinstance(country, Country)
+
             for group in country.groups:
-                assert isinstance(group, Group)
+
                 yield group
 
     @property
@@ -576,9 +576,9 @@ class Coalition(BaseMissionObject):
         Returns: generator over all statics in this coalition
         """
         for country in self.countries:
-            assert isinstance(country, Country)
+
             for static in country.statics:
-                assert isinstance(static, Static)
+
                 yield static
 
     @property
@@ -587,7 +587,7 @@ class Coalition(BaseMissionObject):
         Returns: generator over all FARPs in this coalition
         """
         for static in self.statics:
-            assert isinstance(static, Static)
+
             if static.static_is_farp:
                 yield static
 
@@ -600,7 +600,7 @@ class Coalition(BaseMissionObject):
         """
         Mission.validator_group_category.validate(category, 'get_groups_from_category')
         for group in self.groups:
-            assert isinstance(group, Group)
+
             if group.group_category == category:
                 yield group
 
@@ -613,7 +613,7 @@ class Coalition(BaseMissionObject):
         """
         Mission.validator_group_category.validate(category, 'group category')
         for unit in self.units:
-            assert isinstance(unit, BaseUnit)
+
             if unit.group_category == category:
                 yield unit
 
@@ -626,7 +626,7 @@ class Coalition(BaseMissionObject):
         """
         VALID_POSITIVE_INT.validate(group_id, 'get_group_by_id')
         for group in self.groups:
-            assert isinstance(group, Group)
+
             if group.group_id == group_id:
                 return group
 
@@ -1243,7 +1243,7 @@ class Country(Coalition):
         """
         Mission.validator_group_category.validate(category, 'get_groups_from_category')
         for group in self.groups:
-            assert isinstance(group, Group)
+
             if group.group_category == category:
                 yield group
 
@@ -1255,7 +1255,7 @@ class Country(Coalition):
         Returns: Group
         """
         for group in self.groups:
-            assert isinstance(group, Group)
+
             if group.group_id == group_id:
                 return group
 
@@ -1344,14 +1344,12 @@ class Group(Country):
             """
 
             def __init__(self, parent_route):
-                assert isinstance(parent_route, Group.Route)
                 self.parent_route = parent_route
 
             def __repr__(self):
                 return 'Route({})'.format(self.parent_route.parent_group.group_name)
 
         def __init__(self, parent_group):
-            assert isinstance(parent_group, Group)
             self.parent_group = parent_group
 
         def __repr__(self):
@@ -1538,8 +1536,10 @@ class Group(Country):
         """
         # TODO create test
         first_unit = self.get_unit_by_index(1)
-        assert isinstance(first_unit, BaseUnit)
-        return first_unit.skill == 'Client'
+        if first_unit:
+            return first_unit.skill == 'Client'
+
+        return False
 
     @property
     def group_start_position(self) -> typing.Tuple[float, float]:
@@ -1849,14 +1849,14 @@ class FlyingUnit(BaseUnit):
         }
 
         def __init__(self, parent_unit, radio_num):
-            assert isinstance(parent_unit, FlyingUnit)
+
             self.parent_unit = parent_unit
             self.radio_num = radio_num
 
         def __eq__(self, other):
             if not isinstance(other, FlyingUnit.RadioPresets):
                 raise Exception('cannot compare RadioPreset instance with other object of type {}'.format(type(other)))
-            assert isinstance(other, FlyingUnit.RadioPresets)
+
             if not self.radio_name == other.radio_name:
                 return False
             for channel, frequency in self.channels:
