@@ -44,3 +44,5 @@ test.miz
 .mypy_cache
 .venv
 /pyproject.toml.example
+packages_emiz.png
+classes_emiz.png
