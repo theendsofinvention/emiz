@@ -22,7 +22,7 @@ from .exceptions import BadStation
 from .static import INFO_KEYS
 
 INFO_PATH = path.dirname(path.realpath(__file__)) + '/stations.json'
-STATIONS = json.load(open(INFO_PATH))
+# STATIONS = json.load(open(INFO_PATH))
 
 
 # type: ignore
@@ -59,19 +59,19 @@ class Report:
         #: 4-character ICAO station ident code the report was initialized with
         self.station = station
 
-    @property
-    def station_info(self) -> structs.StationInfo:
-        """
-        Provide basic station info
-
-        Raises a BadStation exception if the station's info cannot be found
-        """
-        if self._station_info is None:
-            if not self.station in STATIONS:
-                raise BadStation('Could not find station in the info dict. Check avwx.STATIONS')
-            info = [self.station] + STATIONS[self.station]
-            self._station_info = structs.StationInfo(**dict(zip(INFO_KEYS, info)))
-        return self._station_info
+    # @property
+    # def station_info(self) -> structs.StationInfo:
+    #     """
+    #     Provide basic station info
+    #
+    #     Raises a BadStation exception if the station's info cannot be found
+    #     """
+    #     if self._station_info is None:
+    #         if not self.station in STATIONS:
+    #             raise BadStation('Could not find station in the info dict. Check avwx.STATIONS')
+    #         info = [self.station] + STATIONS[self.station]
+    #         self._station_info = structs.StationInfo(**dict(zip(INFO_KEYS, info)))
+    #     return self._station_info
 
     def update(self, report: str = None) -> bool:
         """
