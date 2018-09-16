@@ -4,6 +4,7 @@ certifi==2018.8.24
 chardet==3.0.4
 click==6.7
 configobj==5.0.6
+dataclasses==0.6
 delegator.py==0.1.0
 elib==2018.9.2.2
 everett==0.9
@@ -23,6 +24,7 @@ pefile==2018.8.8
 pexpect==4.6.0
 ptyprocess==0.6.0
 pyparsing==2.2.0
+python-dateutil==2.7.3
 pyyaml==3.13
 raven==6.9.0
 requests==2.19.1
@@ -31,3 +33,4 @@ smmap2==2.0.4
 tqdm==4.26.0; python_version != '3.0.*'
 ujson==1.35
 urllib3==1.23
+xmltodict==0.11.0
