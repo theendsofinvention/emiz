@@ -2,6 +2,7 @@
 Contains the core parsing and indent functions of avwx
 """
 # pylint: disable=too-many-branches,too-many-boolean-expressions,too-many-return-statements,bad-continuation
+# pylint: disable=inconsistent-return-statements
 # stdlib
 from copy import copy
 from datetime import datetime, timedelta
@@ -100,12 +101,12 @@ def spoken_number(num: str) -> str:
     return ' and '.join(ret)
 
 
-def make_number(num: str, repr_: str = None, speak: str = None) -> Number:
+def make_number(num: str, repr_: str = None, speak: str = None):
     """
     Returns a Number or Fraction dataclass for a number string
     """
     if not num or is_unknown(num):
-        raise ValueError(num)
+        return
     # Check CAVOK
     if num == 'CAVOK':
         return Number('CAVOK', 9999, 'ceiling and visibility ok')  # type: ignore
@@ -861,7 +862,7 @@ def get_ceiling(clouds: [Cloud]) -> Cloud:  # type: ignore
     return None  # type: ignore
 
 
-def parse_date(date: str, hour_threshold: int = 200) -> datetime:
+def parse_date(date: str, hour_threshold: int = 200):
     """
     Parses a report timestamp in ddhhZ or ddhhmmZ format
 
@@ -872,7 +873,7 @@ def parse_date(date: str, hour_threshold: int = 200) -> datetime:
     if len(date) == 4:
         date += '00'
     if not (len(date) == 6 and date.isdigit()):
-        raise ValueError(date)
+        return
     # Create initial guess
     now = datetime.utcnow()
     guess = now.replace(day=int(date[0:2]),
