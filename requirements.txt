@@ -11,8 +11,8 @@ everett==0.9
 future==0.16.0
 gitdb2==2.0.4
 gitpython==2.1.11
-gtts-token==1.1.1; python_version < '4'
-gtts==2.0.1; python_version < '4'
+gtts-token==1.1.1
+gtts==2.0.1
 humanize==0.5.1
 idna==2.7
 metar==1.6.0
