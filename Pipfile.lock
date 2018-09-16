@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "1eb99d6dc12154bca80a3b9ca001a6608507cd9e731903f1821cfe6107e6dd48"
+            "sha256": "d5796b0f0af9b73b66d2f24e45e8095df4e3cb8ccbf19510e85ff98a272b39c2"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -57,6 +57,14 @@
                 "sha256:a2f5650770e1c87fb335af19a9b7eb73fc05ccf22144eb68db7d00cd2bcb0902"
             ],
             "version": "==5.0.6"
+        },
+        "dataclasses": {
+            "hashes": [
+                "sha256:454a69d788c7fda44efd71e259be79577822f5e3f53f029a22d08004e951dc9f",
+                "sha256:6988bd2b895eef432d562370bb707d540f32f7360ab13da45340101bc2307d84"
+            ],
+            "index": "pypi",
+            "version": "==0.6"
         },
         "delegator.py": {
             "hashes": [
@@ -191,6 +199,14 @@
             ],
             "version": "==2.2.0"
         },
+        "python-dateutil": {
+            "hashes": [
+                "sha256:1adb80e7a782c12e52ef9a8182bebeb73f1d7e24e374397af06fb4956c8dc5c0",
+                "sha256:e27001de32f627c22380a688bcc43ce83504a7bc5da472209b4c70f02829f0b8"
+            ],
+            "index": "pypi",
+            "version": "==2.7.3"
+        },
         "pyyaml": {
             "hashes": [
                 "sha256:3d7da3009c0f3e783b2c873687652d83b1bbfd5c88e9813fb7e5b03c0dd3108b",
@@ -258,6 +274,14 @@
             ],
             "index": "pypi",
             "version": "==1.23"
+        },
+        "xmltodict": {
+            "hashes": [
+                "sha256:8f8d7d40aa28d83f4109a7e8aa86e67a4df202d9538be40c0cb1d70da527b0df",
+                "sha256:add07d92089ff611badec526912747cf87afd4f9447af6661aca074eeaf32615"
+            ],
+            "index": "pypi",
+            "version": "==0.11.0"
         }
     },
     "develop": {
@@ -385,6 +409,7 @@
                 "sha256:454a69d788c7fda44efd71e259be79577822f5e3f53f029a22d08004e951dc9f",
                 "sha256:6988bd2b895eef432d562370bb707d540f32f7360ab13da45340101bc2307d84"
             ],
+            "index": "pypi",
             "version": "==0.6"
         },
         "datadiff": {
@@ -409,9 +434,9 @@
         },
         "elib-config": {
             "hashes": [
-                "sha256:9acc089309467ff79c9d277c431838313dac039385686494a8ea7d6ce51508f3"
+                "sha256:709d9a6d9ec309968e17146056dbd6f6a9e2ff435dce30768772ad06f172d38f"
             ],
-            "version": "==2018.9.2.1"
+            "version": "==2018.9.16.1"
         },
         "elib-run": {
             "hashes": [
@@ -421,10 +446,10 @@
         },
         "epab": {
             "hashes": [
-                "sha256:e59c2bb424cc6a4cafc58d822d9768909c3b2d72d3ed6ea0f40fbc4ef0a58cea"
+                "sha256:8dd6fced4dc2fa0489bd498124235f53aba481ef907d7dbf9397b1222c8b8761"
             ],
             "index": "pypi",
-            "version": "==2018.9.12.1"
+            "version": "==2018.9.16.1"
         },
         "execnet": {
             "hashes": [
@@ -478,11 +503,11 @@
         },
         "hypothesis": {
             "hashes": [
-                "sha256:568eb2acfd1545714a1d136cfb3967e9e3608227027181afc6653ec3fe4d1b02",
-                "sha256:7e5f8b3d6c78a34a8fa6e995e5c1808fefe42a5a7aeed050b9ce8c3ce118a365",
-                "sha256:ffa37bc51a5c414d7ea79b773c6aa00e3cea99340270695ec2045fc2c902d6a3"
+                "sha256:68eb97e15faab2f9e2245a0626be3bd4d5a805162a6aa7b581f711f7ac8347c6",
+                "sha256:8b0ccf78c66637de6805071686183d6ac6f4ccfd032c92325f50074f8c26fdfb",
+                "sha256:e986622aac608edc234ac98df1c52c56a294900fee02d60270d58a74711a8e63"
             ],
-            "version": "==3.71.5"
+            "version": "==3.71.6"
         },
         "idna": {
             "hashes": [
@@ -747,6 +772,7 @@
                 "sha256:1adb80e7a782c12e52ef9a8182bebeb73f1d7e24e374397af06fb4956c8dc5c0",
                 "sha256:e27001de32f627c22380a688bcc43ce83504a7bc5da472209b4c70f02829f0b8"
             ],
+            "index": "pypi",
             "version": "==2.7.3"
         },
         "pytz": {

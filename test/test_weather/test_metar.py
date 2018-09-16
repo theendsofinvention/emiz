@@ -47,13 +47,6 @@ def test_set_weather_from_icao(icao, weather_test_file, out_file):
     assert m1.weather != m2.weather
 
 
-@pytest.mark.vcr()
-@pytest.mark.parametrize('icao', ['KU31', 'KILC', 'KYUC'])
-def test_station_not_found(icao):
-    with pytest.raises(emiz.weather.avwx.StationNotFound):
-        emiz.weather.avwx.AVWX.query_icao(icao)
-
-
 @pytest.mark.parametrize('metar,out', [
     ('UGTB 211300Z 13014KT CAVOK 33/07 Q1016 R13R/CLRD70 NOSIG',
      {

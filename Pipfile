@@ -16,6 +16,9 @@ requests = "*"
 elib = "*"
 ujson = "*"
 pathvalidate = "*"
+python-dateutil = "*"
+dataclasses = "*"
+xmltodict = "*"
 
 [dev-packages]
 pip = ">=18"
