@@ -17,6 +17,9 @@ requirements = [
     'elib',
     'ujson',
     'pathvalidate',
+    'python-dateutil',
+    'dataclasses',
+    'xmltodict',
 ]
 test_requirements = [
     'pip',
