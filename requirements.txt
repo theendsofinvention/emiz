@@ -18,7 +18,7 @@ idna==2.9
 metar==1.6.0
 mpmath==1.0.0
 natsort==5.5.0
-packaging==18.0
+packaging==20.4
 pathvalidate==0.21.3
 pefile==2018.8.8
 pexpect==4.6.0
