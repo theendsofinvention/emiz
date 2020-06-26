@@ -10,7 +10,7 @@ elib==2018.10.1.1
 everett==0.9
 future==0.18.2
 gitdb2==4.0.1
-gitpython==2.1.11
+gitpython==3.1.3
 gtts-token==1.1.2
 gtts==2.0.1
 humanize==0.5.1
