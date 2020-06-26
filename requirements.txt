@@ -6,7 +6,7 @@ click==7.1.2
 configobj==5.0.6
 dataclasses==0.7
 delegator.py==0.1.1
-elib==2018.10.1.1
+elib==2018.11.22.1
 everett==0.9
 future==0.18.2
 gitdb2==4.0.1
