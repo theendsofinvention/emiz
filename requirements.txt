@@ -9,7 +9,7 @@ delegator.py==0.1.1
 elib==2018.10.1.1
 everett==0.9
 future==0.18.2
-gitdb2==2.0.5
+gitdb2==4.0.1
 gitpython==2.1.11
 gtts-token==1.1.2
 gtts==2.0.1
