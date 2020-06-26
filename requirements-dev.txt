@@ -1,6 +1,6 @@
 apipkg==1.5
 argh==0.26.2
-astroid==2.0.4
+astroid==2.4.2
 atomicwrites==1.2.1
 attrs==18.2.0
 bandit==1.5.1
