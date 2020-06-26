@@ -33,4 +33,4 @@ smmap2==3.0.0
 tqdm==4.46.1
 ujson==3.0.0
 urllib3==1.25.9
-xmltodict==0.11.0
+xmltodict==0.12.0
