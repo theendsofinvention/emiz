@@ -32,5 +32,5 @@ six==1.15.0
 smmap2==3.0.0
 tqdm==4.46.1
 ujson==1.35
-urllib3==1.24.3
+urllib3==1.25.9
 xmltodict==0.11.0
