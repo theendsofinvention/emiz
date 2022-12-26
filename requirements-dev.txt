@@ -79,6 +79,6 @@ urllib3==1.25.9
 vcrpy==4.0.2
 watchdog==0.10.3
 webencodings==0.5.1
-wheel==0.34.2
+wheel==0.38.1
 wrapt==1.12.1
 yarl==1.4.2; python_version >= '3.4'
